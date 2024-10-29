@@ -1,13 +1,12 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.request.user.CreateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +30,18 @@ public class UserController {
         SuccessResponse<List<UserDTO>> successResponse = SuccessResponse.<List<UserDTO>>builder()
                 .message(message)
                 .result(users)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping
+    public ResponseEntity<SuccessResponse<UserDTO>> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        UserDTO user = userService.createUser(createUserRequest);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("User created")
+                .result(user)
                 .build();
 
         return ResponseEntity.ok(successResponse);

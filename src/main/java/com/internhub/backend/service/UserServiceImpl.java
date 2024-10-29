@@ -1,5 +1,6 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.request.user.CreateUserRequest;
 import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.entity.User;
 import com.internhub.backend.mapper.UserMapper;
@@ -8,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -31,5 +34,22 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(userMapper::mapUserToUserDTO)
                 .toList();
+    }
+
+    @Override
+    public UserDTO createUser(CreateUserRequest createUserRequest) {
+
+        User user = User.builder()
+                .email(createUserRequest.getEmail())
+                .password(createUserRequest.getPassword())
+//                .password(passwordEncoder.encode(createUserRequest.getPassword()))
+                .isActive(true)
+                .registrationDate(Date.from(Instant.now()))
+//                .role(roleRepository.findByName("STUDENT")
+                .build();
+
+        User savedUser = userRepository.save(user);
+
+        return userMapper.mapUserToUserDTO(savedUser);
     }
 }
