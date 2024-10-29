@@ -9,5 +9,7 @@ public interface UserService {
 
     List<UserDTO> getAllUsers();
 
+    UserDTO getUserById(String id);
+
     UserDTO createUser(CreateUserRequest createUserRequest);
 }

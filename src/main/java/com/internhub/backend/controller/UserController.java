@@ -35,6 +35,18 @@ public class UserController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<SuccessResponse<UserDTO>> getUserById(@PathVariable("id") String id) {
+        UserDTO user = userService.getUserById(id);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("User found")
+                .result(user)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @PostMapping
     public ResponseEntity<SuccessResponse<UserDTO>> createUser(@RequestBody CreateUserRequest createUserRequest) {
         UserDTO user = userService.createUser(createUserRequest);
