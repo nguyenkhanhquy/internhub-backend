@@ -1,5 +1,6 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.entity.User;
 import com.internhub.backend.exception.CustomException;
@@ -7,12 +8,15 @@ import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.repository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -50,6 +54,47 @@ public class AuthServiceImpl implements AuthService{
 
         String token = generateToken(user);
         return Map.of("accessToken", token);
+    }
+
+    @Override
+    public Map<String, Object> introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {
+        String token = introspectRequest.getToken();
+
+        try {
+            SignedJWT signedJWT = verifyToken(token, false);
+
+            // Lấy payload từ JWTClaimsSet
+            Map<String, Object> payloadData = signedJWT.getJWTClaimsSet().getClaims();
+
+            return Map.of("payload", payloadData);
+        } catch (CustomException e) {
+            throw new CustomException(EnumException.INVALID_TOKEN);
+        }
+    }
+
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
+        JWSVerifier verifier = new MACVerifier(jwtSignerKey.getBytes());
+
+        // Phân tích token
+        SignedJWT signedJWT = SignedJWT.parse(token);
+
+        // Kiểm tra tính hợp lệ của chữ ký
+        boolean verified = signedJWT.verify(verifier);
+
+        // Lấy thời gian hết hạn hoặc thời gian làm mới từ claims
+        Instant expiration = (isRefresh)
+                ? signedJWT.getJWTClaimsSet().getIssueTime().toInstant().plus(jwtRefreshableDuration, ChronoUnit.SECONDS)
+                : signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
+
+        if (!(verified && Instant.now().isBefore(expiration))) {
+            throw new CustomException(EnumException.UNAUTHENTICATED);
+        }
+
+//        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+//            throw new CustomException(EnumException.UNAUTHENTICATED);
+//        }
+
+        return signedJWT;
     }
 
     private String generateToken(User user) {

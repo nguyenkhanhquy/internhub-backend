@@ -1,8 +1,10 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.AuthService;
+import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
 import java.util.Map;
 
 @RestController
@@ -30,6 +33,18 @@ public class AuthController {
 
         SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
                 .message("Login successfully")
+                .result(resultData)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/introspect")
+    public ResponseEntity<SuccessResponse<Map<String, Object>>> introspect(@RequestBody IntrospectRequest introspectRequest) throws JOSEException, ParseException {
+        Map<String, Object> resultData = authService.introspect(introspectRequest);
+
+        SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
+                .message("Token is valid")
                 .result(resultData)
                 .build();
 
