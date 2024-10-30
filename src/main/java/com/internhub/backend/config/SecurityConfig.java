@@ -27,24 +27,19 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**"};
 
-    private static final String[] PUBLIC_ENDPOINTS = {"/users/**"};
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CustomJwtDecoder customJwtDecoder) throws Exception {
         httpSecurity.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, PUBLIC_POST_ENDPOINTS).permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_ENDPOINTS).permitAll()
-                .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .anyRequest()
                 .authenticated()
         );
 
-        /*
         httpSecurity.oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwtConfigure -> jwtConfigure.decoder(customJwtDecoder))
-                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
+//                .authenticationEntryPoint(new JwtAuthenticationEntryPoint())
         );
-         */
 
         httpSecurity.csrf(AbstractHttpConfigurer::disable);
 
