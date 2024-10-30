@@ -5,6 +5,7 @@ import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<SuccessResponse<UserDTO>> createUser(@RequestBody CreateUserRequest createUserRequest) {
+    public ResponseEntity<SuccessResponse<UserDTO>> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
         UserDTO user = userService.createUser(createUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
@@ -61,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SuccessResponse<UserDTO>> updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<SuccessResponse<UserDTO>> updateUser(@Valid @PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
         UserDTO user = userService.updateUser(id, updateUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
