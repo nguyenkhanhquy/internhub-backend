@@ -2,6 +2,7 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
+import com.internhub.backend.dto.request.auth.LogoutRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
@@ -46,6 +47,17 @@ public class AuthController {
         SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
                 .message("Token is valid")
                 .result(resultData)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<SuccessResponse<Void>> logout(@RequestBody LogoutRequest logoutRequest) throws ParseException, JOSEException {
+        authService.logout(logoutRequest);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Logout successfully")
                 .build();
 
         return ResponseEntity.ok(successResponse);

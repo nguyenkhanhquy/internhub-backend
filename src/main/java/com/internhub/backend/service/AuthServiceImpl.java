@@ -2,9 +2,12 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
+import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
+import com.internhub.backend.repository.InvalidatedTokenRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -36,11 +39,13 @@ public class AuthServiceImpl implements AuthService{
     private int jwtRefreshableDuration;
 
     private final UserRepository userRepository;
+    private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -72,6 +77,24 @@ public class AuthServiceImpl implements AuthService{
         }
     }
 
+    @Override
+    public void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
+        String token = logoutRequest.getToken();
+
+        SignedJWT signedJWT = verifyToken(token, false);
+        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+    }
+
+    private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+
+        return InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+    }
+
     private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(jwtSignerKey.getBytes());
 
@@ -90,9 +113,9 @@ public class AuthServiceImpl implements AuthService{
             throw new CustomException(EnumException.UNAUTHENTICATED);
         }
 
-//        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
-//            throw new CustomException(EnumException.UNAUTHENTICATED);
-//        }
+        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+            throw new CustomException(EnumException.UNAUTHENTICATED);
+        }
 
         return signedJWT;
     }
