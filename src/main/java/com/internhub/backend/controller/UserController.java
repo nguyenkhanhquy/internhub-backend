@@ -1,6 +1,7 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.request.user.CreateUserRequest;
+import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.UserService;
@@ -53,6 +54,30 @@ public class UserController {
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("User created")
+                .result(user)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SuccessResponse<UserDTO>> updateUser(@PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
+        UserDTO user = userService.updateUser(id, updateUserRequest);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("User updated")
+                .result(user)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<SuccessResponse<UserDTO>> deleteUser(@PathVariable("id") String id) {
+        UserDTO user = userService.deleteUser(id);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("User deleted")
                 .result(user)
                 .build();
 

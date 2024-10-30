@@ -3,7 +3,7 @@ package com.internhub.backend.dto.request.user;
 import lombok.Getter;
 
 @Getter
-public class CreateUserRequest {
+public class UpdateUserRequest {
 
     private String email;
 
