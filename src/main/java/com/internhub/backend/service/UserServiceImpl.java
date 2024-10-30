@@ -11,6 +11,7 @@ import com.internhub.backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,11 +24,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -51,8 +54,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = User.builder()
                     .email(createUserRequest.getEmail())
-                    .password(createUserRequest.getPassword())
-//                    .password(passwordEncoder.encode(createUserRequest.getPassword()))
+                    .password(passwordEncoder.encode(createUserRequest.getPassword()))
                     .isActive(true)
                     .registrationDate(Date.from(Instant.now()))
 //                    .role(roleRepository.findByName("STUDENT")
@@ -72,8 +74,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findById(id).orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
 
             user.setEmail(updateUserRequest.getEmail());
-//            user.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
-            user.setPassword(updateUserRequest.getPassword());
+            user.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
 
             User updatedUser = userRepository.save(user);
 
