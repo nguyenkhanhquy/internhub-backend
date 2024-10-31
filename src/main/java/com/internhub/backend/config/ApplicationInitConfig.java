@@ -40,7 +40,7 @@ public class ApplicationInitConfig {
 
     private void initializeRoles(RoleRepository roleRepository) {
         if (roleRepository.count() == 0) {
-            List<String> roleNames = List.of("FIT", "STUDENT", "BUSINESS");
+            List<String> roleNames = List.of("FIT", "STUDENT", "RECRUITER");
             roleNames.forEach(roleName ->
                     roleRepository.save(Role.builder()
                             .name(roleName)

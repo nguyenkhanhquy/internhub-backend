@@ -1,8 +1,6 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.request.auth.IntrospectRequest;
-import com.internhub.backend.dto.request.auth.LoginRequest;
-import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.*;
 import com.internhub.backend.dto.user.UserDTO;
 import com.nimbusds.jose.JOSEException;
 
@@ -18,4 +16,6 @@ public interface AuthService {
     void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException;
 
     UserDTO getCurrentAuthUser();
+
+    UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest);
 }

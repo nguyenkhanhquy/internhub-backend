@@ -10,7 +10,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    open-in-view: false
 
   datasource:
     url: ${DATASOURCE_URL}

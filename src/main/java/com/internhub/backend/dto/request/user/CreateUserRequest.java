@@ -8,11 +8,11 @@ import lombok.Getter;
 @Getter
 public class CreateUserRequest {
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email format")
+    @NotBlank(message = "Email không được bỏ trống")
+    @Email(message = "Định dạng email không hợp lệ")
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters")
+    @NotBlank(message = "Password không được bỏ trống")
+    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     private String password;
 }

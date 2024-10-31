@@ -1,16 +1,14 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.request.auth.IntrospectRequest;
-import com.internhub.backend.dto.request.auth.LoginRequest;
-import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.*;
 import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.entity.InvalidatedToken;
+import com.internhub.backend.entity.Recruiter;
 import com.internhub.backend.entity.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
-import com.internhub.backend.repository.InvalidatedTokenRepository;
-import com.internhub.backend.repository.UserRepository;
+import com.internhub.backend.repository.*;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -18,6 +16,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     @Value("${jwt.signerkey}")
     private String jwtSignerKey;
@@ -44,13 +43,17 @@ public class AuthServiceImpl implements AuthService{
     private int jwtRefreshableDuration;
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final RecruiterRepository recruiterRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.recruiterRepository = recruiterRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
@@ -106,6 +109,36 @@ public class AuthServiceImpl implements AuthService{
         }
 
         return userMapper.mapUserToUserDTO(user);
+    }
+
+    @Override
+    public UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest) {
+        User user = User.builder()
+                .email(registerRecruiterRequest.getEmail())
+                .password(passwordEncoder.encode(registerRecruiterRequest.getPassword()))
+                .isActive(true)
+                .createdDate(Date.from(Instant.now()))
+                .updatedDate(Date.from(Instant.now()))
+                .role(roleRepository.findByName("RECRUITER"))
+                .build();
+
+        try {
+            User savedUser = userRepository.save(user);
+
+            recruiterRepository.save(Recruiter.builder()
+                    .user(savedUser)
+                    .company(registerRecruiterRequest.getCompany())
+                    .recruiterName(registerRecruiterRequest.getRecruiterName())
+                    .position(registerRecruiterRequest.getPosition())
+                    .phone(registerRecruiterRequest.getPhone())
+                    .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
+                    .build()
+            );
+
+            return userMapper.mapUserToUserDTO(savedUser);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EnumException.EMAIL_EXISTED);
+        }
     }
 
     private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {
