@@ -11,14 +11,14 @@ public enum EnumException {
     EMAIL_EXISTED(HttpStatus.BAD_REQUEST, "Email đã tồn tại"),
 
     // 401 : Unauthorized — user chưa được xác thực
-    UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Bạn chưa được xác thực"),
+    UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token không hợp lệ"),
     INVALID_OTP(HttpStatus.UNAUTHORIZED, "OTP không hợp lệ hoặc OTP đã hết hạn"),
     INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "Email hoặc mật khẩu không hợp lệ"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Mật khẩu hiện tại không đúng"),
 
     // 403: Forbidden — user không có quyền
-    UNAUTHORIZED(HttpStatus.FORBIDDEN, "Bạn không có quyền truy cập"),
+    UNAUTHORIZED(HttpStatus.FORBIDDEN, "Không có quyền truy cập"),
     ADMIN_CANNOT_BE_DELETED(HttpStatus.FORBIDDEN, "Không thể xóa người dùng có vai trò ADMIN"),
 
     // 404: Not found — không tồn tại resource

@@ -12,6 +12,8 @@ import com.internhub.backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> getAllUsers() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.info("getName() -> Email : {}", authentication.getName());
+        log.info("getAuthorities() -> Scope : {}", authentication.getAuthorities());
+
         List<User> users = userRepository.findAll();
 
         return users.stream()

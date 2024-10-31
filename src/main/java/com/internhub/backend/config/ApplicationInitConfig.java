@@ -64,7 +64,7 @@ public class ApplicationInitConfig {
     }
 
     private void runTokenCleanupTask() {
-        log.info("Đang chạy tác vụ dọn dẹp token khi khởi động...");
+        log.info("Đang chạy tác vụ dọn dẹp token khi khởi động máy chủ...");
         tokenCleanupTask.deleteExpiredTokens();
     }
 }

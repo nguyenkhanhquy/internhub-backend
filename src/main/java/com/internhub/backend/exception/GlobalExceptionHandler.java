@@ -3,7 +3,7 @@ package com.internhub.backend.exception;
 import com.internhub.backend.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -53,17 +53,17 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(AuthorizationDeniedException.class)
-//    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AuthorizationDeniedException e) {
-//        EnumException enumException = EnumException.UNAUTHORIZED;
-//
-//        ErrorResponse errorResponse = ErrorResponse.builder()
-//                .statusCode(enumException.getStatusCode().value())
-//                .message(e.getMessage() + " - " + enumException.getMessage())
-//                .build();
-//
-//        return new ResponseEntity<>(errorResponse, enumException.getStatusCode());
-//    }
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException() {
+        EnumException enumException = EnumException.UNAUTHORIZED;
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .statusCode(enumException.getStatusCode().value())
+                .message(enumException.getMessage())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, enumException.getStatusCode());
+    }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFoundException() {
