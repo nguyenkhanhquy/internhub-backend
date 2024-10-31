@@ -31,7 +31,7 @@ public class AuthController {
         Map<String, Object> resultData = authService.login(loginRequest);
 
         SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
-                .message("Login successfully")
+                .message("Đăng nhập thành công")
                 .result(resultData)
                 .build();
 
@@ -43,7 +43,7 @@ public class AuthController {
         Map<String, Object> resultData = authService.introspect(introspectRequest);
 
         SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
-                .message("Token is valid")
+                .message("Token hợp lệ")
                 .result(resultData)
                 .build();
 
@@ -55,7 +55,7 @@ public class AuthController {
         authService.logout(logoutRequest);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
-                .message("Logout successfully")
+                .message("Đăng xuất thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);

@@ -27,10 +27,7 @@ public class UserController {
     public ResponseEntity<SuccessResponse<List<UserDTO>>> getAllUsers() {
         List<UserDTO> userDTOs = userService.getAllUsers();
 
-        String message = userDTOs.isEmpty() ? "No users found" : "Users found";
-
         SuccessResponse<List<UserDTO>> successResponse = SuccessResponse.<List<UserDTO>>builder()
-                .message(message)
                 .result(userDTOs)
                 .build();
 
@@ -42,7 +39,7 @@ public class UserController {
         UserDTO userDTO = userService.getUserById(id);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("User found")
+                .message("Người dùng không tồn tại")
                 .result(userDTO)
                 .build();
 
@@ -54,7 +51,7 @@ public class UserController {
         UserDTO userDTO = userService.createUser(createUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("User created")
+                .message("Đã tạo người dùng")
                 .result(userDTO)
                 .build();
 
@@ -66,7 +63,7 @@ public class UserController {
         UserDTO userDTO = userService.updateUser(id, updateUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("User updated")
+                .message("Đã cập nhật người dùng")
                 .result(userDTO)
                 .build();
 
@@ -78,7 +75,7 @@ public class UserController {
         UserDTO userDTO = userService.deleteUser(id);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("User deleted")
+                .message("Đã xóa người dùng")
                 .result(userDTO)
                 .build();
 

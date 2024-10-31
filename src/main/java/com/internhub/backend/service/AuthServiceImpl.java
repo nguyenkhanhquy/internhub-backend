@@ -133,11 +133,11 @@ public class AuthServiceImpl implements AuthService{
                 : signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
 
         if (!(verified && Instant.now().isBefore(expiration))) {
-            throw new CustomException(EnumException.UNAUTHENTICATED);
+            throw new CustomException(EnumException.INVALID_TOKEN);
         }
 
         if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
-            throw new CustomException(EnumException.UNAUTHENTICATED);
+            throw new CustomException(EnumException.INVALID_TOKEN);
         }
 
         return signedJWT;
@@ -161,7 +161,7 @@ public class AuthServiceImpl implements AuthService{
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(expiration))
                 .jwtID(UUID.randomUUID().toString())
-//                .claim("scope", user.getRole().getName())
+                .claim("scope", user.getRole().getName())
                 .build();
 
         // Chuyển đổi JWTClaimsSet thành Payload

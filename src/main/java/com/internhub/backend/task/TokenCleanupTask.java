@@ -24,12 +24,12 @@ public class TokenCleanupTask {
 
     @Scheduled(cron = "0 59 23 * * ?")
     public void deleteExpiredTokens() {
-        log.info("Starting expired token cleanup task at {}", Instant.now());
+        log.info("Bắt đầu nhiệm vụ dọn dẹp token đã hết hạn tại {}", Instant.now());
         try {
             int deletedCount = invalidatedTokenRepository.deleteByExpiryTimeBefore(Date.from(Instant.now()));
-            log.info("Completed expired token cleanup task. Tokens deleted: {}", deletedCount);
+            log.info("Đã hoàn tất nhiệm vụ dọn dẹp token hết hạn. Số token đã xóa: {}", deletedCount);
         } catch (Exception e) {
-            log.error("Error during token cleanup task: {}", e.getMessage(), e);
+            log.error("Lỗi trong quá trình dọn dẹp token: {}", e.getMessage(), e);
         }
     }
 }

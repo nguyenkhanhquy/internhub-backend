@@ -1,5 +1,6 @@
 package com.internhub.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,15 @@ public class User {
     private boolean isActive;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "registration_date", nullable = false)
-    private Date registrationDate;
+    @Column(name = "created_date", nullable = false)
+    private Date createdDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "updated_date", nullable = false)
+    private Date updatedDate;
+
+    @ManyToOne
+    @JoinColumn(name = "role_name", referencedColumnName = "name")
+    @JsonManagedReference
+    private Role role;
 }

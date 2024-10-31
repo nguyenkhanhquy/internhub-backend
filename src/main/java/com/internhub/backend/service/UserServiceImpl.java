@@ -7,6 +7,7 @@ import com.internhub.backend.entity.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
+import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +24,14 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -56,8 +59,9 @@ public class UserServiceImpl implements UserService {
                     .email(createUserRequest.getEmail())
                     .password(passwordEncoder.encode(createUserRequest.getPassword()))
                     .isActive(true)
-                    .registrationDate(Date.from(Instant.now()))
-//                    .role(roleRepository.findByName("STUDENT")
+                    .createdDate(Date.from(Instant.now()))
+                    .updatedDate(Date.from(Instant.now()))
+                    .role(roleRepository.findByName("STUDENT"))
                     .build();
 
             User savedUser = userRepository.save(user);
