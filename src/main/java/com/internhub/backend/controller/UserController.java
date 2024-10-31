@@ -25,13 +25,13 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse<List<UserDTO>>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+        List<UserDTO> userDTOs = userService.getAllUsers();
 
-        String message = users.isEmpty() ? "No users found" : "Users found";
+        String message = userDTOs.isEmpty() ? "No users found" : "Users found";
 
         SuccessResponse<List<UserDTO>> successResponse = SuccessResponse.<List<UserDTO>>builder()
                 .message(message)
-                .result(users)
+                .result(userDTOs)
                 .build();
 
         return ResponseEntity.ok(successResponse);
@@ -39,11 +39,11 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<SuccessResponse<UserDTO>> getUserById(@PathVariable("id") String id) {
-        UserDTO user = userService.getUserById(id);
+        UserDTO userDTO = userService.getUserById(id);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("User found")
-                .result(user)
+                .result(userDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
@@ -51,11 +51,11 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<SuccessResponse<UserDTO>> createUser(@Valid @RequestBody CreateUserRequest createUserRequest) {
-        UserDTO user = userService.createUser(createUserRequest);
+        UserDTO userDTO = userService.createUser(createUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("User created")
-                .result(user)
+                .result(userDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
@@ -63,11 +63,11 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<SuccessResponse<UserDTO>> updateUser(@Valid @PathVariable("id") String id, @RequestBody UpdateUserRequest updateUserRequest) {
-        UserDTO user = userService.updateUser(id, updateUserRequest);
+        UserDTO userDTO = userService.updateUser(id, updateUserRequest);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("User updated")
-                .result(user)
+                .result(userDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
@@ -75,11 +75,11 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<SuccessResponse<UserDTO>> deleteUser(@PathVariable("id") String id) {
-        UserDTO user = userService.deleteUser(id);
+        UserDTO userDTO = userService.deleteUser(id);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("User deleted")
-                .result(user)
+                .result(userDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
