@@ -18,4 +18,6 @@ public interface AuthService {
     UserDTO getCurrentAuthUser();
 
     UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest);
+
+    UserDTO registerStudent(RegisterStudentRequest registerStudentRequest);
 }

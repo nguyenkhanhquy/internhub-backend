@@ -12,22 +12,22 @@ public class RegisterRecruiterRequest {
     @Email(message = "Định dạng email không hợp lệ")
     private String email;
 
-    @NotBlank(message = "Password không được bỏ trống")
+    @NotBlank(message = "Mật khẩu không được bỏ trống")
     @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 ký tự")
     private String password;
 
-    @NotBlank(message = "Company không được bỏ trống")
+    @NotBlank(message = "Công ty không được bỏ trống")
     private String company;
 
-    @NotBlank(message = "Recruiter không được bỏ trống")
+    @NotBlank(message = "Tên nhà tuyển dụng không được bỏ trống")
     private String recruiterName;
 
     @NotBlank(message = "Position không được bỏ trống")
     private String position;
 
-    @NotBlank(message = "Phone không được bỏ trống")
+    @NotBlank(message = "Số điện thoại không được bỏ trống")
     private String phone;
 
-    @NotBlank(message = "Recruiter email không được bỏ trống")
+    @NotBlank(message = "Email nhà tuyển dụng không được bỏ trống")
     private String recruiterEmail;
 }

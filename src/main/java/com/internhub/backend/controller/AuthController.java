@@ -81,4 +81,16 @@ public class AuthController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PostMapping("/register/student")
+    public ResponseEntity<SuccessResponse<UserDTO>> registerStudent(@Valid @RequestBody RegisterStudentRequest registerStudentRequest) {
+        UserDTO userDTO = authService.registerStudent(registerStudentRequest);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("Đăng ký thành công")
+                .result(userDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

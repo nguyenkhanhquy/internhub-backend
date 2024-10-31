@@ -2,9 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.auth.*;
 import com.internhub.backend.dto.user.UserDTO;
-import com.internhub.backend.entity.InvalidatedToken;
-import com.internhub.backend.entity.Recruiter;
-import com.internhub.backend.entity.User;
+import com.internhub.backend.entity.*;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
@@ -45,15 +43,17 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final RecruiterRepository recruiterRepository;
+    private final StudentRepository studentRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.recruiterRepository = recruiterRepository;
+        this.studentRepository = studentRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
@@ -132,6 +132,41 @@ public class AuthServiceImpl implements AuthService {
                     .position(registerRecruiterRequest.getPosition())
                     .phone(registerRecruiterRequest.getPhone())
                     .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
+                    .build()
+            );
+
+            return userMapper.mapUserToUserDTO(savedUser);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EnumException.EMAIL_EXISTED);
+        }
+    }
+
+    @Override
+    public UserDTO registerStudent(RegisterStudentRequest registerStudentRequest) {
+        User user = User.builder()
+                .email(registerStudentRequest.getEmail())
+                .password(passwordEncoder.encode(registerStudentRequest.getPassword()))
+                .isActive(true)
+                .createdDate(Date.from(Instant.now()))
+                .updatedDate(Date.from(Instant.now()))
+                .role(roleRepository.findByName("STUDENT"))
+                .build();
+
+        try {
+            User savedUser = userRepository.save(user);
+
+            studentRepository.save(Student.builder()
+                    .user(savedUser)
+                    .studentName(registerStudentRequest.getStudentName())
+                    .gender(registerStudentRequest.isGender())
+                    .phone(registerStudentRequest.getPhone())
+                    .address(registerStudentRequest.getAddress())
+                    .dob(registerStudentRequest.getDob())
+                    .expGrad(registerStudentRequest.getExpGrad())
+                    .major(Major.valueOf(registerStudentRequest.getMajor()))
+                    .internStatus(InternStatus.valueOf(registerStudentRequest.getInternStatus()))
+                    .studentId(registerStudentRequest.getStudentId())
+                    .gpa(registerStudentRequest.getGpa())
                     .build()
             );
 
