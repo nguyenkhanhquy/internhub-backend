@@ -1,4 +1,4 @@
-package com.internhub.backend.entity;
+package com.internhub.backend.entity.student;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.internhub.backend.config;
 
-import com.internhub.backend.entity.Role;
-import com.internhub.backend.entity.User;
+import com.internhub.backend.entity.User.Role;
+import com.internhub.backend.entity.User.User;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.task.TokenCleanupTask;

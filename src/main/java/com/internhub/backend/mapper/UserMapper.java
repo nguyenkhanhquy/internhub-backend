@@ -1,8 +1,8 @@
 package com.internhub.backend.mapper;
 
 import com.internhub.backend.dto.user.UserDTO;
-import com.internhub.backend.entity.Role;
-import com.internhub.backend.entity.User;
+import com.internhub.backend.entity.User.Role;
+import com.internhub.backend.entity.User.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

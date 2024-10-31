@@ -3,7 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.request.user.CreateUserRequest;
 import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.dto.user.UserDTO;
-import com.internhub.backend.entity.User;
+import com.internhub.backend.entity.User.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
