@@ -4,15 +4,13 @@ import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.Map;
@@ -58,6 +56,17 @@ public class AuthController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Logout successfully")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<SuccessResponse<UserDTO>> getCurrentAuthUser() {
+        UserDTO userDTO = authService.getCurrentAuthUser();
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .result(userDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);

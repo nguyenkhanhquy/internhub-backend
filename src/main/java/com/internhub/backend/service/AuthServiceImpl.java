@@ -3,10 +3,12 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
+import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.InvalidatedTokenRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -16,6 +18,9 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,12 +46,14 @@ public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder) {
+    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -83,6 +90,22 @@ public class AuthServiceImpl implements AuthService{
 
         SignedJWT signedJWT = verifyToken(token, false);
         invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+    }
+
+    @Override
+    public UserDTO getCurrentAuthUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            throw new CustomException(EnumException.UNAUTHENTICATED);
+        }
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        return userMapper.mapUserToUserDTO(user);
     }
 
     private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {
