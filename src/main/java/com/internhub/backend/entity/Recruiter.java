@@ -23,18 +23,18 @@ public class Recruiter {
     @MapsId
     private User user;
 
-    @Column(name = "company")
+    @Column(name = "company", nullable = false)
     private String company;
 
-    @Column(name = "recruiter_name")
+    @Column(name = "recruiter_name", nullable = false)
     private String recruiterName;
 
-    @Column(name = "position")
+    @Column(name = "position", nullable = false)
     private String position;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "recruiter_email")
+    @Column(name = "recruiter_email", nullable = false)
     private String recruiterEmail;
 }
