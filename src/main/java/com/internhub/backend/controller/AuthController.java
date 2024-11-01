@@ -1,8 +1,8 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.*;
 import com.internhub.backend.dto.response.SuccessResponse;
-import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.validation.Valid;

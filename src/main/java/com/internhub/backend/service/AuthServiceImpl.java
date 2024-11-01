@@ -1,9 +1,9 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.*;
-import com.internhub.backend.dto.user.UserDTO;
-import com.internhub.backend.entity.*;
-import com.internhub.backend.entity.User.User;
+import com.internhub.backend.entity.InvalidatedToken;
+import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Major;

@@ -1,6 +1,6 @@
 package com.internhub.backend.entity.student;
 
-import com.internhub.backend.entity.User.User;
+import com.internhub.backend.entity.account.User;
 import jakarta.persistence.*;
 import lombok.*;
 

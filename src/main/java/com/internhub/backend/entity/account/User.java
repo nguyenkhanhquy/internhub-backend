@@ -1,10 +1,13 @@
-package com.internhub.backend.entity.User;
+package com.internhub.backend.entity.account;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -39,7 +42,23 @@ public class User {
     private Date updatedDate;
 
     @ManyToOne
-    @JoinColumn(name = "role_name", referencedColumnName = "name")
+    @JoinColumn(name = "role_name", referencedColumnName = "name", nullable = false)
     @JsonManagedReference
     private Role role;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    @JsonBackReference
+    @Builder.Default
+    private List<Notification> notifications = new ArrayList<>();
+
+    public void addNotification(Notification notification) {
+        notifications.add(notification);
+        notification.setUser(this);
+    }
+
+    public void removeNotification(Notification notification) {
+        notifications.remove(notification);
+        notification.setUser(null);
+    }
 }

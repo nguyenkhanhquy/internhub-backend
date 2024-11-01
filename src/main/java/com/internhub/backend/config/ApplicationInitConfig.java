@@ -1,7 +1,9 @@
 package com.internhub.backend.config;
 
-import com.internhub.backend.entity.User.Role;
-import com.internhub.backend.entity.User.User;
+import com.internhub.backend.entity.account.Notification;
+import com.internhub.backend.entity.account.Role;
+import com.internhub.backend.entity.account.User;
+import com.internhub.backend.repository.NotificationRepository;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.task.TokenCleanupTask;
@@ -30,10 +32,10 @@ public class ApplicationInitConfig {
     }
 
     @Bean
-    public ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository) {
+    public ApplicationRunner applicationRunner(UserRepository userRepository, RoleRepository roleRepository, NotificationRepository notificationRepository) {
         return args -> {
             initializeRoles(roleRepository);
-            initializeAdminUser(userRepository, roleRepository);
+            initializeAdminUser(userRepository, roleRepository, notificationRepository);
             runTokenCleanupTask();
         };
     }
@@ -49,7 +51,7 @@ public class ApplicationInitConfig {
         }
     }
 
-    private void initializeAdminUser(UserRepository userRepository, RoleRepository roleRepository) {
+    private void initializeAdminUser(UserRepository userRepository, RoleRepository roleRepository, NotificationRepository notificationRepository) {
         if (userRepository.findByEmail("admin@admin.com") == null) {
             User user = User.builder()
                     .email("admin@admin.com")
@@ -59,7 +61,19 @@ public class ApplicationInitConfig {
                     .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("FIT"))
                     .build();
+
+            Notification notification = Notification.builder()
+                    .title("Test notification")
+                    .content("This is a test notification")
+                    .isRead(false)
+                    .createdDate(Date.from(Instant.now()))
+                    .build();
+
+            user.addNotification(notification);
+
             userRepository.save(user);
+
+            notificationRepository.save(notification);
         }
     }
 

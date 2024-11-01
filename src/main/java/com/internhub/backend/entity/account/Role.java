@@ -1,4 +1,4 @@
-package com.internhub.backend.entity.User;
+package com.internhub.backend.entity.account;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

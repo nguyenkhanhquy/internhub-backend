@@ -1,9 +1,9 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.user.CreateUserRequest;
 import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
-import com.internhub.backend.dto.user.UserDTO;
 import com.internhub.backend.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.*;
-import com.internhub.backend.dto.user.UserDTO;
 import com.nimbusds.jose.JOSEException;
 
 import java.text.ParseException;
