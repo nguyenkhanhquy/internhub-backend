@@ -39,7 +39,6 @@ public class UserController {
         UserDTO userDTO = userService.getUserById(id);
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("Người dùng không tồn tại")
                 .result(userDTO)
                 .build();
 
