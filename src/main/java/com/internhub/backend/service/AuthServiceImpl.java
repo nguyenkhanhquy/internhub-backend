@@ -4,6 +4,7 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.*;
 import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.account.User;
+import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Major;
@@ -130,9 +131,13 @@ public class AuthServiceImpl implements AuthService {
         try {
             User savedUser = userRepository.save(user);
 
+            Company company = Company.builder()
+                    .name(registerRecruiterRequest.getCompany())
+                    .build();
+
             recruiterRepository.save(Recruiter.builder()
                     .user(savedUser)
-                    .company(registerRecruiterRequest.getCompany())
+                    .company(company)
                     .recruiterName(registerRecruiterRequest.getRecruiterName())
                     .position(registerRecruiterRequest.getPosition())
                     .phone(registerRecruiterRequest.getPhone())

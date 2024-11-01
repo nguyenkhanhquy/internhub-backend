@@ -74,11 +74,13 @@ public class ApplicationInitConfig {
             userRepository.save(user);
 
             notificationRepository.save(notification);
+
+            log.info("Tài khoản FIT mặc định đã được tạo khi khởi động máy chủ");
         }
     }
 
     private void runTokenCleanupTask() {
-        log.info("Đang chạy tác vụ dọn dẹp token khi khởi động máy chủ...");
+        log.info("Đang chạy tác vụ dọn dẹp token khi khởi động máy chủ");
         tokenCleanupTask.deleteExpiredTokens();
     }
 }

@@ -18,12 +18,13 @@ public class Recruiter {
     private String userId;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @MapsId
     private User user;
 
-    @Column(name = "company", nullable = false)
-    private String company;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    private Company company;
 
     @Column(name = "recruiter_name", nullable = false)
     private String recruiterName;
