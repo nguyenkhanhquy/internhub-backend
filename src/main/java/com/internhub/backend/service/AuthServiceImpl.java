@@ -240,6 +240,7 @@ public class AuthServiceImpl implements AuthService {
                 .expirationTime(Date.from(expiration))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", user.getRole().getName())
+                .claim("userId", user.getId())
                 .build();
 
         // Chuyển đổi JWTClaimsSet thành Payload
