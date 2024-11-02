@@ -4,6 +4,7 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.RefreshTokenRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
@@ -61,11 +62,24 @@ public class AuthController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<SuccessResponse<Map<String, Object>>> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
+        Map<String, Object> resultData = authService.refreshToken(refreshTokenRequest);
+
+        SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
+                .message("Làm mới token thành công")
+                .result(resultData)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @GetMapping("/me")
     public ResponseEntity<SuccessResponse<UserDTO>> getCurrentAuthUser() {
         UserDTO userDTO = authService.getCurrentAuthUser();
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("Lấy thông tin người dùng thành công")
                 .result(userDTO)
                 .build();
 

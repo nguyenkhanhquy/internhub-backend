@@ -30,10 +30,10 @@ public class CustomJwtDecoder implements JwtDecoder {
     }
 
     @Override
-    public Jwt decode(String token) throws JwtException {
+    public Jwt decode(String accessToken) throws JwtException {
         try {
             IntrospectRequest introspectRequest = new IntrospectRequest();
-            introspectRequest.setToken(token);
+            introspectRequest.setAccessToken(accessToken);
             authService.introspect(introspectRequest);
         } catch (CustomException | ParseException | JOSEException e) {
             throw new BadJwtException(e.getMessage());
@@ -43,7 +43,7 @@ public class CustomJwtDecoder implements JwtDecoder {
             initializeDecoder();
         }
 
-        return nimbusJwtDecoder.decode(token);
+        return nimbusJwtDecoder.decode(accessToken);
     }
 
     private void initializeDecoder() {

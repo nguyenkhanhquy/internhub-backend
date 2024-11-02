@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 public class LogoutRequest {
 
-    private String token;
+    private String accessToken;
 }

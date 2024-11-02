@@ -4,6 +4,7 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.RefreshTokenRequest;
 import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.exception.CustomException;
@@ -63,16 +64,16 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(EnumException.INVALID_LOGIN);
         }
 
-        String token = generateToken(user);
-        return Map.of("accessToken", token);
+        String accessToken = generateToken(user);
+        return Map.of("accessToken", accessToken);
     }
 
     @Override
     public Map<String, Object> introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {
-        String token = introspectRequest.getToken();
+        String accessToken = introspectRequest.getAccessToken();
 
         try {
-            SignedJWT signedJWT = verifyToken(token, false);
+            SignedJWT signedJWT = verifyToken(accessToken, false);
 
             // Lấy payload từ JWTClaimsSet
             Map<String, Object> payloadData = signedJWT.getJWTClaimsSet().getClaims();
@@ -85,10 +86,27 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException {
-        String token = logoutRequest.getToken();
+        String accessToken = logoutRequest.getAccessToken();
 
-        SignedJWT signedJWT = verifyToken(token, false);
+        SignedJWT signedJWT = verifyToken(accessToken, false);
         invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+    }
+
+    @Override
+    public Map<String, Object> refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
+        String accessToken = refreshTokenRequest.getAccessToken();
+
+        SignedJWT signedJWT = verifyToken(accessToken, true);
+        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+
+        String email = signedJWT.getJWTClaimsSet().getSubject();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.UNAUTHENTICATED);
+        }
+
+        String newAccessToken = generateToken(user);
+        return Map.of("accessToken", newAccessToken);
     }
 
     @Override
@@ -114,19 +132,19 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException {
+    private SignedJWT verifyToken(String accessToken, boolean isRefresh) throws JOSEException {
         try {
             JWSVerifier verifier = new MACVerifier(jwtSignerKey.getBytes());
 
-            // Phân tích token
-            SignedJWT signedJWT = SignedJWT.parse(token);
+            // Phân tích accessToken
+            SignedJWT signedJWT = SignedJWT.parse(accessToken);
 
             // Kiểm tra tính hợp lệ của chữ ký
             boolean verified = signedJWT.verify(verifier);
 
             // Lấy thời gian hết hạn hoặc thời gian làm mới từ claims
             Instant expiration = (isRefresh)
-                    ? signedJWT.getJWTClaimsSet().getIssueTime().toInstant().plus(jwtRefreshableDuration, ChronoUnit.SECONDS)
+                    ? signedJWT.getJWTClaimsSet().getIssueTime().toInstant().plus(jwtRefreshableDuration, ChronoUnit.HOURS)
                     : signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
 
             if (!(verified && Instant.now().isBefore(expiration))) {
@@ -151,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
 
         // Lấy thời gian hiện tại
         Instant now = Instant.now();
-        // Tạo thời gian hết hạn (thời gian hiện tại + thời hạn token)
+        // Tạo thời gian hết hạn (thời gian hiện tại + thời gian hiệu lực của accessToken)
         Instant expiration = now.plus(jwtValidDuration, ChronoUnit.HOURS);
 
         // Tạo JWTClaimsSet chứa các thông tin cần thiết
