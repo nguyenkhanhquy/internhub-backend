@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum EnumException {
+
     // 400 : Bad request — dữ liệu gửi lên không hợp lệ
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "Dữ liệu yêu cầu không hợp lệ"),
     USER_EXISTED(HttpStatus.BAD_REQUEST, "Người dùng đã tồn tại"),

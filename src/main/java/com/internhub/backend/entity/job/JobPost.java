@@ -1,5 +1,6 @@
 package com.internhub.backend.entity.job;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.student.Major;
 import jakarta.persistence.*;
@@ -32,6 +33,7 @@ public class JobPost {
     @Column(name = "remote", nullable = false)
     private String remote;
 
+    @Lob
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -41,7 +43,7 @@ public class JobPost {
     @Column(name = "quantity", nullable = false)
     private String quantity;
 
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
 
     @Column(name = "updated_date", nullable = false)
@@ -53,9 +55,11 @@ public class JobPost {
     @Column(name = "job_position", nullable = false)
     private String JobPosition;
 
+    @Lob
     @Column(name = "requirements", nullable = false)
     private String requirements;
 
+    @Lob
     @Column(name = "benefits", nullable = false)
     private String benefits;
 
@@ -71,6 +75,11 @@ public class JobPost {
 
     @Column(name = "address", nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<JobApply> jobApplies;
 
     private void addMajor(Major major) {
         majors.add(major);
