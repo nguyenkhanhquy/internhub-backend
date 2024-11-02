@@ -1,4 +1,4 @@
-package com.internhub.backend.dto.request.user;
+package com.internhub.backend.dto.request.users;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

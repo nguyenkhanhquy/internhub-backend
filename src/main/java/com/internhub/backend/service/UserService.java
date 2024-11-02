@@ -1,9 +1,9 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
-import com.internhub.backend.dto.request.user.CreateUserRequest;
-import com.internhub.backend.dto.request.user.UpdatePasswordRequest;
-import com.internhub.backend.dto.request.user.UpdateUserRequest;
+import com.internhub.backend.dto.request.users.CreateUserRequest;
+import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
+import com.internhub.backend.dto.request.users.UpdateUserRequest;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
