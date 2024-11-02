@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
                     .isActive(true)
                     .createdDate(Date.from(Instant.now()))
                     .updatedDate(Date.from(Instant.now()))
-                    .role(roleRepository.findByName("STUDENT"))
                     .build();
 
             User savedUser = userRepository.save(user);
@@ -95,6 +94,7 @@ public class UserServiceImpl implements UserService {
 
             user.setEmail(updateUserRequest.getEmail());
             user.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
+            user.setUpdatedDate(Date.from(Instant.now()));
 
             User updatedUser = userRepository.save(user);
 
@@ -108,7 +108,18 @@ public class UserServiceImpl implements UserService {
     public UserDTO deleteUser(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
 
-        userRepository.delete(user);
+        if (user.getRole() == null) {
+            userRepository.delete(user);
+        } else {
+            if (user.getRole().getName().equals("RECRUITER")) {
+                recruiterRepository.deleteById(user.getId());
+            } else if (user.getRole().getName().equals("STUDENT")) {
+                studentRepository.deleteById(user.getId());
+            } else {
+                throw new CustomException(EnumException.ADMIN_CANNOT_BE_DELETED);
+            }
+            userRepository.delete(user);
+        }
 
         return userMapper.mapUserToUserDTO(user);
     }
@@ -138,7 +149,7 @@ public class UserServiceImpl implements UserService {
             recruiterRepository.save(Recruiter.builder()
                     .user(savedUser)
                     .company(company)
-                    .recruiterName(registerRecruiterRequest.getRecruiterName())
+                    .name(registerRecruiterRequest.getName())
                     .position(registerRecruiterRequest.getPosition())
                     .phone(registerRecruiterRequest.getPhone())
                     .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
@@ -191,7 +202,7 @@ public class UserServiceImpl implements UserService {
 
             studentRepository.save(Student.builder()
                     .user(savedUser)
-                    .studentName(registerStudentRequest.getStudentName())
+                    .name(registerStudentRequest.getName())
                     .gender(registerStudentRequest.isGender())
                     .phone(registerStudentRequest.getPhone())
                     .address(registerStudentRequest.getAddress())
@@ -225,6 +236,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        user.setUpdatedDate(Date.from(Instant.now()));
         userRepository.save(user);
     }
 }

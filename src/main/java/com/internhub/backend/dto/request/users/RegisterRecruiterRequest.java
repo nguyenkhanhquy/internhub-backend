@@ -20,7 +20,7 @@ public class RegisterRecruiterRequest {
     private String company;
 
     @NotBlank(message = "Tên nhà tuyển dụng không được bỏ trống")
-    private String recruiterName;
+    private String name;
 
     @NotBlank(message = "Position không được bỏ trống")
     private String position;

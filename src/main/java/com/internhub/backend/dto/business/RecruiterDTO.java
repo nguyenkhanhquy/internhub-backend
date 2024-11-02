@@ -16,7 +16,7 @@ public class RecruiterDTO {
 
     private String userId;
 
-    private String recruiterName;
+    private String name;
 
     private String position;
 

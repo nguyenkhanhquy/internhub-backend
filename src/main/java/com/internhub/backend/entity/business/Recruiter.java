@@ -26,8 +26,8 @@ public class Recruiter {
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     private Company company;
 
-    @Column(name = "recruiter_name", nullable = false)
-    private String recruiterName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "position", nullable = false)
     private String position;

@@ -19,13 +19,13 @@ public class Student {
     @Id
     private String userId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id")
     @MapsId
     private User user;
 
-    @Column(name = "student_name", nullable = false)
-    private String studentName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "gender", nullable = false)
     private boolean gender;

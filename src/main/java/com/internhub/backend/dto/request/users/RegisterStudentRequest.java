@@ -21,7 +21,7 @@ public class RegisterStudentRequest {
     private String password;
 
     @NotBlank(message = "Tên sinh viên không được bỏ trống")
-    private String studentName;
+    private String name;
 
     @NotNull(message = "Giới tính không được bỏ trống")
     private boolean gender;
