@@ -30,7 +30,7 @@ public class Notification {
     @Column(name = "is_read", nullable = false)
     private boolean isRead;
 
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

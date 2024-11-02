@@ -34,16 +34,17 @@ public class User {
     private boolean isActive;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_date", nullable = false)
+    @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_date", nullable = false)
     private Date updatedDate;
 
-    @ManyToOne
-    @JoinColumn(name = "role_name", referencedColumnName = "name", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_name", referencedColumnName = "name")
     @JsonManagedReference
+    @ToString.Exclude
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
