@@ -164,7 +164,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO registerStudent(RegisterStudentRequest registerStudentRequest) {
-        // Lấy mã sinh viên từ email
         String email = registerStudentRequest.getEmail();
 
         // Kiểm tra phần sau dấu '@'
@@ -173,10 +172,10 @@ public class UserServiceImpl implements UserService {
             throw new CustomException(EnumException.INVALID_EMAIL_DOMAIN);
         }
 
-        // Tách mã sinh viên từ địa chỉ email
-        String extractedStudentId = email.substring(0, email.indexOf("@")); // Lấy phần trước '@'
+        // Lấy phần trước '@'
+        String extractedStudentId = email.substring(0, email.indexOf("@"));
 
-        // Kiểm tra mã khoa trong mã sinh viên
+        // Kiểm tra mã ngành trong mã sinh viên
         String majorCode = extractedStudentId.substring(3, 5); // Lấy 2 ký tự từ vị trí thứ 3
         if (!"10".equals(majorCode)) {
             throw new CustomException(EnumException.INVALID_MAJOR_CODE);
