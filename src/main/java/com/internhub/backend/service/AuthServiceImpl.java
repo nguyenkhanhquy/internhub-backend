@@ -10,8 +10,6 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.InvalidatedTokenRepository;
-import com.internhub.backend.repository.RoleRepository;
-import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.SecurityUtil;
 import com.nimbusds.jose.*;
@@ -45,17 +43,13 @@ public class AuthServiceImpl implements AuthService {
     private int jwtRefreshableDuration;
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final StudentRepository studentRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, StudentRepository studentRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.studentRepository = studentRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
@@ -120,29 +114,33 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
-    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
-        JWSVerifier verifier = new MACVerifier(jwtSignerKey.getBytes());
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException {
+        try {
+            JWSVerifier verifier = new MACVerifier(jwtSignerKey.getBytes());
 
-        // Phân tích token
-        SignedJWT signedJWT = SignedJWT.parse(token);
+            // Phân tích token
+            SignedJWT signedJWT = SignedJWT.parse(token);
 
-        // Kiểm tra tính hợp lệ của chữ ký
-        boolean verified = signedJWT.verify(verifier);
+            // Kiểm tra tính hợp lệ của chữ ký
+            boolean verified = signedJWT.verify(verifier);
 
-        // Lấy thời gian hết hạn hoặc thời gian làm mới từ claims
-        Instant expiration = (isRefresh)
-                ? signedJWT.getJWTClaimsSet().getIssueTime().toInstant().plus(jwtRefreshableDuration, ChronoUnit.SECONDS)
-                : signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
+            // Lấy thời gian hết hạn hoặc thời gian làm mới từ claims
+            Instant expiration = (isRefresh)
+                    ? signedJWT.getJWTClaimsSet().getIssueTime().toInstant().plus(jwtRefreshableDuration, ChronoUnit.SECONDS)
+                    : signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
 
-        if (!(verified && Instant.now().isBefore(expiration))) {
+            if (!(verified && Instant.now().isBefore(expiration))) {
+                throw new CustomException(EnumException.INVALID_TOKEN);
+            }
+
+            if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+                throw new CustomException(EnumException.INVALID_TOKEN);
+            }
+
+            return signedJWT;
+        } catch (ParseException e) {
             throw new CustomException(EnumException.INVALID_TOKEN);
         }
-
-        if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
-            throw new CustomException(EnumException.INVALID_TOKEN);
-        }
-
-        return signedJWT;
     }
 
     private String generateToken(User user) {
