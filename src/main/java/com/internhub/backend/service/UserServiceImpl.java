@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
             studentRepository.save(Student.builder()
                     .user(savedUser)
                     .name(registerStudentRequest.getName())
-                    .gender(registerStudentRequest.isGender())
+                    .gender(registerStudentRequest.getGender())
                     .phone(registerStudentRequest.getPhone())
                     .address(registerStudentRequest.getAddress())
                     .dob(registerStudentRequest.getDob())

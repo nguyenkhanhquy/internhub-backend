@@ -28,7 +28,7 @@ public class Student {
     private String name;
 
     @Column(name = "gender", nullable = false)
-    private boolean gender;
+    private String gender;
 
     @Column(name = "phone", nullable = false)
     private String phone;

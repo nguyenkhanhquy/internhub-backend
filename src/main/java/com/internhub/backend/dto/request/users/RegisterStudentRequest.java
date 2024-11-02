@@ -23,8 +23,8 @@ public class RegisterStudentRequest {
     @NotBlank(message = "Tên sinh viên không được bỏ trống")
     private String name;
 
-    @NotNull(message = "Giới tính không được bỏ trống")
-    private boolean gender;
+    @NotBlank(message = "Giới tính không được bỏ trống")
+    private String gender;
 
     @NotBlank(message = "Số điện thoại không được bỏ trống")
     private String phone;
