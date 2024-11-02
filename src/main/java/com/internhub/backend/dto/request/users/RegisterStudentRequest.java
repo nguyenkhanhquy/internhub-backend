@@ -1,4 +1,4 @@
-package com.internhub.backend.dto.request.auth;
+package com.internhub.backend.dto.request.users;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;

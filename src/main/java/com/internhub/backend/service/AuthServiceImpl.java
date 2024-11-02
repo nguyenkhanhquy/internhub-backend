@@ -4,16 +4,15 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
-import com.internhub.backend.dto.request.auth.RegisterStudentRequest;
 import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.account.User;
-import com.internhub.backend.entity.student.InternStatus;
-import com.internhub.backend.entity.student.Major;
-import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
-import com.internhub.backend.repository.*;
+import com.internhub.backend.repository.InvalidatedTokenRepository;
+import com.internhub.backend.repository.RoleRepository;
+import com.internhub.backend.repository.StudentRepository;
+import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.SecurityUtil;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
@@ -22,7 +21,6 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -110,41 +108,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return userMapper.mapUserToUserDTO(user);
-    }
-
-    @Override
-    public UserDTO registerStudent(RegisterStudentRequest registerStudentRequest) {
-        User user = User.builder()
-                .email(registerStudentRequest.getEmail())
-                .password(passwordEncoder.encode(registerStudentRequest.getPassword()))
-                .isActive(true)
-                .createdDate(Date.from(Instant.now()))
-                .updatedDate(Date.from(Instant.now()))
-                .role(roleRepository.findByName("STUDENT"))
-                .build();
-
-        try {
-            User savedUser = userRepository.save(user);
-
-            studentRepository.save(Student.builder()
-                    .user(savedUser)
-                    .studentName(registerStudentRequest.getStudentName())
-                    .gender(registerStudentRequest.isGender())
-                    .phone(registerStudentRequest.getPhone())
-                    .address(registerStudentRequest.getAddress())
-                    .dob(registerStudentRequest.getDob())
-                    .expGrad(registerStudentRequest.getExpGrad())
-                    .major(Major.valueOf(registerStudentRequest.getMajor()))
-                    .internStatus(InternStatus.valueOf(registerStudentRequest.getInternStatus()))
-                    .studentId(registerStudentRequest.getStudentId())
-                    .gpa(registerStudentRequest.getGpa())
-                    .build()
-            );
-
-            return userMapper.mapUserToUserDTO(savedUser);
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomException(EnumException.EMAIL_EXISTED);
-        }
     }
 
     private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {

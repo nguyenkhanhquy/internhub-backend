@@ -1,20 +1,17 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
-import com.internhub.backend.dto.request.users.CreateUserRequest;
-import com.internhub.backend.dto.request.users.RegisterRecruiterRequest;
-import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
-import com.internhub.backend.dto.request.users.UpdateUserRequest;
+import com.internhub.backend.dto.request.users.*;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.business.Recruiter;
+import com.internhub.backend.entity.student.InternStatus;
+import com.internhub.backend.entity.student.Major;
+import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
-import com.internhub.backend.repository.CompanyRepository;
-import com.internhub.backend.repository.RecruiterRepository;
-import com.internhub.backend.repository.RoleRepository;
-import com.internhub.backend.repository.UserRepository;
+import com.internhub.backend.repository.*;
 import com.internhub.backend.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,15 +33,17 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
+    private final StudentRepository studentRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, StudentRepository studentRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.recruiterRepository = recruiterRepository;
         this.companyRepository = companyRepository;
+        this.studentRepository = studentRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -143,6 +142,65 @@ public class UserServiceImpl implements UserService {
                     .position(registerRecruiterRequest.getPosition())
                     .phone(registerRecruiterRequest.getPhone())
                     .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
+                    .build()
+            );
+
+            return userMapper.mapUserToUserDTO(savedUser);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EnumException.EMAIL_EXISTED);
+        }
+    }
+
+    @Override
+    public UserDTO registerStudent(RegisterStudentRequest registerStudentRequest) {
+        // Lấy mã sinh viên từ email
+        String email = registerStudentRequest.getEmail();
+
+        // Kiểm tra phần sau dấu '@'
+        String emailDomain = email.substring(email.indexOf("@") + 1);
+        if (!"student.hcmute.edu.vn".equals(emailDomain)) {
+            throw new CustomException(EnumException.INVALID_EMAIL_DOMAIN);
+        }
+
+        // Tách mã sinh viên từ địa chỉ email
+        String extractedStudentId = email.substring(0, email.indexOf("@")); // Lấy phần trước '@'
+
+        // Kiểm tra mã khoa trong mã sinh viên
+        String majorCode = extractedStudentId.substring(3, 5); // Lấy 2 ký tự từ vị trí thứ 3
+        if (!"10".equals(majorCode)) {
+            throw new CustomException(EnumException.INVALID_MAJOR_CODE);
+        }
+
+        String studentId = registerStudentRequest.getStudentId();
+
+        if (!extractedStudentId.equals(studentId)) {
+            throw new CustomException(EnumException.EMAIL_AND_STUDENT_ID_MISMATCH);
+        }
+
+        try {
+            User user = User.builder()
+                    .email(registerStudentRequest.getEmail())
+                    .password(passwordEncoder.encode(registerStudentRequest.getPassword()))
+                    .isActive(true)
+                    .createdDate(Date.from(Instant.now()))
+                    .updatedDate(Date.from(Instant.now()))
+                    .role(roleRepository.findByName("STUDENT"))
+                    .build();
+
+            User savedUser = userRepository.save(user);
+
+            studentRepository.save(Student.builder()
+                    .user(savedUser)
+                    .studentName(registerStudentRequest.getStudentName())
+                    .gender(registerStudentRequest.isGender())
+                    .phone(registerStudentRequest.getPhone())
+                    .address(registerStudentRequest.getAddress())
+                    .dob(registerStudentRequest.getDob())
+                    .expGrad(registerStudentRequest.getExpGrad())
+                    .major(Major.valueOf(registerStudentRequest.getMajor()))
+                    .internStatus(InternStatus.valueOf(registerStudentRequest.getInternStatus()))
+                    .studentId(registerStudentRequest.getStudentId())
+                    .gpa(registerStudentRequest.getGpa())
                     .build()
             );
 

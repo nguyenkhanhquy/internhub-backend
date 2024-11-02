@@ -4,7 +4,6 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
-import com.internhub.backend.dto.request.auth.RegisterStudentRequest;
 import com.nimbusds.jose.JOSEException;
 
 import java.text.ParseException;
@@ -19,6 +18,4 @@ public interface AuthService {
     void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException;
 
     UserDTO getCurrentAuthUser();
-
-    UserDTO registerStudent(RegisterStudentRequest registerStudentRequest);
 }

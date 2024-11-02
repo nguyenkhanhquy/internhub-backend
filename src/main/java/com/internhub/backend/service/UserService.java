@@ -1,10 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
-import com.internhub.backend.dto.request.users.CreateUserRequest;
-import com.internhub.backend.dto.request.users.RegisterRecruiterRequest;
-import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
-import com.internhub.backend.dto.request.users.UpdateUserRequest;
+import com.internhub.backend.dto.request.users.*;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -28,6 +25,8 @@ public interface UserService {
     UserDTO deleteUser(String id);
 
     UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest);
+
+    UserDTO registerStudent(RegisterStudentRequest registerStudentRequest);
 
     void updatePassword(UpdatePasswordRequest updatePasswordRequest);
 }
