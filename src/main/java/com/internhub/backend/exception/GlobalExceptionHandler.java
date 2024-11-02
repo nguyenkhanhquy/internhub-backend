@@ -8,7 +8,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -63,17 +62,5 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(errorResponse, enumException.getStatusCode());
-    }
-
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ErrorResponse> handleNoResourceFoundException() {
-        EnumException enumException = EnumException.PAGE_NOT_FOUND;
-
-        ErrorResponse errorResponse = ErrorResponse.builder()
-                .statusCode(enumException.getStatusCode().value())
-                .message(enumException.getMessage())
-                .build();
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }
