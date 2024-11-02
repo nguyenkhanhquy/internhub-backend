@@ -2,6 +2,7 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.users.CreateUserRequest;
+import com.internhub.backend.dto.request.users.RegisterRecruiterRequest;
 import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
 import com.internhub.backend.dto.request.users.UpdateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
@@ -76,6 +77,18 @@ public class UserController {
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("Đã xóa người dùng")
+                .result(userDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/register/recruiter")
+    public ResponseEntity<SuccessResponse<UserDTO>> registerRecruiter(@Valid @RequestBody RegisterRecruiterRequest registerRecruiterRequest) {
+        UserDTO userDTO = userService.registerRecruiter(registerRecruiterRequest);
+
+        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
+                .message("Đăng ký thành công")
                 .result(userDTO)
                 .build();
 

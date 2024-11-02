@@ -1,11 +1,12 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
-import com.internhub.backend.dto.request.auth.*;
+import com.internhub.backend.dto.request.auth.IntrospectRequest;
+import com.internhub.backend.dto.request.auth.LoginRequest;
+import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.RegisterStudentRequest;
 import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.account.User;
-import com.internhub.backend.entity.business.Company;
-import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Major;
 import com.internhub.backend.entity.student.Student;
@@ -47,17 +48,15 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final RecruiterRepository recruiterRepository;
     private final StudentRepository studentRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, StudentRepository studentRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.recruiterRepository = recruiterRepository;
         this.studentRepository = studentRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
         this.passwordEncoder = passwordEncoder;
@@ -111,40 +110,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return userMapper.mapUserToUserDTO(user);
-    }
-
-    @Override
-    public UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest) {
-        User user = User.builder()
-                .email(registerRecruiterRequest.getEmail())
-                .password(passwordEncoder.encode(registerRecruiterRequest.getPassword()))
-                .isActive(true)
-                .createdDate(Date.from(Instant.now()))
-                .updatedDate(Date.from(Instant.now()))
-                .role(roleRepository.findByName("RECRUITER"))
-                .build();
-
-        try {
-            User savedUser = userRepository.save(user);
-
-            Company company = Company.builder()
-                    .name(registerRecruiterRequest.getCompany())
-                    .build();
-
-            recruiterRepository.save(Recruiter.builder()
-                    .user(savedUser)
-                    .company(company)
-                    .recruiterName(registerRecruiterRequest.getRecruiterName())
-                    .position(registerRecruiterRequest.getPosition())
-                    .phone(registerRecruiterRequest.getPhone())
-                    .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
-                    .build()
-            );
-
-            return userMapper.mapUserToUserDTO(savedUser);
-        } catch (DataIntegrityViolationException e) {
-            throw new CustomException(EnumException.EMAIL_EXISTED);
-        }
     }
 
     @Override

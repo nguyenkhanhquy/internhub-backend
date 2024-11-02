@@ -9,6 +9,7 @@ public enum EnumException {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "Dữ liệu yêu cầu không hợp lệ"),
     USER_EXISTED(HttpStatus.BAD_REQUEST, "Người dùng đã tồn tại"),
     EMAIL_EXISTED(HttpStatus.BAD_REQUEST, "Email đã tồn tại"),
+    COMPANY_EXISTED(HttpStatus.BAD_REQUEST, "Công ty đã tồn tại"),
 
     // 401 : Unauthorized — user chưa được xác thực
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),

@@ -1,7 +1,10 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.account.UserDTO;
-import com.internhub.backend.dto.request.auth.*;
+import com.internhub.backend.dto.request.auth.IntrospectRequest;
+import com.internhub.backend.dto.request.auth.LoginRequest;
+import com.internhub.backend.dto.request.auth.LogoutRequest;
+import com.internhub.backend.dto.request.auth.RegisterStudentRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.AuthService;
 import com.nimbusds.jose.JOSEException;
@@ -64,18 +67,6 @@ public class AuthController {
         UserDTO userDTO = authService.getCurrentAuthUser();
 
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .result(userDTO)
-                .build();
-
-        return ResponseEntity.ok(successResponse);
-    }
-
-    @PostMapping("/register/recruiter")
-    public ResponseEntity<SuccessResponse<UserDTO>> registerRecruiter(@Valid @RequestBody RegisterRecruiterRequest registerRecruiterRequest) {
-        UserDTO userDTO = authService.registerRecruiter(registerRecruiterRequest);
-
-        SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
-                .message("Đăng ký thành công")
                 .result(userDTO)
                 .build();
 

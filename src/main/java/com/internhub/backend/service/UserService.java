@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.users.CreateUserRequest;
+import com.internhub.backend.dto.request.users.RegisterRecruiterRequest;
 import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
 import com.internhub.backend.dto.request.users.UpdateUserRequest;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -25,6 +26,8 @@ public interface UserService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     UserDTO deleteUser(String id);
+
+    UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest);
 
     void updatePassword(UpdatePasswordRequest updatePasswordRequest);
 }

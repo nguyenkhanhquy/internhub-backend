@@ -2,12 +2,17 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.users.CreateUserRequest;
+import com.internhub.backend.dto.request.users.RegisterRecruiterRequest;
 import com.internhub.backend.dto.request.users.UpdatePasswordRequest;
 import com.internhub.backend.dto.request.users.UpdateUserRequest;
 import com.internhub.backend.entity.account.User;
+import com.internhub.backend.entity.business.Company;
+import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
+import com.internhub.backend.repository.CompanyRepository;
+import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.SecurityUtil;
@@ -29,13 +34,17 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final RecruiterRepository recruiterRepository;
+    private final CompanyRepository companyRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.recruiterRepository = recruiterRepository;
+        this.companyRepository = companyRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -103,6 +112,44 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
 
         return userMapper.mapUserToUserDTO(user);
+    }
+
+    @Override
+    public UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest) {
+        if (companyRepository.existsByName(registerRecruiterRequest.getCompany())) {
+            throw new CustomException(EnumException.COMPANY_EXISTED);
+        }
+
+        try {
+            User user = User.builder()
+                    .email(registerRecruiterRequest.getEmail())
+                    .password(passwordEncoder.encode(registerRecruiterRequest.getPassword()))
+                    .isActive(true)
+                    .createdDate(Date.from(Instant.now()))
+                    .updatedDate(Date.from(Instant.now()))
+                    .role(roleRepository.findByName("RECRUITER"))
+                    .build();
+
+            User savedUser = userRepository.save(user);
+
+            Company company = Company.builder()
+                    .name(registerRecruiterRequest.getCompany())
+                    .build();
+
+            recruiterRepository.save(Recruiter.builder()
+                    .user(savedUser)
+                    .company(company)
+                    .recruiterName(registerRecruiterRequest.getRecruiterName())
+                    .position(registerRecruiterRequest.getPosition())
+                    .phone(registerRecruiterRequest.getPhone())
+                    .recruiterEmail(registerRecruiterRequest.getRecruiterEmail())
+                    .build()
+            );
+
+            return userMapper.mapUserToUserDTO(savedUser);
+        } catch (DataIntegrityViolationException e) {
+            throw new CustomException(EnumException.EMAIL_EXISTED);
+        }
     }
 
     @Override
