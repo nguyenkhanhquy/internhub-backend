@@ -2,6 +2,7 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.user.CreateUserRequest;
+import com.internhub.backend.dto.request.user.UpdatePasswordRequest;
 import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.UserService;
@@ -76,6 +77,17 @@ public class UserController {
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("Đã xóa người dùng")
                 .result(userDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/update-password")
+    public ResponseEntity<SuccessResponse<Void>> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        userService.updatePassword(updatePasswordRequest);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Cập nhật mật khẩu thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);

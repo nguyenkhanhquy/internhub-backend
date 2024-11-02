@@ -13,6 +13,7 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.*;
+import com.internhub.backend.util.SecurityUtil;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -21,9 +22,7 @@ import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -103,10 +102,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDTO getCurrentAuthUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            throw new CustomException(EnumException.UNAUTHENTICATED);
-        }
+        Authentication authentication = SecurityUtil.getAuthenticatedUser();
 
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);

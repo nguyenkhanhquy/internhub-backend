@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.user.CreateUserRequest;
+import com.internhub.backend.dto.request.user.UpdatePasswordRequest;
 import com.internhub.backend.dto.request.user.UpdateUserRequest;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.exception.CustomException;
@@ -9,6 +10,7 @@ import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
+import com.internhub.backend.util.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -101,5 +103,23 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
 
         return userMapper.mapUserToUserDTO(user);
+    }
+
+    @Override
+    public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
+        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        if (!passwordEncoder.matches(updatePasswordRequest.getOldPassword(), user.getPassword())) {
+            throw new CustomException(EnumException.INVALID_PASSWORD);
+        }
+
+        user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
+        userRepository.save(user);
     }
 }
