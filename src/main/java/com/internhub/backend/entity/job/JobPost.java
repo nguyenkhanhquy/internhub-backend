@@ -41,7 +41,7 @@ public class JobPost {
     private String salary;
 
     @Column(name = "quantity", nullable = false)
-    private String quantity;
+    private int quantity;
 
     @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
