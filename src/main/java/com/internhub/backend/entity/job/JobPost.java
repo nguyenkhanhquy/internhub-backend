@@ -53,7 +53,7 @@ public class JobPost {
     private Date expiryDate;
 
     @Column(name = "job_position", nullable = false)
-    private String JobPosition;
+    private String jobPosition;
 
     @Lob
     @Column(name = "requirements", nullable = false)
@@ -62,12 +62,6 @@ public class JobPost {
     @Lob
     @Column(name = "benefits", nullable = false)
     private String benefits;
-
-    @ElementCollection(targetClass = Major.class)
-    @CollectionTable(name = "job_post_majors", joinColumns = @JoinColumn(name = "job_post_id"))
-    @Column(name = "major")
-    @Enumerated(EnumType.STRING)
-    private List<Major> majors;
 
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
@@ -80,6 +74,12 @@ public class JobPost {
     @ToString.Exclude
     @JsonBackReference
     private List<JobApply> jobApplies;
+
+    @ElementCollection(targetClass = Major.class)
+    @CollectionTable(name = "job_post_majors", joinColumns = @JoinColumn(name = "job_post_id"))
+    @Column(name = "major")
+    @Enumerated(EnumType.STRING)
+    private List<Major> majors;
 
     private void addMajor(Major major) {
         majors.add(major);
