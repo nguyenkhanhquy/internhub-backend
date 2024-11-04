@@ -21,6 +21,9 @@ spring:
       connection-timeout: 10000
       idle-timeout: 300000
 
+  jackson:
+    time-zone: UTC
+
   mail:
     host: smtp.gmail.com
     port: 587
