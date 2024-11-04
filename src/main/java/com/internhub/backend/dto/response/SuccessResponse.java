@@ -19,5 +19,18 @@ public class SuccessResponse <T> {
 
     private String message;
 
+    private PageInfo pageInfo;
+
     private T result;
+
+    @Getter
+    @Builder
+    public static class PageInfo {
+        private int currentPage;
+        private int totalPages;
+        private int pageSize;
+        private long totalElements;
+        private boolean hasPreviousPage;
+        private boolean hasNextPage;
+    }
 }
