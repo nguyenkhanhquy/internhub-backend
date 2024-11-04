@@ -31,9 +31,9 @@ public class JobApply {
     @Column(name = "cv", nullable = false)
     private String cv;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "apply_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ApplyStatus status;
+    private ApplyStatus applyStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "job_post_id", referencedColumnName = "id", nullable = false)

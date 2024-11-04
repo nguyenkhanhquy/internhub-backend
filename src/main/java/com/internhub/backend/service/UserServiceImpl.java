@@ -63,7 +63,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUserById(String id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
 
         return userMapper.mapUserToUserDTO(user);
     }

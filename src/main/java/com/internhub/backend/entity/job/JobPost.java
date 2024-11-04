@@ -77,7 +77,7 @@ public class JobPost {
 
     @ElementCollection(targetClass = Major.class)
     @CollectionTable(name = "job_post_majors", joinColumns = @JoinColumn(name = "job_post_id"))
-    @Column(name = "major")
+    @Column(name = "major", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<Major> majors;
 

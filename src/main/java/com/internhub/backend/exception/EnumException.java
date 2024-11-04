@@ -29,6 +29,7 @@ public enum EnumException {
     // 404: Not found — không tồn tại resource
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"),
     PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy hồ sơ"),
+    JOB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy bài đăng việc làm"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống
     UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),
