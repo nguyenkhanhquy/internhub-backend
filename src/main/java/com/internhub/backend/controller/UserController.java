@@ -127,6 +127,17 @@ public class UserController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @PostMapping("/verify/reset-password")
+    public ResponseEntity<SuccessResponse<Void>> resetPassword(@RequestBody Map<String, String> request) {
+        userService.resetPassword(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Đặt lại mật khẩu thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @PostMapping("/update-password")
     public ResponseEntity<SuccessResponse<Void>> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
         userService.updatePassword(updatePasswordRequest);

@@ -255,6 +255,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void resetPassword(Map<String, String> request) {
+        String email = request.get("email");
+        String otp = request.get("otp");
+        String newPassword = request.get("newPassword");
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        verifyOtp(email, otp);
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setUpdatedDate(Date.from(Instant.now()));
+        userRepository.save(user);
+    }
+
+    @Override
     public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
         Authentication authentication = SecurityUtil.getAuthenticatedUser();
 
