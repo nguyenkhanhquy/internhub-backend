@@ -23,7 +23,7 @@ public class SecurityConfig {
     @Value("${cors.allowed.origins}")
     private String allowedOrigins;
 
-    private static final String[] PUBLIC_POST_ENDPOINTS = {"/auth/**", "/users/register/**", "/jobs"};
+    private static final String[] PUBLIC_POST_ENDPOINTS = {"/auth/**", "/users/register/**", "/users/verify/**", "/jobs"};
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**"};
 

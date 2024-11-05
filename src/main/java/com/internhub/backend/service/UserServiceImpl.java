@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -36,9 +37,11 @@ public class UserServiceImpl implements UserService {
     private final StudentRepository studentRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final OtpService otpService;
+    private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, StudentRepository studentRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, StudentRepository studentRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.recruiterRepository = recruiterRepository;
@@ -46,6 +49,8 @@ public class UserServiceImpl implements UserService {
         this.studentRepository = studentRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.otpService = otpService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -192,7 +197,7 @@ public class UserServiceImpl implements UserService {
             User user = User.builder()
                     .email(registerStudentRequest.getEmail())
                     .password(passwordEncoder.encode(registerStudentRequest.getPassword()))
-                    .isActive(true)
+                    .isActive(false)
                     .createdDate(Date.from(Instant.now()))
                     .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("STUDENT"))
@@ -222,6 +227,34 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void sendOTP(Map<String, String> request) {
+        String email = request.get("email");
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        int otp = otpService.generateOtp(email);
+        emailService.sendSimpleEmail(email, "Mã OTP", "Mã xác thực của bạn là: " + otp);
+    }
+
+    @Override
+    public void activateAccount(Map<String, String> request) {
+        String email = request.get("email");
+        String otp = request.get("otp");
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        verifyOtp(email, otp);
+
+        user.setActive(true);
+        userRepository.save(user);
+    }
+
+    @Override
     public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
         Authentication authentication = SecurityUtil.getAuthenticatedUser();
 
@@ -238,5 +271,17 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
         user.setUpdatedDate(Date.from(Instant.now()));
         userRepository.save(user);
+    }
+
+    private void verifyOtp(String email, String otpString) {
+        try {
+            int otp = Integer.parseInt(otpString);
+
+            if (!otpService.validateOtp(email, otp)) {
+                throw new CustomException(EnumException.INVALID_OTP);
+            }
+        } catch (NumberFormatException e) {
+            throw new CustomException(EnumException.INVALID_OTP);
+        }
     }
 }

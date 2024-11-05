@@ -64,6 +64,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(EnumException.INVALID_LOGIN);
         }
 
+        if (user.isActive()) {
+            throw new CustomException(EnumException.USER_NOT_ACTIVATED);
+        }
+
         String accessToken = generateToken(user);
         return Map.of("accessToken", accessToken);
     }

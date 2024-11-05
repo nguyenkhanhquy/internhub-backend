@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -99,6 +100,28 @@ public class UserController {
         SuccessResponse<UserDTO> successResponse = SuccessResponse.<UserDTO>builder()
                 .message("Đăng ký thành công")
                 .result(userDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/verify/send-otp")
+    public ResponseEntity<SuccessResponse<Void>> sendOTP(@RequestBody Map<String, String> request) {
+        userService.sendOTP(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Đã gửi mã OTP đến email")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/verify/activate-account")
+    public ResponseEntity<SuccessResponse<Void>> activateAccount(@RequestBody Map<String, String> request) {
+        userService.activateAccount(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Kích hoạt tài khoản thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
