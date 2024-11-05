@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface JobPostService {
 
-    SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(int page, int size);
+    SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(int page, int size, String search);
 
     JobPostDetailDTO getJobPostById(String id);
 

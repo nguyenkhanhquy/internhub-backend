@@ -13,6 +13,7 @@ import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -39,12 +40,16 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
-    public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(int page, int size) {
+    public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(int page, int size, String search) {
         Sort sort = Sort.by(Sort.Order.desc("createdDate"));
-
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        var pageData = jobPostRepository.findAll(pageable);
+        Page<JobPost> pageData;
+        if (search != null && !search.isBlank()) {
+            pageData = jobPostRepository.findByTitleContainingIgnoreCase(search, pageable);
+        } else {
+            pageData = jobPostRepository.findAll(pageable);
+        }
 
         return SuccessResponse.<List<JobPostBasicDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

@@ -26,9 +26,10 @@ public class JobPostController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllJobPosts(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                                 @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+                                                                                 @RequestParam(value = "size", required = false, defaultValue = "10") int size,
+                                                                                 @RequestParam(value = "search", required = false) String search) {
 
-        return ResponseEntity.ok(jobPostService.getAllJobPosts(page, size));
+        return ResponseEntity.ok(jobPostService.getAllJobPosts(page, size, search));
     }
 
     @GetMapping("/{id}")
