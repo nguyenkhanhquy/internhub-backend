@@ -9,8 +9,12 @@ import com.internhub.backend.entity.InvalidatedToken;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
+import com.internhub.backend.mapper.RecruiterMapper;
+import com.internhub.backend.mapper.StudentMapper;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.InvalidatedTokenRepository;
+import com.internhub.backend.repository.RecruiterRepository;
+import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.SecurityUtil;
 import com.nimbusds.jose.*;
@@ -22,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -45,15 +50,23 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private final RecruiterRepository recruiterRepository;
+    private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RecruiterMapper recruiterMapper;
+    private final StudentMapper studentMapper;
 
     @Autowired
-    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RecruiterMapper recruiterMapper, StudentMapper studentMapper) {
         this.userRepository = userRepository;
         this.invalidatedTokenRepository = invalidatedTokenRepository;
+        this.recruiterRepository = recruiterRepository;
+        this.studentRepository = studentRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.recruiterMapper = recruiterMapper;
+        this.studentMapper = studentMapper;
     }
 
     @Override
@@ -124,6 +137,29 @@ public class AuthServiceImpl implements AuthService {
         }
 
         return userMapper.mapUserToUserDTO(user);
+    }
+
+    @Override
+    public Object getCurentAuthProfile() {
+        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        if (user.getRole().getName().equals("STUDENT")) {
+            return studentMapper.mapStudentToStudentDTO(studentRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
+        } else if (user.getRole().getName().equals("RECRUITER")) {
+            return recruiterMapper.mapRecruiterToRecruiterDTO(recruiterRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
+        } else {
+            throw new CustomException(EnumException.PROFILE_NOT_FOUND);
+        }
     }
 
     private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {

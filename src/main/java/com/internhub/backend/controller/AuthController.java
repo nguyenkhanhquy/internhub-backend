@@ -85,4 +85,16 @@ public class AuthController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<SuccessResponse<Object>> getCurrentAuthProfile() {
+        Object profile = authService.getCurentAuthProfile();
+
+        SuccessResponse<Object> successResponse = SuccessResponse.builder()
+                .message("Lấy thông tin hồ sơ thành công")
+                .result(profile)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

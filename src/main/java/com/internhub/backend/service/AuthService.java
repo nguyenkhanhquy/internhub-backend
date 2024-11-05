@@ -21,4 +21,6 @@ public interface AuthService {
     Map<String, Object> refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException;
 
     UserDTO getCurrentAuthUser();
+
+    Object getCurentAuthProfile();
 }
