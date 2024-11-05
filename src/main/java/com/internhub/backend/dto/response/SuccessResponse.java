@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SuccessResponse <T> {
+public class SuccessResponse<T> {
 
     @Builder.Default
     private boolean success = true;
