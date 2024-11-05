@@ -11,4 +11,5 @@ public class JobPostSearchFilterRequest {
     private int size = 10;
 
     private String search;
+    private String order = "latest";
 }

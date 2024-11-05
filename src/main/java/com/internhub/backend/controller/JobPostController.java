@@ -27,7 +27,6 @@ public class JobPostController {
 
     @GetMapping
     public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
-        System.out.println(request.getSearch());
         return ResponseEntity.ok(jobPostService.getAllJobPosts(request));
     }
 

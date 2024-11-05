@@ -42,7 +42,12 @@ public class JobPostServiceImpl implements JobPostService {
 
     @Override
     public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
-        Sort sort = Sort.by(Sort.Order.desc("createdDate"));
+        Sort sort;
+        if ("oldest".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else {
+            sort = Sort.by(Sort.Order.desc("createdDate"));
+        }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
 
         Page<JobPost> pageData;
