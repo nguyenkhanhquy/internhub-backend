@@ -3,6 +3,7 @@ package com.internhub.backend.controller;
 import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
+import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobPostService;
 import jakarta.validation.Valid;
@@ -25,11 +26,9 @@ public class JobPostController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllJobPosts(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                                 @RequestParam(value = "size", required = false, defaultValue = "10") int size,
-                                                                                 @RequestParam(value = "search", required = false) String search) {
-
-        return ResponseEntity.ok(jobPostService.getAllJobPosts(page, size, search));
+    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
+        System.out.println(request.getSearch());
+        return ResponseEntity.ok(jobPostService.getAllJobPosts(request));
     }
 
     @GetMapping("/{id}")

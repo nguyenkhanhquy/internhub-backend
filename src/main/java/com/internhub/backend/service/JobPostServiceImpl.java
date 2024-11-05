@@ -3,6 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
+import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
@@ -40,20 +41,20 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
-    public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(int page, int size, String search) {
+    public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         Sort sort = Sort.by(Sort.Order.desc("createdDate"));
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
 
         Page<JobPost> pageData;
-        if (search != null && !search.isBlank()) {
-            pageData = jobPostRepository.findByTitleContainingIgnoreCase(search, pageable);
+        if (request.getSearch() != null && !request.getSearch().isBlank()) {
+            pageData = jobPostRepository.findByTitleContainingIgnoreCase(request.getSearch(), pageable);
         } else {
             pageData = jobPostRepository.findAll(pageable);
         }
 
         return SuccessResponse.<List<JobPostBasicDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
-                        .currentPage(page)
+                        .currentPage(request.getPage())
                         .totalPages(pageData.getTotalPages())
                         .pageSize(pageData.getSize())
                         .totalElements(pageData.getTotalElements())
