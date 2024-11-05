@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Map;
 
 public interface JobPostService {
 
@@ -21,4 +22,7 @@ public interface JobPostService {
 
     @PostAuthorize("hasAuthority('SCOPE_RECRUITER')")
     void deleteJobPost(String id);
+
+    @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
+    void saveJobPost(Map<String, String> request);
 }

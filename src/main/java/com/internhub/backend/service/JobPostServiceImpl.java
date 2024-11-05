@@ -7,11 +7,15 @@ import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
+import com.internhub.backend.entity.job.JobSaved;
+import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
 import com.internhub.backend.repository.JobPostRepository;
+import com.internhub.backend.repository.JobSavedRepository;
 import com.internhub.backend.repository.RecruiterRepository;
+import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,18 +29,23 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class JobPostServiceImpl implements JobPostService {
 
     private final JobPostRepository jobPostRepository;
     private final RecruiterRepository recruiterRepository;
+    private final StudentRepository studentRepository;
+    private final JobSavedRepository jobSavedRepository;
     private final JobPostMapper jobPostMapper;
 
     @Autowired
-    public JobPostServiceImpl(JobPostRepository jobPostRepository, RecruiterRepository recruiterRepository, JobPostMapper jobPostMapper) {
+    public JobPostServiceImpl(JobPostRepository jobPostRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, JobSavedRepository jobSavedRepository, JobPostMapper jobPostMapper) {
         this.jobPostRepository = jobPostRepository;
         this.recruiterRepository = recruiterRepository;
+        this.studentRepository = studentRepository;
+        this.jobSavedRepository = jobSavedRepository;
         this.jobPostMapper = jobPostMapper;
     }
 
@@ -113,5 +122,31 @@ public class JobPostServiceImpl implements JobPostService {
     @Override
     public void deleteJobPost(String id) {
         jobPostRepository.deleteById(id);
+    }
+
+    @Override
+    public void saveJobPost(Map<String, String> request) {
+        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        JobPost jobPost = jobPostRepository.findById(request.get("id"))
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        if (jobSavedRepository.existsByStudentAndJobPost(student, jobPost)) {
+            throw new CustomException(EnumException.JOB_SAVED_ALREADY);
+        }
+
+        JobSaved jobSaved = JobSaved.builder()
+                .savedDate(Date.from(Instant.now()))
+                .student(student)
+                .jobPost(jobPost)
+                .build();
+
+
+        jobSavedRepository.save(jobSaved);
     }
 }

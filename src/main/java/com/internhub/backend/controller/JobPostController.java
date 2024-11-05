@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/jobs")
@@ -58,5 +59,16 @@ public class JobPostController {
         jobPostService.deleteJobPost(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<SuccessResponse<Void>> saveJobPost(@RequestBody Map<String, String> request) {
+        jobPostService.saveJobPost(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Lưu bài đăng việc làm thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
     }
 }
