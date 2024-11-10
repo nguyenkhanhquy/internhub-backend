@@ -12,7 +12,7 @@ public class HealthCheckController {
     @RequestMapping
     public ResponseEntity<SuccessResponse<Void>> healthCheck() {
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
-                .message("Server is running and reachable")
+                .message("Máy chủ đang chạy và có thể truy cập được")
                 .build();
 
         return ResponseEntity.ok(successResponse);

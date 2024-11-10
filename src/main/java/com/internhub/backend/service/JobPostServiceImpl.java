@@ -50,7 +50,39 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
-    public SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
+    public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
+        Sort sort;
+        if ("oldest".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else {
+            sort = Sort.by(Sort.Order.desc("createdDate"));
+        }
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+
+        Page<JobPost> pageData;
+        if (request.getSearch() != null && !request.getSearch().isBlank()) {
+            pageData = jobPostRepository.findByTitleContainingIgnoreCase(request.getSearch(), pageable);
+        } else {
+            pageData = jobPostRepository.findAll(pageable);
+        }
+
+        return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent().stream()
+                        .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
+                        .toList())
+                .build();
+    }
+
+    @Override
+    public SuccessResponse<List<JobPostBasicDTO>> getPopularJobPosts(JobPostSearchFilterRequest request) {
         Sort sort;
         if ("oldest".equalsIgnoreCase(request.getOrder())) {
             sort = Sort.by(Sort.Order.asc("createdDate"));

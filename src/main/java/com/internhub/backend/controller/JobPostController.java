@@ -27,8 +27,13 @@ public class JobPostController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
+    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getAllJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
         return ResponseEntity.ok(jobPostService.getAllJobPosts(request));
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getPopularJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobPostService.getPopularJobPosts(request));
     }
 
     @GetMapping("/{id}")

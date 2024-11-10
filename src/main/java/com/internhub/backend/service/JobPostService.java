@@ -13,7 +13,9 @@ import java.util.Map;
 
 public interface JobPostService {
 
-    SuccessResponse<List<JobPostBasicDTO>> getAllJobPosts(JobPostSearchFilterRequest request);
+    SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request);
+
+    SuccessResponse<List<JobPostBasicDTO>> getPopularJobPosts(JobPostSearchFilterRequest request);
 
     JobPostDetailDTO getJobPostById(String id);
 
