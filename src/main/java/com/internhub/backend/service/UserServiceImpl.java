@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
             User user = User.builder()
                     .email(registerRecruiterRequest.getEmail())
                     .password(passwordEncoder.encode(registerRecruiterRequest.getPassword()))
-                    .isActive(true)
+                    .isActive(false)
                     .createdDate(Date.from(Instant.now()))
                     .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("RECRUITER"))

@@ -7,7 +7,7 @@ public enum InternStatus {
 
     SEARCHING("Đang tìm nơi thực tập"),
     WORKING("Đang thực tập"),
-    COMPLETED("Đã thực tập"),
+    COMPLETED("Đã hoàn thành thực tập"),
     ;
 
     private final String description;
