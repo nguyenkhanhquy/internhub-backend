@@ -30,6 +30,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class JobPostServiceImpl implements JobPostService {
@@ -66,6 +68,49 @@ public class JobPostServiceImpl implements JobPostService {
             pageData = jobPostRepository.findAll(pageable);
         }
 
+        String userId;
+
+        try {
+            Authentication authentication = SecurityUtil.getAuthenticatedUser();
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            userId = (String) jwt.getClaims().get("userId");
+        } catch (CustomException e) {
+            return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                    .pageInfo(SuccessResponse.PageInfo.builder()
+                            .currentPage(request.getPage())
+                            .totalPages(pageData.getTotalPages())
+                            .pageSize(pageData.getSize())
+                            .totalElements(pageData.getTotalElements())
+                            .hasPreviousPage(pageData.hasPrevious())
+                            .hasNextPage(pageData.hasNext())
+                            .build())
+                    .result(pageData.getContent().stream()
+                            .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
+                            .toList())
+                    .build();
+        }
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        List<JobSaved> jobSavedList = jobSavedRepository.findByStudent(student);
+
+        // Tạo danh sách ID của các công việc đã lưu
+        Set<String> savedJobPostIds = jobSavedList.stream()
+                .map(jobSaved -> jobSaved.getJobPost().getId())
+                .collect(Collectors.toSet());
+
+        List<JobPostDetailDTO> jobPostDetails = pageData.getContent().stream()
+                .map(jobPost -> {
+                    JobPostDetailDTO dto = jobPostMapper.mapJobPostToJobPostDetailDTO(jobPost);
+                    // Kiểm tra nếu jobPostId nằm trong savedJobPostIds, cập nhật isSaved
+                    if (savedJobPostIds.contains(jobPost.getId())) {
+                        dto.setSaved(true);
+                    }
+                    return dto;
+                })
+                .toList();
+
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
                         .currentPage(request.getPage())
@@ -75,9 +120,7 @@ public class JobPostServiceImpl implements JobPostService {
                         .hasPreviousPage(pageData.hasPrevious())
                         .hasNextPage(pageData.hasNext())
                         .build())
-                .result(pageData.getContent().stream()
-                        .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
-                        .toList())
+                .result(jobPostDetails)
                 .build();
     }
 

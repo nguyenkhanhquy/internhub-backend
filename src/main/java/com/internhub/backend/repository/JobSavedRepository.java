@@ -5,7 +5,11 @@ import com.internhub.backend.entity.job.JobSaved;
 import com.internhub.backend.entity.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface JobSavedRepository extends JpaRepository<JobSaved, String> {
 
     JobSaved findByStudentAndJobPost(Student student, JobPost jobPost);
+
+    List<JobSaved> findByStudent(Student student);
 }
