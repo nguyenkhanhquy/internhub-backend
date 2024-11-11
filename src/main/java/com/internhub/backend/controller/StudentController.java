@@ -23,7 +23,7 @@ public class StudentController {
     }
 
     @PostMapping("/update-profile")
-    public ResponseEntity<SuccessResponse<Void>> updateProfile(@Valid @RequestBody UpdateStudentProfileRequest request) {
+    public ResponseEntity<SuccessResponse<Void>> updateStudentProfile(@Valid @RequestBody UpdateStudentProfileRequest request) {
         studentService.updateStudentProfile(request);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()

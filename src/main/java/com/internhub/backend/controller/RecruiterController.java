@@ -1,19 +1,18 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.business.RecruiterDTO;
+import com.internhub.backend.dto.request.recruiters.UpdateRecruiterProfileRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.RecruiterService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/business/recruiter")
+@RequestMapping("/recruiters")
 public class RecruiterController {
 
     private final RecruiterService recruiterService;
@@ -40,6 +39,17 @@ public class RecruiterController {
 
         SuccessResponse<RecruiterDTO> successResponse = SuccessResponse.<RecruiterDTO>builder()
                 .result(recruiterDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/update-profile")
+    public ResponseEntity<SuccessResponse<Void>> updateRecruiterProfile(@Valid @RequestBody UpdateRecruiterProfileRequest request) {
+        recruiterService.updateRecruiterProfile(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Cập nhật hồ sơ thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
