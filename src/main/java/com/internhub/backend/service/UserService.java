@@ -33,6 +33,8 @@ public interface UserService {
 
     void activateAccount(Map<String, String> request);
 
+    void requestActivateAccount(Map<String, String> request);
+
     void resetPassword(Map<String, String> request);
 
     void updatePassword(UpdatePasswordRequest updatePasswordRequest);

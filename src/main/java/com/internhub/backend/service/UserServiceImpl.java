@@ -255,6 +255,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void requestActivateAccount(Map<String, String> request) {
+        String email = request.get("email");
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new CustomException(EnumException.USER_NOT_FOUND);
+        }
+
+        if (user.isActive()) {
+            throw new CustomException(EnumException.ACCOUNT_ALREADY_ACTIVATED);
+        }
+    }
+
+    @Override
     public void resetPassword(Map<String, String> request) {
         String email = request.get("email");
         String otp = request.get("otp");
