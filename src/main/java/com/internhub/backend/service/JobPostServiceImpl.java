@@ -157,7 +157,7 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
-    public void saveJobPost(Map<String, String> request) {
+    public boolean saveJobPost(Map<String, String> request) {
         Authentication authentication = SecurityUtil.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
@@ -168,17 +168,18 @@ public class JobPostServiceImpl implements JobPostService {
         Student student = studentRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
 
-        if (jobSavedRepository.existsByStudentAndJobPost(student, jobPost)) {
-            throw new CustomException(EnumException.JOB_SAVED_ALREADY);
+        JobSaved jobSaved = jobSavedRepository.findByStudentAndJobPost(student, jobPost);
+        if (jobSaved != null) {
+            jobSavedRepository.delete(jobSaved);
+            return false;
         }
 
-        JobSaved jobSaved = JobSaved.builder()
+        jobSavedRepository.save(JobSaved.builder()
                 .savedDate(Date.from(Instant.now()))
                 .student(student)
                 .jobPost(jobPost)
-                .build();
+                .build());
 
-
-        jobSavedRepository.save(jobSaved);
+        return true;
     }
 }

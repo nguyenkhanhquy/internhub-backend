@@ -26,5 +26,5 @@ public interface JobPostService {
     void deleteJobPost(String id);
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
-    void saveJobPost(Map<String, String> request);
+    boolean saveJobPost(Map<String, String> request);
 }

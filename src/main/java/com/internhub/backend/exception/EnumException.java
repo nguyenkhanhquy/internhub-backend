@@ -14,7 +14,6 @@ public enum EnumException {
     INVALID_EMAIL_DOMAIN(HttpStatus.BAD_REQUEST, "Email không thuộc trường ĐH Sư phạm Kỹ thuật TP.HCM"),
     INVALID_MAJOR_CODE(HttpStatus.BAD_REQUEST, "Mã ngành trong email không hợp lệ"),
     EMAIL_AND_STUDENT_ID_MISMATCH(HttpStatus.BAD_REQUEST, "Mã số sinh viên không khớp với email"),
-    JOB_SAVED_ALREADY(HttpStatus.BAD_REQUEST, "Bài đăng việc làm đã được lưu trước đó"),
     ACCOUNT_ALREADY_ACTIVATED(HttpStatus.BAD_REQUEST, "Tài khoản đã được kích hoạt trước đó"),
 
     // 401 : Unauthorized — user chưa được xác thực
