@@ -69,8 +69,8 @@ public class JobPostController {
     @PostMapping("/save")
     public ResponseEntity<SuccessResponse<Void>> saveJobPost(@RequestBody Map<String, String> request) {
         String message = jobPostService.saveJobPost(request)
-                ? "Công việc làm đã được lưu"
-                : "Đã bỏ lưu công việc";
+                ? "Lưu công việc thành công"
+                : "Bỏ lưu công việc thành công";
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message(message)
