@@ -11,5 +11,7 @@ public interface JobSavedRepository extends JpaRepository<JobSaved, String> {
 
     JobSaved findByStudentAndJobPost(Student student, JobPost jobPost);
 
+    boolean existsByStudentAndJobPost(Student student, JobPost jobPost);
+
     List<JobSaved> findByStudent(Student student);
 }
