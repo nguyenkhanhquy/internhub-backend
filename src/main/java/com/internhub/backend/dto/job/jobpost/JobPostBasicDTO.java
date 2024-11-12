@@ -21,10 +21,17 @@ public class JobPostBasicDTO {
 
     private String title;
 
+    private String jobPosition;
+
     private CompanyBasicDTO company;
+
+    private String remote;
 
     private String type;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date createdDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date expiryDate;
 }

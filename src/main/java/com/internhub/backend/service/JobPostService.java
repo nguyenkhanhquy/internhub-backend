@@ -27,4 +27,7 @@ public interface JobPostService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     boolean saveJobPost(Map<String, String> request);
+
+    @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
+    SuccessResponse<List<JobPostBasicDTO>> getAllSavedJobPosts(JobPostSearchFilterRequest request);
 }

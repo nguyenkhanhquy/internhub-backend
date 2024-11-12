@@ -18,19 +18,13 @@ import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.util.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -224,5 +218,68 @@ public class JobPostServiceImpl implements JobPostService {
                 .build());
 
         return true;
+    }
+
+    @Override
+    public SuccessResponse<List<JobPostBasicDTO>> getAllSavedJobPosts(JobPostSearchFilterRequest request) {
+        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        List<JobSaved> jobSavedList = jobSavedRepository.findByStudent(student);
+
+        // Tạo danh sách ID của các công việc đã lưu
+        Set<String> savedJobPostIds = jobSavedList.stream()
+                .map(jobSaved -> jobSaved.getJobPost().getId())
+                .collect(Collectors.toSet());
+
+        List<JobPost> jobPosts;
+
+        if (request.getSearch() != null && !request.getSearch().isBlank()) {
+            jobPosts = jobPostRepository.findByTitleContainingIgnoreCase(request.getSearch());
+        } else {
+            jobPosts = jobPostRepository.findAll();
+        }
+
+
+        List<JobPostBasicDTO> jobPostBasic = jobPosts.stream()
+                .map(jobPostMapper::mapJobPostToJobPostBasicDTO)
+                .filter(dto -> savedJobPostIds.contains(dto.getId())) // Chỉ giữ lại những DTO có jobPostId nằm trong savedJobPostIds
+                .toList();
+
+        int filteredTotalElements = jobPostBasic.size();
+        int filteredTotalPages = (int) Math.ceil((double) filteredTotalElements / request.getSize());
+
+        // Xác định kích thước trang và số trang từ request
+        int pageNumber = request.getPage() - 1; // 0-based index
+        int pageSize = request.getSize();
+        int startIndex = pageNumber * pageSize;
+        int endIndex = Math.min(startIndex + pageSize, jobPostBasic.size());
+
+        // Kiểm tra điều kiện phân trang để tránh lỗi khi startIndex vượt quá kích thước của List
+        List<JobPostBasicDTO> pageContent;
+        if (startIndex < jobPostBasic.size()) {
+            pageContent = jobPostBasic.subList(startIndex, endIndex);
+        } else {
+            pageContent = Collections.emptyList();
+        }
+
+        // Tạo đối tượng Page từ danh sách đã được phân trang
+        Page<JobPostBasicDTO> pageData = new PageImpl<>(pageContent, PageRequest.of(pageNumber, pageSize), filteredTotalElements);
+
+        return SuccessResponse.<List<JobPostBasicDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(filteredTotalPages)
+                        .pageSize(request.getSize())
+                        .totalElements(filteredTotalElements)
+                        .hasPreviousPage(request.getPage() > 1)
+                        .hasNextPage(request.getPage() < filteredTotalPages)
+                        .build())
+                .result(pageData.getContent())
+                .build();
     }
 }
