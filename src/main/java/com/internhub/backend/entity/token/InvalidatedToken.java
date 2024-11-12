@@ -1,4 +1,4 @@
-package com.internhub.backend.entity;
+package com.internhub.backend.entity.token;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

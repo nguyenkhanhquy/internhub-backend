@@ -1,6 +1,6 @@
 package com.internhub.backend.repository;
 
-import com.internhub.backend.entity.InvalidatedToken;
+import com.internhub.backend.entity.token.InvalidatedToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Date;
