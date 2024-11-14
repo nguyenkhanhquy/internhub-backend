@@ -13,6 +13,7 @@ import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.*;
 import com.internhub.backend.util.SecurityUtil;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -227,7 +228,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendOTP(Map<String, String> request) {
+    public void sendOTP(Map<String, String> request) throws MessagingException {
         String email = request.get("email");
 
         if (!userRepository.existsByEmail(email)) {
@@ -235,7 +236,18 @@ public class UserServiceImpl implements UserService {
         }
 
         int otp = otpService.generateOtp(email);
-        emailService.sendSimpleEmail(email, "Mã OTP", "Mã xác thực của bạn là: " + otp);
+
+        String htmlContent =
+                "<div style=\"display: flex; justify-content: center; align-items: center;\">" +
+                        "    <div>" +
+                        "        <h1>Xác thực địa chỉ email của bạn</h1>" +
+                        "        <p style='font-size: 1.1em'>Để kích hoạt tài khoản InternHub, vui lòng xác thực rằng đây là địa chỉ email của bạn.</p>" +
+                        "        <p style='display: inline-block; padding: 10px 20px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px;'>" + otp + "</p>" +
+                        "        <p style='font-size: 1em; color: #888888;'>Mã OTP sẽ hết hạn sau 5 phút. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>" +
+                        "    </div>" +
+                        "</div>";
+
+        emailService.sendHtmlEmail(email, "InternHub - Xác thực địa chỉ email", htmlContent);
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.users.*;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -106,7 +107,7 @@ public class UserController {
     }
 
     @PostMapping("/verify/send-otp")
-    public ResponseEntity<SuccessResponse<Void>> sendOTP(@RequestBody Map<String, String> request) {
+    public ResponseEntity<SuccessResponse<Void>> sendOTP(@RequestBody Map<String, String> request) throws MessagingException {
         userService.sendOTP(request);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
