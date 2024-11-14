@@ -14,4 +14,6 @@ public interface JobSavedRepository extends JpaRepository<JobSaved, String> {
     boolean existsByStudentAndJobPost(Student student, JobPost jobPost);
 
     List<JobSaved> findByStudent(Student student);
+
+    void deleteAllByStudent(Student student);
 }
