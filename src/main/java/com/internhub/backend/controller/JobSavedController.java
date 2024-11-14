@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/jobs/save")
+@RequestMapping("/jobs/saved")
 public class JobSavedController {
 
     private final JobSavedService jobSavedService;
