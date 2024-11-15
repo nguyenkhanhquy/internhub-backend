@@ -78,9 +78,4 @@ public class JobPostController {
 
         return ResponseEntity.ok(successResponse);
     }
-
-    @GetMapping("/saved")
-    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllSavedJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
-        return ResponseEntity.ok(jobPostService.getAllSavedJobPosts(request));
-    }
 }

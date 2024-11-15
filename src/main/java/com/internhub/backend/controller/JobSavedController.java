@@ -1,11 +1,14 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
+import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobSavedService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/jobs/saved")
@@ -16,6 +19,11 @@ public class JobSavedController {
     @Autowired
     public JobSavedController(JobSavedService jobSavedService) {
         this.jobSavedService = jobSavedService;
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllSavedJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobSavedService.getAllSavedJobPosts(request));
     }
 
     @DeleteMapping
