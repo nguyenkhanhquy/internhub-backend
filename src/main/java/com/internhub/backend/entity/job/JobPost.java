@@ -33,8 +33,7 @@ public class JobPost {
     @Column(name = "remote", nullable = false)
     private String remote;
 
-    @Lob
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", length = 1000, nullable = false)
     private String description;
 
     @Column(name = "salary", nullable = false)
@@ -55,12 +54,10 @@ public class JobPost {
     @Column(name = "job_position", nullable = false)
     private String jobPosition;
 
-    @Lob
-    @Column(name = "requirements", nullable = false)
+    @Column(name = "requirements", length = 1000, nullable = false)
     private String requirements;
 
-    @Lob
-    @Column(name = "benefits", nullable = false)
+    @Column(name = "benefits", length = 1000, nullable = false)
     private String benefits;
 
     @ManyToOne
