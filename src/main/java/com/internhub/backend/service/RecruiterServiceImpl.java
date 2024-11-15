@@ -8,7 +8,7 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.RecruiterMapper;
 import com.internhub.backend.repository.RecruiterRepository;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -46,7 +46,7 @@ public class RecruiterServiceImpl implements RecruiterService {
 
     @Override
     public void updateRecruiterProfile(UpdateRecruiterProfileRequest request) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 

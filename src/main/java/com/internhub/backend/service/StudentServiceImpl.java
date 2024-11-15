@@ -5,7 +5,7 @@ import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.repository.StudentRepository;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -23,7 +23,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void updateStudentProfile(UpdateStudentProfileRequest request) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 

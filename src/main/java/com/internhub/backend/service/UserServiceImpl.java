@@ -12,7 +12,7 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.*;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -300,7 +300,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updatePassword(UpdatePasswordRequest updatePasswordRequest) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
 
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);

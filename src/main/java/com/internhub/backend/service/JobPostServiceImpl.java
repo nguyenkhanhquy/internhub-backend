@@ -16,7 +16,7 @@ import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.JobSavedRepository;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.StudentRepository;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -71,7 +71,7 @@ public class JobPostServiceImpl implements JobPostService {
         String userId;
 
         try {
-            Authentication authentication = SecurityUtil.getAuthenticatedUser();
+            Authentication authentication = AuthUtils.getAuthenticatedUser();
             Jwt jwt = (Jwt) authentication.getPrincipal();
             userId = (String) jwt.getClaims().get("userId");
 
@@ -166,7 +166,7 @@ public class JobPostServiceImpl implements JobPostService {
         String userId;
 
         try {
-            Authentication authentication = SecurityUtil.getAuthenticatedUser();
+            Authentication authentication = AuthUtils.getAuthenticatedUser();
             Jwt jwt = (Jwt) authentication.getPrincipal();
             userId = (String) jwt.getClaims().get("userId");
 
@@ -184,7 +184,7 @@ public class JobPostServiceImpl implements JobPostService {
 
     @Override
     public void createJobPost(CreateJobPostRequest createJobPostRequest) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
@@ -219,7 +219,7 @@ public class JobPostServiceImpl implements JobPostService {
 
     @Override
     public boolean saveJobPost(Map<String, String> request) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 

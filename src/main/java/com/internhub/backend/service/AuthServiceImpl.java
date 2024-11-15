@@ -16,7 +16,7 @@ import com.internhub.backend.repository.InvalidatedTokenRepository;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -128,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public UserDTO getCurrentAuthUser() {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
 
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
@@ -141,7 +141,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Object getCurentAuthProfile() {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         String email = authentication.getName();
         User user = userRepository.findByEmail(email);
         if (user == null) {

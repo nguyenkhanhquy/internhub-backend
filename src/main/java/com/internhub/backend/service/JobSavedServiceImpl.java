@@ -12,7 +12,7 @@ import com.internhub.backend.mapper.JobPostMapper;
 import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.JobSavedRepository;
 import com.internhub.backend.repository.StudentRepository;
-import com.internhub.backend.util.SecurityUtil;
+import com.internhub.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -44,7 +44,7 @@ public class JobSavedServiceImpl implements JobSavedService {
 
     @Override
     public SuccessResponse<List<JobPostBasicDTO>> getAllSavedJobPosts(JobPostSearchFilterRequest request) {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
@@ -107,7 +107,7 @@ public class JobSavedServiceImpl implements JobSavedService {
 
     @Override
     public void deleteAllSavedJobPosts() {
-        Authentication authentication = SecurityUtil.getAuthenticatedUser();
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
