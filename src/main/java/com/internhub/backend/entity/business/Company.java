@@ -24,7 +24,7 @@ public class Company {
     @Column(name = "website")
     private String website;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = 3000)
     private String description;
 
     @Column(name = "address")

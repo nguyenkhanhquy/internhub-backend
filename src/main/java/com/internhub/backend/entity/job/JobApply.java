@@ -24,7 +24,7 @@ public class JobApply {
     @Column(name = "apply_date", updatable = false, nullable = false)
     private Date applyDate;
 
-    @Column(name = "cover_letter", length = 1000, nullable = false)
+    @Column(name = "cover_letter", length = 3000, nullable = false)
     private String coverLetter;
 
     @Column(name = "cv", nullable = false)
