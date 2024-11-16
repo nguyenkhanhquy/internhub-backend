@@ -20,6 +20,15 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
+    public Map uploadImage(MultipartFile file, String folderName) throws IOException {
+        return cloudinary.uploader().upload(file.getBytes(),
+                ObjectUtils.asMap(
+                        "resource_type", "image",
+                        "folder", folderName
+                ));
+    }
+
+    @Override
     public Map uploadRaw(MultipartFile file, String folderName) throws IOException {
         String originalFilename = file.getOriginalFilename();
         if (originalFilename == null) {

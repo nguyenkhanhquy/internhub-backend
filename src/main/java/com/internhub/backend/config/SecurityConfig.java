@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**", "/companies/**"};
 
-    private static final String[] PUBLIC_ENDPOINTS = {"/"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/", "/files/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CustomJwtDecoder customJwtDecoder) throws Exception {
