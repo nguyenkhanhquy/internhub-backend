@@ -57,5 +57,5 @@ public class JobPostDetailDTO {
 
     private List<MajorDTO> majors;
 
-    boolean isSaved;
+    private boolean isSaved;
 }

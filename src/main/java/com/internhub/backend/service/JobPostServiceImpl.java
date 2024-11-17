@@ -68,12 +68,10 @@ public class JobPostServiceImpl implements JobPostService {
             pageData = jobPostRepository.findAll(pageable);
         }
 
-        String userId;
-
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();
             Jwt jwt = (Jwt) authentication.getPrincipal();
-            userId = (String) jwt.getClaims().get("userId");
+            String userId = (String) jwt.getClaims().get("userId");
 
             Student student = studentRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
@@ -163,12 +161,10 @@ public class JobPostServiceImpl implements JobPostService {
 
         JobPostDetailDTO jobPostDetailDTO = jobPostMapper.mapJobPostToJobPostDetailDTO(jobPost);
 
-        String userId;
-
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();
             Jwt jwt = (Jwt) authentication.getPrincipal();
-            userId = (String) jwt.getClaims().get("userId");
+            String userId = (String) jwt.getClaims().get("userId");
 
             Student student = studentRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
