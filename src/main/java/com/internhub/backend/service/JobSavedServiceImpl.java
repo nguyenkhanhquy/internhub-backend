@@ -49,6 +49,15 @@ public class JobSavedServiceImpl implements JobSavedService {
 
         List<JobSavedDTO> jobSavedDTOs = jobSavedList.stream()
                 .map(jobSavedMapper::mapJobSavedToJobSavedDTO)
+                .filter(job -> {
+                    String search = request.getSearch();
+                    if (search == null || search.trim().isEmpty()) return true;
+
+                    String searchLower = search.toLowerCase().trim();
+                    return (job.getTitle() != null && job.getTitle().toLowerCase().contains(searchLower)) ||
+                            (job.getJobPosition() != null && job.getJobPosition().toLowerCase().contains(searchLower)) ||
+                            (job.getCompanyName() != null && job.getCompanyName().toLowerCase().contains(searchLower));
+                })
                 .sorted((a, b) -> b.getSavedDate().compareTo(a.getSavedDate())) // Sắp xếp theo thời gian lưu mới nhất (Giảm dần)
 //                .sorted((a, b) -> a.getSavedDate().compareTo(b.getSavedDate())) // Sắp xếp theo thời gian lưu cũ nhất (Tăng dần)
                 .toList();
