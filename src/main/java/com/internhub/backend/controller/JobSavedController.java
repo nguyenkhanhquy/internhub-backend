@@ -1,6 +1,6 @@
 package com.internhub.backend.controller;
 
-import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
+import com.internhub.backend.dto.job.jobsaved.JobSavedDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobSavedService;
@@ -22,7 +22,7 @@ public class JobSavedController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getAllSavedJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
+    public ResponseEntity<SuccessResponse<List<JobSavedDTO>>> getAllSavedJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
         return ResponseEntity.ok(jobSavedService.getAllSavedJobPosts(request));
     }
 
