@@ -15,11 +15,12 @@ spring:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
+    driver-class-name: ${DATASOURCE_DRIVER}
     hikari:
-      maximum-pool-size: 9
       minimum-idle: 5
-      connection-timeout: 10000
+      maximum-pool-size: 9
       idle-timeout: 300000
+      connection-timeout: 10000
 
   jackson:
     time-zone: UTC
