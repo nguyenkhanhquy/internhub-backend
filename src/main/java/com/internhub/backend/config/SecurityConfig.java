@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**", "/companies/**"};
 
-    private static final String[] PUBLIC_ENDPOINTS = {"/", "/files/**"};
+    private static final String[] PUBLIC_ENDPOINTS = {"/", "/files/**", "/ws-demo/**", "/ws/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity, CustomJwtDecoder customJwtDecoder) throws Exception {
@@ -51,6 +51,7 @@ public class SecurityConfig {
             corsConfiguration.addAllowedOrigin(allowedOrigins);
             corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
             corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+            corsConfiguration.setAllowCredentials(true);
             return corsConfiguration;
         }));
 
