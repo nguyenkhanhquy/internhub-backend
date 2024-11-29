@@ -61,12 +61,7 @@ public class JobPostServiceImpl implements JobPostService {
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
 
-        Page<JobPost> pageData;
-        if (request.getSearch() != null && !request.getSearch().isBlank()) {
-            pageData = jobPostRepository.findByTitleContainingIgnoreCase(request.getSearch(), pageable);
-        } else {
-            pageData = jobPostRepository.findAll(pageable);
-        }
+        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), pageable);
 
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();
@@ -132,12 +127,7 @@ public class JobPostServiceImpl implements JobPostService {
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
 
-        Page<JobPost> pageData;
-        if (request.getSearch() != null && !request.getSearch().isBlank()) {
-            pageData = jobPostRepository.findByTitleContainingIgnoreCase(request.getSearch(), pageable);
-        } else {
-            pageData = jobPostRepository.findAll(pageable);
-        }
+        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), pageable);
 
         return SuccessResponse.<List<JobPostBasicDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
