@@ -83,7 +83,6 @@ public class RecruiterServiceImpl implements RecruiterService {
         Notification notification = Notification.builder()
                 .title("Hồ sơ doanh nghiệp đã được duyệt")
                 .content("Hồ sơ doanh nghiệp của bạn đã được duyệt")
-                .isRead(false)
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();

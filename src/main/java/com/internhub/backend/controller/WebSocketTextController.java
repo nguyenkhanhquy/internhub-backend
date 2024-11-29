@@ -26,10 +26,10 @@ public class WebSocketTextController {
 
     @PostMapping("/send-to-user")
     public ResponseEntity<Void> sendPrivateMessage(@RequestBody TextMessageDTO textMessageDTO,
-                                                   @RequestParam String username) {
-        // Gửi tới endpoint /user/{username}/private
+                                                   @RequestParam String id) {
+        // Gửi tới endpoint /user/{id}/private
         template.convertAndSendToUser(
-                username,
+                id,
                 "/private",
                 textMessageDTO
         );

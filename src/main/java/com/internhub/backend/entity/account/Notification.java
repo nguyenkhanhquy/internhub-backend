@@ -27,8 +27,9 @@ public class Notification {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Builder.Default
     @Column(name = "is_read", nullable = false)
-    private boolean isRead;
+    private boolean isRead = false;
 
     @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
