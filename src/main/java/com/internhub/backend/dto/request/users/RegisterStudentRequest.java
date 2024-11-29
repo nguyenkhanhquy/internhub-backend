@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 public class RegisterStudentRequest {
@@ -34,11 +34,11 @@ public class RegisterStudentRequest {
 
     @NotNull(message = "Ngày sinh không được bỏ trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dob;
+    private LocalDate dob;
 
     @NotNull(message = "Ngày tốt nghiệp dự kiến không được bỏ trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date expGrad;
+    private LocalDate expGrad;
 
     @NotBlank(message = "Chuyên ngành không được bỏ trống")
     private String major;

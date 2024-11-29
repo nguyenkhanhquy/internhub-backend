@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -35,7 +35,7 @@ public class CreateJobPostRequest {
 
     @NotNull(message = "Ngày hết hạn không được bỏ trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date expiryDate;
+    private LocalDate expiryDate;
 
     @NotBlank(message = "Vị trí công việc không được bỏ trống")
     private String jobPosition;

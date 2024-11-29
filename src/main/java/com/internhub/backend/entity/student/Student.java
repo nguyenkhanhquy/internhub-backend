@@ -4,7 +4,7 @@ import com.internhub.backend.entity.account.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "student")
@@ -37,10 +37,10 @@ public class Student {
     private String address;
 
     @Column(name = "dob", nullable = false)
-    private Date dob;
+    private LocalDate dob;
 
     @Column(name = "exp_grad", nullable = false)
-    private Date expGrad;
+    private LocalDate expGrad;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "major", nullable = false)

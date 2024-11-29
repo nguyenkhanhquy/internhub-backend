@@ -6,6 +6,8 @@ import com.internhub.backend.entity.student.Major;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,7 +51,7 @@ public class JobPost {
     private Date updatedDate;
 
     @Column(name = "expiry_date", nullable = false)
-    private Date expiryDate;
+    private LocalDate expiryDate;
 
     @Column(name = "job_position", nullable = false)
     private String jobPosition;
@@ -60,17 +62,18 @@ public class JobPost {
     @Column(name = "benefits", length = 3000, nullable = false)
     private String benefits;
 
+    @Column(name = "address", nullable = false)
+    private String address;
+
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
     private Company company;
 
-    @Column(name = "address", nullable = false)
-    private String address;
-
+    @Builder.Default
     @OneToMany(mappedBy = "jobPost", cascade = CascadeType.ALL)
     @ToString.Exclude
     @JsonBackReference
-    private List<JobApply> jobApplies;
+    private List<JobApply> jobApplies = new ArrayList<>();
 
     @ElementCollection(targetClass = Major.class)
     @CollectionTable(name = "job_post_majors", joinColumns = @JoinColumn(name = "job_post_id"))
@@ -78,11 +81,19 @@ public class JobPost {
     @Enumerated(EnumType.STRING)
     private List<Major> majors;
 
-    private void addMajor(Major major) {
-        majors.add(major);
-    }
+    @Builder.Default
+    @Column(name = "is_approved", nullable = false)
+    private boolean isApproved = false;
 
-    private void removeMajor(Major major) {
-        majors.remove(major);
+    @Builder.Default
+    @Column(name = "is_hidden", nullable = false)
+    private boolean isHidden = false;
+
+    @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
+    public int getJobApplyCount() {
+        return jobApplies != null ? jobApplies.size() : 0;
     }
 }

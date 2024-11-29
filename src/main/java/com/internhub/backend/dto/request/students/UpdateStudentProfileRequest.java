@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 public class UpdateStudentProfileRequest {
@@ -26,11 +26,11 @@ public class UpdateStudentProfileRequest {
 
     @NotNull(message = "Ngày sinh không được để trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dob;
+    private LocalDate dob;
 
     @NotNull(message = "Ngày tốt nghiệp dự kiến không được để trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date expGrad;
+    private LocalDate expGrad;
 
     @NotNull(message = "Trạng thái thực tập không được để trống")
     private InternStatus internStatus;
