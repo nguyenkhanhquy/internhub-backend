@@ -37,4 +37,8 @@ public class Recruiter {
 
     @Column(name = "recruiter_email", nullable = false)
     private String recruiterEmail;
+
+    @Builder.Default
+    @Column(name = "is_approved", nullable = false)
+    private boolean isApproved = false;
 }

@@ -53,13 +53,11 @@ public class User {
     @Builder.Default
     private List<Notification> notifications = new ArrayList<>();
 
-    public void addNotification(Notification notification) {
-        notifications.add(notification);
-        notification.setUser(this);
+    public int getNotificationCount() {
+        return notifications != null ? notifications.size() : 0;
     }
 
-    public void removeNotification(Notification notification) {
-        notifications.remove(notification);
-        notification.setUser(null);
+    public int getNotificationIsReadCount() {
+        return notifications != null ? (int) notifications.stream().filter(Notification::isRead).count() : 0;
     }
 }

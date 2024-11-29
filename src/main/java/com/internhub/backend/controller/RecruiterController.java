@@ -5,7 +5,7 @@ import com.internhub.backend.dto.request.recruiters.UpdateRecruiterProfileReques
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.RecruiterService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/recruiters")
+@RequiredArgsConstructor
 public class RecruiterController {
 
     private final RecruiterService recruiterService;
-
-    @Autowired
-    public RecruiterController(RecruiterService recruiterService) {
-        this.recruiterService = recruiterService;
-    }
 
     @GetMapping
     public ResponseEntity<SuccessResponse<List<RecruiterDTO>>> getAllRecruiters() {
@@ -50,6 +46,17 @@ public class RecruiterController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Cập nhật hồ sơ thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/approve/{id}")
+    public ResponseEntity<SuccessResponse<Void>> approveRecruiter(@PathVariable("id") String id) {
+        recruiterService.approveRecruiter(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Duyệt hồ sơ nhà tuyển dụng thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);

@@ -25,4 +25,6 @@ public class RecruiterDTO {
     private String recruiterEmail;
 
     private Company company;
+
+    private boolean isApproved;
 }

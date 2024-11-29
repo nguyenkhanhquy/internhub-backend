@@ -16,4 +16,7 @@ public interface RecruiterService {
     RecruiterDTO getRecruiterById(String id);
 
     void updateRecruiterProfile(UpdateRecruiterProfileRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void approveRecruiter(String id);
 }

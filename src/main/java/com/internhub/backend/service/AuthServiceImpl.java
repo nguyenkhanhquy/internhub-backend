@@ -155,7 +155,7 @@ public class AuthServiceImpl implements AuthService {
             return studentMapper.mapStudentToStudentDTO(studentRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
         } else if (user.getRole().getName().equals("RECRUITER")) {
-            return recruiterMapper.mapRecruiterToRecruiterDTO(recruiterRepository.findById(userId)
+            return recruiterMapper.toDTO(recruiterRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
         } else {
             throw new CustomException(EnumException.PROFILE_NOT_FOUND);

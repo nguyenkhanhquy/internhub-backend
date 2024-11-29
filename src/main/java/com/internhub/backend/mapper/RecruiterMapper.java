@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface RecruiterMapper {
 
-    RecruiterDTO mapRecruiterToRecruiterDTO(Recruiter recruiter);
+    RecruiterDTO toDTO(Recruiter recruiter);
 }
