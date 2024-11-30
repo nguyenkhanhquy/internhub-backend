@@ -24,12 +24,12 @@ public class JobSaved {
     @Column(name = "saved_date", updatable = false, nullable = false)
     private Date savedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "user_id", nullable = false)
     @ToString.Exclude
     private Student student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "job_post_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     private JobPost jobPost;

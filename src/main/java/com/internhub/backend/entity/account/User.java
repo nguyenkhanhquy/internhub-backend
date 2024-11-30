@@ -41,7 +41,7 @@ public class User {
     @Column(name = "updated_date", nullable = false)
     private Date updatedDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "role_name", referencedColumnName = "name")
     @JsonManagedReference
     @ToString.Exclude

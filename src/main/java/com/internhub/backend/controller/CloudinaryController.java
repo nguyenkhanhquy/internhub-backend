@@ -33,4 +33,15 @@ public class CloudinaryController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PostMapping("/upload/raw")
+    public ResponseEntity<SuccessResponse<Object>> uploadRaw(@RequestParam("file") MultipartFile file,
+                                                             @RequestParam("folder") String folderName) throws IOException {
+        SuccessResponse<Object> successResponse = SuccessResponse.builder()
+                .message("Upload tệp thành công")
+                .result(cloudinaryService.uploadRaw(file, folderName))
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

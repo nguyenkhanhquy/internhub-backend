@@ -1,6 +1,7 @@
 package com.internhub.backend.entity.job;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.internhub.backend.entity.student.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,7 +35,13 @@ public class JobApply {
     @Enumerated(EnumType.STRING)
     private ApplyStatus applyStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "student_id", referencedColumnName = "user_id", nullable = false)
+    @ToString.Exclude
+    @JsonManagedReference
+    private Student student;
+
+    @ManyToOne
     @JoinColumn(name = "job_post_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonManagedReference

@@ -34,7 +34,7 @@ public class Notification {
     @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ToString.Exclude
     @JsonManagedReference
