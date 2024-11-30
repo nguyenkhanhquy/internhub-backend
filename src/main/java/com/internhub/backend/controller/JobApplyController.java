@@ -1,14 +1,15 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
+import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobApplyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/jobs/apply")
@@ -26,5 +27,10 @@ public class JobApplyController {
                 .build();
 
         return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/student")
+    public ResponseEntity<SuccessResponse<List<JobApplyDetailDTO>>> getJobApplyByStudent(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobApplyService.getJobApplyByStudent(request));
     }
 }
