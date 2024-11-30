@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -61,6 +62,15 @@ public class TeacherController {
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
                 .message("Xóa giáo viên thành công")
+                .build());
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<SuccessResponse<Void>> importTeachers(@RequestParam("file") MultipartFile file) {
+        teacherService.importTeachersFromFile(file);
+
+        return ResponseEntity.ok(SuccessResponse.<Void>builder()
+                .message("Import giáo viên thành công")
                 .build());
     }
 }

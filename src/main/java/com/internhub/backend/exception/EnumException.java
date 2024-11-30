@@ -15,6 +15,7 @@ public enum EnumException {
     INVALID_MAJOR_CODE(HttpStatus.BAD_REQUEST, "Mã ngành trong email không hợp lệ"),
     EMAIL_AND_STUDENT_ID_MISMATCH(HttpStatus.BAD_REQUEST, "Mã số sinh viên không khớp với email"),
     ACCOUNT_ALREADY_ACTIVATED(HttpStatus.BAD_REQUEST, "Tài khoản đã được kích hoạt trước đó"),
+    FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "Loại tệp không hợp lệ"),
 
     // 401 : Unauthorized — user chưa được xác thực
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),
@@ -37,8 +38,8 @@ public enum EnumException {
     // 500: Internal Server Error — có lỗi trong hệ thống
     UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),
     JWT_SIGNING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Không thể ký JWT Token"),
-    ERROR_UPLOAD_FILE(HttpStatus.INTERNAL_SERVER_ERROR, "Tải lên tệp không thành công"),
-    ;
+    UPLOAD_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Tải lên tệp không thành công"),
+    IMPORT_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi khi nhập dữ liệu từ tệp");
 
     private final HttpStatus statusCode;
     private final String message;
