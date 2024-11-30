@@ -78,4 +78,9 @@ public class JobPostController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @GetMapping("/recruiter")
+    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getJobPostByRecruiter(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobPostService.getJobPostByRecruiter(request));
+    }
 }

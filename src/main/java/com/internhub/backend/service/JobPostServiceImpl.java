@@ -17,7 +17,7 @@ import com.internhub.backend.repository.JobSavedRepository;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.util.AuthUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class JobPostServiceImpl implements JobPostService {
 
     private final JobPostRepository jobPostRepository;
@@ -41,15 +42,6 @@ public class JobPostServiceImpl implements JobPostService {
     private final StudentRepository studentRepository;
     private final JobSavedRepository jobSavedRepository;
     private final JobPostMapper jobPostMapper;
-
-    @Autowired
-    public JobPostServiceImpl(JobPostRepository jobPostRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, JobSavedRepository jobSavedRepository, JobPostMapper jobPostMapper) {
-        this.jobPostRepository = jobPostRepository;
-        this.recruiterRepository = recruiterRepository;
-        this.studentRepository = studentRepository;
-        this.jobSavedRepository = jobSavedRepository;
-        this.jobPostMapper = jobPostMapper;
-    }
 
     @Override
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
@@ -166,6 +158,43 @@ public class JobPostServiceImpl implements JobPostService {
         } catch (CustomException e) {
             return jobPostDetailDTO;
         }
+    }
+
+    @Override
+    public SuccessResponse<List<JobPostDetailDTO>> getJobPostByRecruiter(JobPostSearchFilterRequest request) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        Recruiter recruiter = recruiterRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        Sort sort;
+        if ("oldest".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else if ("recentUpdate".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.desc("updatedDate"));
+        } else {
+            sort = Sort.by(Sort.Order.desc("createdDate"));
+        }
+
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+
+        Page<JobPost> pageData = jobPostRepository.findByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted());
+
+        return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent().stream()
+                        .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
+                        .toList())
+                .build();
     }
 
     @Override

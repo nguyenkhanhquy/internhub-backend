@@ -87,7 +87,7 @@ public class JobPost {
 
     @Builder.Default
     @Column(name = "is_hidden", nullable = false)
-    private boolean isHidden = false;
+    private boolean isHidden = true;
 
     @Builder.Default
     @Column(name = "is_deleted", nullable = false)

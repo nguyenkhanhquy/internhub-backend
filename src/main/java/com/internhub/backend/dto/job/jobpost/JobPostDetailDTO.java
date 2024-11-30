@@ -2,9 +2,9 @@ package com.internhub.backend.dto.job.jobpost;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.internhub.backend.dto.student.MajorDTO;
 import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.job.JobApply;
+import com.internhub.backend.entity.student.Major;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,7 +55,9 @@ public class JobPostDetailDTO {
 
     private List<JobApply> jobApplies;
 
-    private List<MajorDTO> majors;
+    private int jobApplyCount;
+
+    private List<Major> majors;
 
     private boolean isApproved;
 
