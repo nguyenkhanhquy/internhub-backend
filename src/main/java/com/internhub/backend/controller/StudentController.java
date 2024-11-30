@@ -2,14 +2,14 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.request.students.UpdateStudentProfileRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/students")
@@ -20,6 +20,17 @@ public class StudentController {
     @Autowired
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+    }
+
+    @GetMapping
+    public ResponseEntity<SuccessResponse<List<Student>>> getAllStudents() {
+        List<Student> students = studentService.getAllStudents();
+
+        SuccessResponse<List<Student>> successResponse = SuccessResponse.<List<Student>>builder()
+                .result(students)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
     }
 
     @PostMapping("/update-profile")
