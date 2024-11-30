@@ -4,6 +4,7 @@ import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobPostService;
 import jakarta.validation.Valid;
@@ -57,6 +58,17 @@ public class JobPostController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<SuccessResponse<Void>> updateJobPost(@PathVariable("id") String id, @Valid @RequestBody JobPostUpdateRequest request) {
+        jobPostService.updateJobPost(id, request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Cập nhật bài đăng việc làm thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
     }
 
     @DeleteMapping("/{id}")

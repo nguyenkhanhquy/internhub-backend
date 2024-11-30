@@ -4,6 +4,7 @@ import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,9 @@ public interface JobPostService {
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
     void createJobPost(CreateJobPostRequest createJobPostRequest);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    void updateJobPost(String id, JobPostUpdateRequest request);
 
     @PostAuthorize("hasAuthority('SCOPE_RECRUITER')")
     void deleteJobPost(String id);

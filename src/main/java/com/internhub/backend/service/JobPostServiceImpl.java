@@ -4,6 +4,7 @@ import com.internhub.backend.dto.job.jobpost.JobPostBasicDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
@@ -48,6 +49,8 @@ public class JobPostServiceImpl implements JobPostService {
         Sort sort;
         if ("oldest".equalsIgnoreCase(request.getOrder())) {
             sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else if ("recentUpdate".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.desc("updatedDate"));
         } else {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
@@ -118,7 +121,6 @@ public class JobPostServiceImpl implements JobPostService {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-
         Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), pageable);
 
         return SuccessResponse.<List<JobPostBasicDTO>>builder()
@@ -140,7 +142,6 @@ public class JobPostServiceImpl implements JobPostService {
     public JobPostDetailDTO getJobPostById(String id) {
         JobPost jobPost = jobPostRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
-
         JobPostDetailDTO jobPostDetailDTO = jobPostMapper.mapJobPostToJobPostDetailDTO(jobPost);
 
         try {
@@ -165,7 +166,6 @@ public class JobPostServiceImpl implements JobPostService {
         Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
-
         Recruiter recruiter = recruiterRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
 
@@ -177,9 +177,7 @@ public class JobPostServiceImpl implements JobPostService {
         } else {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
-
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-
         Page<JobPost> pageData = jobPostRepository.findByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted());
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
@@ -223,6 +221,31 @@ public class JobPostServiceImpl implements JobPostService {
                 .address(createJobPostRequest.getAddress())
                 .majors(createJobPostRequest.getMajors())
                 .build();
+
+        jobPostRepository.save(jobPost);
+    }
+
+    @Override
+    public void updateJobPost(String id, JobPostUpdateRequest request) {
+        JobPost jobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        jobPost.setTitle(request.getTitle());
+        jobPost.setJobPosition(request.getJobPosition());
+        jobPost.setQuantity(request.getQuantity());
+        jobPost.setSalary(request.getSalary());
+        jobPost.setType(request.getType());
+        jobPost.setRemote(request.getRemote());
+        jobPost.setMajors(request.getMajors());
+        jobPost.setExpiryDate(request.getExpiryDate());
+        jobPost.setAddress(request.getAddress());
+        jobPost.setDescription(request.getDescription());
+        jobPost.setRequirements(request.getRequirements());
+        jobPost.setBenefits(request.getBenefits());
+
+        jobPost.setUpdatedDate(Date.from(Instant.now()));
+        jobPost.setApproved(false);
+        jobPost.setHidden(true);
 
         jobPostRepository.save(jobPost);
     }
