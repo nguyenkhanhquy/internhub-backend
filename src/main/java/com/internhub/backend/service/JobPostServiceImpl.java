@@ -281,4 +281,15 @@ public class JobPostServiceImpl implements JobPostService {
 
         return true;
     }
+
+    @Override
+    public boolean hiddenJobPost(String id) {
+        JobPost jobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        jobPost.setHidden(!jobPost.isHidden());
+        jobPostRepository.save(jobPost);
+
+        return jobPost.isHidden();
+    }
 }

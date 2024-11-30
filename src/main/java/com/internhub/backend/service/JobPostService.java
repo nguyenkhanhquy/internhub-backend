@@ -34,4 +34,7 @@ public interface JobPostService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     boolean saveJobPost(Map<String, String> request);
+
+    @PostAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    boolean hiddenJobPost(String id);
 }

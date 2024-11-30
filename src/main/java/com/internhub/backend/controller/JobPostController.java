@@ -48,6 +48,11 @@ public class JobPostController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @GetMapping("/recruiter")
+    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getJobPostByRecruiter(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobPostService.getJobPostByRecruiter(request));
+    }
+
     @PostMapping
     public ResponseEntity<SuccessResponse<Void>> createJobPost(@Valid @RequestBody CreateJobPostRequest createJobPostRequest) {
         jobPostService.createJobPost(createJobPostRequest);
@@ -91,8 +96,16 @@ public class JobPostController {
         return ResponseEntity.ok(successResponse);
     }
 
-    @GetMapping("/recruiter")
-    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getJobPostByRecruiter(@ModelAttribute JobPostSearchFilterRequest request) {
-        return ResponseEntity.ok(jobPostService.getJobPostByRecruiter(request));
+    @PostMapping("/hidden/{id}")
+    public ResponseEntity<SuccessResponse<Void>> hiddenJobPost(@PathVariable("id") String id) {
+        String message = jobPostService.hiddenJobPost(id)
+                ? "Ẩn bài đăng thành công"
+                : "Hiện bài đăng thành công";
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message(message)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
     }
 }

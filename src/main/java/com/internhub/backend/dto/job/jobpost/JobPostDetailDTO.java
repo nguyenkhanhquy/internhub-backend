@@ -61,5 +61,7 @@ public class JobPostDetailDTO {
 
     private boolean isApproved;
 
+    private boolean isHidden;
+
     private boolean isSaved;
 }
