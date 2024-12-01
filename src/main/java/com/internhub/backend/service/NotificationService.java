@@ -7,4 +7,6 @@ import java.util.List;
 public interface NotificationService {
 
     List<NotificationDTO> getAllNotificationsByUser();
+
+    void markNotificationAsRead(String notificationId);
 }

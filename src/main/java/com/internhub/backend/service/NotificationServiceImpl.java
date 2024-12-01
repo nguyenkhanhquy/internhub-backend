@@ -36,4 +36,13 @@ public class NotificationServiceImpl implements NotificationService {
                 .map(notificationMapper::toDTO)
                 .toList();
     }
+
+    @Override
+    public void markNotificationAsRead(String notificationId) {
+        notificationRepository.findById(notificationId)
+                .ifPresent(notification -> {
+                    notification.setRead(true);
+                    notificationRepository.save(notification);
+                });
+    }
 }

@@ -5,9 +5,7 @@ import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,6 +22,17 @@ public class NotificationController {
 
         SuccessResponse<List<NotificationDTO>> successResponse = SuccessResponse.<List<NotificationDTO>>builder()
                 .result(notifications)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PutMapping("/mark-as-read/{id}")
+    public ResponseEntity<SuccessResponse<Void>> markNotificationAsRead(@PathVariable("id") String id) {
+        notificationService.markNotificationAsRead(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Thông báo đã được đánh dấu là đã đọc")
                 .build();
 
         return ResponseEntity.ok(successResponse);
