@@ -83,4 +83,25 @@ public class AdminServiceImpl implements AdminService {
 
         webSocketService.sendPrivateMessage(user.getId(), title);
     }
+
+    @Override
+    public void approveRecruiter(String id) {
+        Recruiter recruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+        recruiter.setApproved(true);
+        recruiterRepository.save(recruiter);
+
+        User user = recruiter.getUser();
+        String title = "Hồ sơ doanh nghiệp của bạn đã được duyệt";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Hồ sơ doanh nghiệp của bạn đã xem xét và đã được chấp nhận, vui lòng tải lại trang để sử dụng các chức năng tuyển dụng")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
 }

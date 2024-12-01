@@ -32,4 +32,15 @@ public class AdminController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PostMapping("/recruiters/approve/{id}")
+    public ResponseEntity<SuccessResponse<Void>> approveRecruiter(@PathVariable("id") String id) {
+        adminService.approveRecruiter(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Duyệt hồ sơ nhà tuyển dụng thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

@@ -50,15 +50,4 @@ public class RecruiterController {
 
         return ResponseEntity.ok(successResponse);
     }
-
-    @PostMapping("/approve/{id}")
-    public ResponseEntity<SuccessResponse<Void>> approveRecruiter(@PathVariable("id") String id) {
-        recruiterService.approveRecruiter(id);
-
-        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
-                .message("Duyệt hồ sơ nhà tuyển dụng thành công")
-                .build();
-
-        return ResponseEntity.ok(successResponse);
-    }
 }

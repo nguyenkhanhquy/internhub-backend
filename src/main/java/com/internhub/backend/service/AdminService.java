@@ -14,4 +14,7 @@ public interface AdminService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     void approveJobPost(String id);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void approveRecruiter(String id);
 }
