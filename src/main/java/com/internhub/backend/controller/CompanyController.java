@@ -23,9 +23,9 @@ public class CompanyController {
         this.companyService = companyService;
     }
 
-    @GetMapping
-    public ResponseEntity<SuccessResponse<List<CompanyBasicDTO>>> getAllCompanies(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                                                  @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
-        return ResponseEntity.ok(companyService.getAllCompanies(page, size));
+    @GetMapping("/approved")
+    public ResponseEntity<SuccessResponse<List<CompanyBasicDTO>>> getAllApprovedCompanies(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                                          @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(companyService.getAllApprovedCompanies(page, size));
     }
 }

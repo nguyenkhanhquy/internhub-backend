@@ -27,11 +27,11 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public SuccessResponse<List<CompanyBasicDTO>> getAllCompanies(int page, int size) {
+    public SuccessResponse<List<CompanyBasicDTO>> getAllApprovedCompanies(int page, int size) {
         Sort sort = Sort.by(Sort.Order.asc("name"));
         Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        Page<Company> pageData = companyRepository.findAll(pageable);
+        Page<Company> pageData = companyRepository.findAllApprovedCompanies(pageable);
 
         return SuccessResponse.<List<CompanyBasicDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

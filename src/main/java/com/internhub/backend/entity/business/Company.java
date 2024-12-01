@@ -1,5 +1,6 @@
 package com.internhub.backend.entity.business;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,4 +33,9 @@ public class Company {
 
     @Column(name = "logo")
     private String logo;
+
+    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @JsonIgnore
+    private Recruiter recruiter;
 }

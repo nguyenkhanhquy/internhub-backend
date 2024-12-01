@@ -17,7 +17,5 @@ public class CompanyBasicDTO {
 
     private String name;
 
-    private String website;
-
     private String logo;
 }

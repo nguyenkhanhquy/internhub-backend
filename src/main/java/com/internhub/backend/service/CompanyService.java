@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CompanyService {
 
-    SuccessResponse<List<CompanyBasicDTO>> getAllCompanies(int page, int size);
+    SuccessResponse<List<CompanyBasicDTO>> getAllApprovedCompanies(int page, int size);
 }
