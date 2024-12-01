@@ -1,8 +1,11 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.business.company.CompanyBasicDTO;
+import com.internhub.backend.dto.business.company.CompanyDetailDTO;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Company;
+import com.internhub.backend.exception.CustomException;
+import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.CompanyMapper;
 import com.internhub.backend.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +46,16 @@ public class CompanyServiceImpl implements CompanyService {
                         .hasNextPage(pageData.hasNext())
                         .build())
                 .result(pageData.getContent().stream()
-                        .map(companyMapper::mapCompanyToCompanyBasicDTO)
+                        .map(companyMapper::toBasicDTO)
                         .toList())
                 .build();
+    }
+
+    @Override
+    public CompanyDetailDTO getCompanyById(String companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new CustomException(EnumException.COMPANY_NOT_FOUND));
+
+        return companyMapper.toDetailDTO(company);
     }
 }
