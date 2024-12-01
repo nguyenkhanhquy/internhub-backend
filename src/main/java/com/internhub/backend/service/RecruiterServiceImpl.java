@@ -1,6 +1,5 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.TextMessageDTO;
 import com.internhub.backend.dto.business.RecruiterDTO;
 import com.internhub.backend.dto.request.recruiters.UpdateRecruiterProfileRequest;
 import com.internhub.backend.entity.account.Notification;
@@ -14,7 +13,6 @@ import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -27,10 +25,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecruiterServiceImpl implements RecruiterService {
 
-    private final SimpMessagingTemplate template;
     private final RecruiterRepository recruiterRepository;
     private final RecruiterMapper recruiterMapper;
     private final UserRepository userRepository;
+    private final WebSocketService webSocketService;
 
     @Override
     public List<RecruiterDTO> getAllRecruiters() {
@@ -80,21 +78,16 @@ public class RecruiterServiceImpl implements RecruiterService {
         recruiterRepository.save(recruiter);
 
         User user = recruiter.getUser();
+        String title = "Hồ sơ doanh nghiệp của bạn đã được duyệt";
         Notification notification = Notification.builder()
-                .title("Hồ sơ doanh nghiệp đã được duyệt")
-                .content("Hồ sơ doanh nghiệp của bạn đã được duyệt")
+                .title(title)
+                .content("Hồ sơ doanh nghiệp của bạn đã xem xét và đã được chấp nhận, vui lòng tải lại trang để sử dụng các chức năng tuyển dụng")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();
         user.getNotifications().add(notification);
         userRepository.save(user);
 
-        TextMessageDTO textMessageDTO = new TextMessageDTO();
-        textMessageDTO.setMessage("Hồ sơ doanh nghiệp của bạn đã được duyệt");
-        template.convertAndSendToUser(
-                user.getId(),
-                "/private",
-                textMessageDTO
-        );
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 }

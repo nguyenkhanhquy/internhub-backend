@@ -1,6 +1,5 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.TextMessageDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -30,11 +28,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-    private final SimpMessagingTemplate template;
     private final JobPostRepository jobPostRepository;
     private final JobPostMapper jobPostMapper;
     private final RecruiterRepository recruiterRepository;
     private final UserRepository userRepository;
+    private final WebSocketService webSocketService;
 
     @Override
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
@@ -70,22 +68,19 @@ public class AdminServiceImpl implements AdminService {
         if (recruiter == null) {
             throw new CustomException(EnumException.PROFILE_NOT_FOUND);
         }
+
+
         User user = recruiter.getUser();
+        String title = "Bài đăng '" + jobPost.getTitle() + "' đã được duyệt";
         Notification notification = Notification.builder()
-                .title("Bài đăng " + jobPost.getTitle() + " đã được duyệt")
-                .content("Bài đăng " + jobPost.getTitle() + " đã được duyệt")
+                .title(title)
+                .content("Bài đăng '" + jobPost.getTitle() + "' đã được duyệt và có thể được hiển thị")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();
         user.getNotifications().add(notification);
         userRepository.save(user);
 
-        TextMessageDTO textMessageDTO = new TextMessageDTO();
-        textMessageDTO.setMessage("Một bài đăng tuyển dụng đã được duyệt");
-        template.convertAndSendToUser(
-                user.getId(),
-                "/private",
-                textMessageDTO
-        );
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 }
