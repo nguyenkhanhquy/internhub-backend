@@ -15,7 +15,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Override
     public void sendPrivateMessage(String userId, String messageContent) {
         TextMessageDTO textMessageDTO = new TextMessageDTO();
-        textMessageDTO.setMessage("Hồ sơ doanh nghiệp của bạn đã được duyệt");
+        textMessageDTO.setMessage(messageContent);
         template.convertAndSendToUser(
                 userId,
                 "/private",

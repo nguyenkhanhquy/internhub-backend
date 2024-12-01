@@ -5,10 +5,12 @@ import lombok.Getter;
 @Getter
 public enum ApplyStatus {
 
-    APPLIED("Đã ứng tuyển"),
-    PENDING("Chờ xử lý"),
-    ACCEPTED("Chấp nhận"),
-    REJECTED("Từ chối"),
+    PROCESSING("Đang xử lý"),
+    INTERVIEW("Phỏng vấn"),
+    OFFER("Đề nghị"),
+    REJECTED("Đã từ chối"),
+    ACCEPTED("Đã nhận"),
+    REFUSED("Không nhận")
     ;
 
     private final String description;

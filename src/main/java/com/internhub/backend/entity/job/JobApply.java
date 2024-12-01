@@ -31,6 +31,9 @@ public class JobApply {
     @Column(name = "cv", nullable = false)
     private String cv;
 
+    @Column(name = "interview_letter")
+    private String interviewLetter;
+
     @Column(name = "apply_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ApplyStatus applyStatus;

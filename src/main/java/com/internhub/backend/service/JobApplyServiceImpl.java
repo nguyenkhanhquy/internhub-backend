@@ -82,7 +82,7 @@ public class JobApplyServiceImpl implements JobApplyService {
                 .student(student)
                 .coverLetter(request.getCoverLetter())
                 .cv(request.getCv())
-                .applyStatus(ApplyStatus.PENDING)
+                .applyStatus(ApplyStatus.PROCESSING)
                 .applyDate(Date.from(Instant.now()))
                 .build();
 

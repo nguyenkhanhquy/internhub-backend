@@ -69,7 +69,6 @@ public class AdminServiceImpl implements AdminService {
             throw new CustomException(EnumException.PROFILE_NOT_FOUND);
         }
 
-
         User user = recruiter.getUser();
         String title = "Bài đăng '" + jobPost.getTitle() + "' đã được duyệt";
         Notification notification = Notification.builder()

@@ -38,4 +38,6 @@ public class JobApplyDetailDTO {
     private String coverLetter;
 
     private String cv;
+
+    private String interviewLetter;
 }
