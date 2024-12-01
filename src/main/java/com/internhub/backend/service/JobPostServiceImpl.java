@@ -178,7 +178,7 @@ public class JobPostServiceImpl implements JobPostService {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<JobPost> pageData = jobPostRepository.findByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted());
+        Page<JobPost> pageData = jobPostRepository.findAllByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted());
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Setter
@@ -30,6 +29,4 @@ public class UserDTO {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss", timezone = "Asia/Ho_Chi_Minh")
     private Date updatedDate;
-
-    private List<NotificationDTO> notifications;
 }
