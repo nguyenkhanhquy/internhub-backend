@@ -19,4 +19,7 @@ public interface JobApplyService {
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
     SuccessResponse<List<JobApplyDetailDTO>> getAllJobApplyByJobPostId(String jobPostId, PageSearchSortFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    void rejectJobApply(String jobApplyId);
 }

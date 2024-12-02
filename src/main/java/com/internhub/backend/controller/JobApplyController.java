@@ -39,4 +39,15 @@ public class JobApplyController {
     public ResponseEntity<SuccessResponse<List<JobApplyDetailDTO>>> getAllJobApplyByJobPostId(@PathVariable("id") String jobPostId, @ModelAttribute PageSearchSortFilterRequest request) {
         return ResponseEntity.ok(jobApplyService.getAllJobApplyByJobPostId(jobPostId, request));
     }
+
+    @PutMapping("/reject/{id}")
+    public ResponseEntity<SuccessResponse<Void>> rejectJobApply(@PathVariable("id") String jobApplyId) {
+        jobApplyService.rejectJobApply(jobApplyId);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Từ chối hồ sơ thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

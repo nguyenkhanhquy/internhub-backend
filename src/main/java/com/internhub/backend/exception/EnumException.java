@@ -35,6 +35,7 @@ public enum EnumException {
     JOB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy bài đăng việc làm"),
     TEACHER_NOT_FOUND(HttpStatus.BAD_REQUEST, "Không tìm thấy giảng viên"),
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy công ty"),
+    JOB_APPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy hồ sơ ứng tuyển"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống
     UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),

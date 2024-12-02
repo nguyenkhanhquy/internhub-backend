@@ -5,6 +5,8 @@ import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.account.Notification;
+import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.job.ApplyStatus;
 import com.internhub.backend.entity.job.JobApply;
 import com.internhub.backend.entity.job.JobPost;
@@ -15,6 +17,7 @@ import com.internhub.backend.mapper.JobApplyMapper;
 import com.internhub.backend.repository.JobApplyRepository;
 import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.StudentRepository;
+import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,7 +39,33 @@ public class JobApplyServiceImpl implements JobApplyService {
     private final JobApplyRepository jobApplyRepository;
     private final StudentRepository studentRepository;
     private final JobPostRepository jobPostRepository;
+    private final UserRepository userRepository;
     private final JobApplyMapper jobApplyMapper;
+    private final WebSocketService webSocketService;
+
+    @Override
+    public void createJobApply(CreateJobApplyRequest request) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        JobPost jobPost = jobPostRepository.findById(request.getJobPostId())
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        JobApply jobApply = JobApply.builder()
+                .jobPost(jobPost)
+                .student(student)
+                .coverLetter(request.getCoverLetter())
+                .cv(request.getCv())
+                .applyStatus(ApplyStatus.PROCESSING)
+                .applyDate(Date.from(Instant.now()))
+                .build();
+
+        jobApplyRepository.save(jobApply);
+    }
 
     @Override
     public SuccessResponse<List<JobApplyDetailDTO>> getJobApplyByStudent(JobPostSearchFilterRequest request) {
@@ -91,26 +120,24 @@ public class JobApplyServiceImpl implements JobApplyService {
     }
 
     @Override
-    public void createJobApply(CreateJobApplyRequest request) {
-        Authentication authentication = AuthUtils.getAuthenticatedUser();
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        String userId = (String) jwt.getClaims().get("userId");
+    public void rejectJobApply(String jobApplyId) {
+        JobApply jobApply = jobApplyRepository.findById(jobApplyId)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_APPLY_NOT_FOUND));
 
-        Student student = studentRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
-
-        JobPost jobPost = jobPostRepository.findById(request.getJobPostId())
-                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
-
-        JobApply jobApply = JobApply.builder()
-                .jobPost(jobPost)
-                .student(student)
-                .coverLetter(request.getCoverLetter())
-                .cv(request.getCv())
-                .applyStatus(ApplyStatus.PROCESSING)
-                .applyDate(Date.from(Instant.now()))
-                .build();
-
+        jobApply.setApplyStatus(ApplyStatus.REJECTED);
         jobApplyRepository.save(jobApply);
+
+        User user = jobApply.getStudent().getUser();
+        String title = "Một hồ sơ của bạn đã bị từ chối";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Hồ sơ của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "] đã bị từ chối")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 }
