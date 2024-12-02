@@ -3,6 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -15,4 +16,7 @@ public interface JobApplyService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     SuccessResponse<List<JobApplyDetailDTO>> getJobApplyByStudent(JobPostSearchFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    SuccessResponse<List<JobApplyDetailDTO>> getAllJobApplyByJobPostId(String jobPostId, PageSearchSortFilterRequest request);
 }

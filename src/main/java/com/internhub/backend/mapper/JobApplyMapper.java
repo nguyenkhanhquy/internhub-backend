@@ -12,5 +12,6 @@ public interface JobApplyMapper {
     @Mapping(source = "jobPost.jobPosition", target = "jobPosition")
     @Mapping(source = "jobPost.company", target = "company")
     @Mapping(source = "jobPost.expiryDate", target = "expiryDate")
+    @Mapping(source = "student.name", target = "name")
     JobApplyDetailDTO toDetailDTO(JobApply jobApply);
 }

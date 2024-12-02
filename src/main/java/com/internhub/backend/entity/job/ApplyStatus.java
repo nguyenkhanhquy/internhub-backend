@@ -10,8 +10,7 @@ public enum ApplyStatus {
     OFFER("Đề nghị"),
     REJECTED("Đã từ chối"),
     ACCEPTED("Đã nhận"),
-    REFUSED("Không nhận")
-    ;
+    REFUSED("Không nhận");
 
     private final String description;
 

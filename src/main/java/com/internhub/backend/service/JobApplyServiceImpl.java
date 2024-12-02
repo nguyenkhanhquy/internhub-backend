@@ -3,6 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.job.ApplyStatus;
 import com.internhub.backend.entity.job.JobApply;
@@ -49,6 +50,30 @@ public class JobApplyServiceImpl implements JobApplyService {
         Sort sort = Sort.by(Sort.Order.desc("applyDate"));
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
         Page<JobApply> pageData = jobApplyRepository.findAllByStudent(student, request.getSearch(), pageable);
+
+        return SuccessResponse.<List<JobApplyDetailDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent().stream()
+                        .map(jobApplyMapper::toDetailDTO)
+                        .toList())
+                .build();
+    }
+
+    @Override
+    public SuccessResponse<List<JobApplyDetailDTO>> getAllJobApplyByJobPostId(String jobPostId, PageSearchSortFilterRequest request) {
+        JobPost jobPost = jobPostRepository.findById(jobPostId)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        Sort sort = Sort.by(Sort.Order.desc("applyDate"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+        Page<JobApply> pageData = jobApplyRepository.findAllByJobPost(jobPost, pageable);
 
         return SuccessResponse.<List<JobApplyDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

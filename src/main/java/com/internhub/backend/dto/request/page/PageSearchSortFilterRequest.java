@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PageRequest {
+public class PageSearchSortFilterRequest {
 
     // pagination
     private int page = 1;

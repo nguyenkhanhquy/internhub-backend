@@ -3,6 +3,7 @@ package com.internhub.backend.controller;
 import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
 import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobApplyService;
 import lombok.RequiredArgsConstructor;
@@ -32,5 +33,10 @@ public class JobApplyController {
     @GetMapping("/student")
     public ResponseEntity<SuccessResponse<List<JobApplyDetailDTO>>> getJobApplyByStudent(@ModelAttribute JobPostSearchFilterRequest request) {
         return ResponseEntity.ok(jobApplyService.getJobApplyByStudent(request));
+    }
+
+    @GetMapping("/post/{id}")
+    public ResponseEntity<SuccessResponse<List<JobApplyDetailDTO>>> getAllJobApplyByJobPostId(@PathVariable("id") String jobPostId, @ModelAttribute PageSearchSortFilterRequest request) {
+        return ResponseEntity.ok(jobApplyService.getAllJobApplyByJobPostId(jobPostId, request));
     }
 }

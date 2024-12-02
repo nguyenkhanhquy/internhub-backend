@@ -35,6 +35,8 @@ public class JobApplyDetailDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private ApplyStatus applyStatus;
 
+    private String name;
+
     private String coverLetter;
 
     private String cv;
