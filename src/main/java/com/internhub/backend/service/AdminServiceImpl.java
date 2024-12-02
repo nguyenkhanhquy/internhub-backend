@@ -70,10 +70,10 @@ public class AdminServiceImpl implements AdminService {
         }
 
         User user = recruiter.getUser();
-        String title = "Bài đăng '" + jobPost.getTitle() + "' đã được duyệt";
+        String title = "Bài đăng: " + jobPost.getTitle() + " đã được duyệt";
         Notification notification = Notification.builder()
                 .title(title)
-                .content("Bài đăng '" + jobPost.getTitle() + "' đã được duyệt và có thể được hiển thị")
+                .content("Bài đăng: " + jobPost.getTitle() + " đã được duyệt và có thể được hiển thị")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();

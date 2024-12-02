@@ -33,7 +33,7 @@ public enum EnumException {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"),
     PROFILE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy hồ sơ"),
     JOB_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy bài đăng việc làm"),
-    TEACHER_NOT_FOUND(HttpStatus.BAD_REQUEST, "Không tìm thấy giáo viên"),
+    TEACHER_NOT_FOUND(HttpStatus.BAD_REQUEST, "Không tìm thấy giảng viên"),
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy công ty"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống

@@ -25,7 +25,7 @@ public class TeacherController {
         teacherService.addTeacher(request);
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
-                .message("Thêm giáo viên thành công")
+                .message("Thêm giảng viên thành công")
                 .build());
     }
 
@@ -52,7 +52,7 @@ public class TeacherController {
         teacherService.updateTeacher(id, request);
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
-                .message("Cập nhật giáo viên thành công")
+                .message("Cập nhật giảng viên thành công")
                 .build());
     }
 
@@ -61,7 +61,7 @@ public class TeacherController {
         teacherService.deleteTeacher(id);
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
-                .message("Xóa giáo viên thành công")
+                .message("Xóa giảng viên thành công")
                 .build());
     }
 
@@ -70,7 +70,7 @@ public class TeacherController {
         teacherService.importTeachersFromFile(file);
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
-                .message("Import giáo viên thành công")
+                .message("Import danh sách giảng viên thành công")
                 .build());
     }
 }
