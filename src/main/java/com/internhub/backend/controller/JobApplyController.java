@@ -1,8 +1,9 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
-import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.jobs.apply.CreateJobApplyRequest;
+import com.internhub.backend.dto.request.jobs.apply.InterviewJobApplyRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobApplyService;
@@ -46,6 +47,17 @@ public class JobApplyController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Từ chối hồ sơ thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PutMapping("/interview")
+    public ResponseEntity<SuccessResponse<Void>> interviewJobApply(@RequestBody InterviewJobApplyRequest request) {
+        jobApplyService.interviewJobApply(request);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Mời phỏng vấn thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);

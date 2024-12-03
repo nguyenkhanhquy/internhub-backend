@@ -1,4 +1,4 @@
-package com.internhub.backend.dto.request.jobs;
+package com.internhub.backend.dto.request.jobs.apply;
 
 import lombok.Getter;
 

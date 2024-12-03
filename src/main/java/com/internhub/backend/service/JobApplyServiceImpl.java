@@ -1,8 +1,9 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.job.jobapply.JobApplyDetailDTO;
-import com.internhub.backend.dto.request.jobs.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.jobs.apply.CreateJobApplyRequest;
+import com.internhub.backend.dto.request.jobs.apply.InterviewJobApplyRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.account.Notification;
@@ -132,6 +133,29 @@ public class JobApplyServiceImpl implements JobApplyService {
         Notification notification = Notification.builder()
                 .title(title)
                 .content("Hồ sơ của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "] đã bị từ chối")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
+
+    @Override
+    public void interviewJobApply(InterviewJobApplyRequest request) {
+        JobApply jobApply = jobApplyRepository.findById(request.getJobApplyId())
+                .orElseThrow(() -> new CustomException(EnumException.JOB_APPLY_NOT_FOUND));
+
+        jobApply.setApplyStatus(ApplyStatus.INTERVIEW);
+        jobApply.setInterviewLetter(request.getInterviewLetter());
+        jobApplyRepository.save(jobApply);
+
+        User user = jobApply.getStudent().getUser();
+        String title = "Một hồ sơ của bạn đã được chọn để phỏng vấn";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Hồ sơ của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "] đã được chọn để phỏng vấn")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();
