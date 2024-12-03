@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface JobApplyMapper {
 
+    @Mapping(source = "jobPost.id", target = "jobPostId")
     @Mapping(source = "jobPost.title", target = "title")
     @Mapping(source = "jobPost.jobPosition", target = "jobPosition")
     @Mapping(source = "jobPost.company", target = "company")
