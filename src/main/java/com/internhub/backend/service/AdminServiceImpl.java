@@ -64,7 +64,7 @@ public class AdminServiceImpl implements AdminService {
         jobPost.setApproved(true);
         jobPostRepository.save(jobPost);
 
-        Recruiter recruiter = recruiterRepository.findByCompany(jobPost.getCompany());
+        Recruiter recruiter = jobPost.getCompany().getRecruiter();
         if (recruiter == null) {
             throw new CustomException(EnumException.PROFILE_NOT_FOUND);
         }
@@ -74,6 +74,32 @@ public class AdminServiceImpl implements AdminService {
         Notification notification = Notification.builder()
                 .title(title)
                 .content("Bài đăng: " + jobPost.getTitle() + " đã được duyệt và có thể được hiển thị")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
+
+    @Override
+    public void deleteJobPost(String id) {
+        JobPost jobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+        jobPost.setDeleted(true);
+        jobPostRepository.save(jobPost);
+
+        Recruiter recruiter = jobPost.getCompany().getRecruiter();
+        if (recruiter == null) {
+            throw new CustomException(EnumException.PROFILE_NOT_FOUND);
+        }
+
+        User user = recruiter.getUser();
+        String title = "Bài đăng: " + jobPost.getTitle() + " đã bị từ chối";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Bài đăng: " + jobPost.getTitle() + " đã bị từ chối và không thể hiển thị")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();

@@ -33,6 +33,17 @@ public class AdminController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @PostMapping("/jobs/delete/{id}")
+    public ResponseEntity<SuccessResponse<Void>> deleteJobPost(@PathVariable("id") String id) {
+        adminService.deleteJobPost(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Từ chối bài đăng tuyển dụng thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @PostMapping("/recruiters/approve/{id}")
     public ResponseEntity<SuccessResponse<Void>> approveRecruiter(@PathVariable("id") String id) {
         adminService.approveRecruiter(id);

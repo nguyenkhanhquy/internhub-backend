@@ -246,6 +246,7 @@ public class JobPostServiceImpl implements JobPostService {
         jobPost.setUpdatedDate(Date.from(Instant.now()));
         jobPost.setApproved(false);
         jobPost.setHidden(true);
+        jobPost.setDeleted(false);
 
         jobPostRepository.save(jobPost);
     }
