@@ -20,6 +20,8 @@ public interface JobPostService {
 
     JobPostDetailDTO getJobPostById(String id);
 
+    SuccessResponse<List<JobPostDetailDTO>> getAllJobPostByCompanyId(String companyId, JobPostSearchFilterRequest request);
+
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
     SuccessResponse<List<JobPostDetailDTO>> getJobPostByRecruiter(JobPostSearchFilterRequest request);
 

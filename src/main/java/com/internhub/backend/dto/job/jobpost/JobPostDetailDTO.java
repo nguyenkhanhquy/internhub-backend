@@ -3,7 +3,6 @@ package com.internhub.backend.dto.job.jobpost;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.internhub.backend.entity.business.Company;
-import com.internhub.backend.entity.job.JobApply;
 import com.internhub.backend.entity.student.Major;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -52,8 +51,6 @@ public class JobPostDetailDTO {
     private Company company;
 
     private String address;
-
-    private List<JobApply> jobApplies;
 
     private int jobApplyCount;
 

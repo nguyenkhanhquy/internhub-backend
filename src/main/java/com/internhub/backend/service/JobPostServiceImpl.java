@@ -6,6 +6,7 @@ import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
 import com.internhub.backend.entity.job.JobSaved;
@@ -13,10 +14,7 @@ import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
-import com.internhub.backend.repository.JobPostRepository;
-import com.internhub.backend.repository.JobSavedRepository;
-import com.internhub.backend.repository.RecruiterRepository;
-import com.internhub.backend.repository.StudentRepository;
+import com.internhub.backend.repository.*;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +39,7 @@ public class JobPostServiceImpl implements JobPostService {
     private final JobPostRepository jobPostRepository;
     private final RecruiterRepository recruiterRepository;
     private final StudentRepository studentRepository;
+    private final CompanyRepository companyRepository;
     private final JobSavedRepository jobSavedRepository;
     private final JobPostMapper jobPostMapper;
 
@@ -158,6 +157,76 @@ public class JobPostServiceImpl implements JobPostService {
             return jobPostDetailDTO;
         } catch (CustomException e) {
             return jobPostDetailDTO;
+        }
+    }
+
+    @Override
+    public SuccessResponse<List<JobPostDetailDTO>> getAllJobPostByCompanyId(String companyId, JobPostSearchFilterRequest request) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new CustomException(EnumException.COMPANY_NOT_FOUND));
+
+        Sort sort;
+        if ("oldest".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else if ("recentUpdate".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.desc("updatedDate"));
+        } else {
+            sort = Sort.by(Sort.Order.desc("createdDate"));
+        }
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+        Page<JobPost> pageData = jobPostRepository.findAllByCompany(company, request.getSearch(), pageable, true, false, false);
+
+        try {
+            Authentication authentication = AuthUtils.getAuthenticatedUser();
+            Jwt jwt = (Jwt) authentication.getPrincipal();
+            String userId = (String) jwt.getClaims().get("userId");
+
+            Student student = studentRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+            List<JobSaved> jobSavedList = jobSavedRepository.findByStudent(student);
+
+            // Tạo danh sách ID của các công việc đã lưu
+            Set<String> savedJobPostIds = jobSavedList.stream()
+                    .map(jobSaved -> jobSaved.getJobPost().getId())
+                    .collect(Collectors.toSet());
+
+            List<JobPostDetailDTO> jobPostDetails = pageData.getContent().stream()
+                    .map(jobPost -> {
+                        JobPostDetailDTO dto = jobPostMapper.mapJobPostToJobPostDetailDTO(jobPost);
+                        // Kiểm tra nếu jobPostId nằm trong savedJobPostIds, cập nhật isSaved
+                        if (savedJobPostIds.contains(jobPost.getId())) {
+                            dto.setSaved(true);
+                        }
+                        return dto;
+                    })
+                    .toList();
+
+            return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                    .pageInfo(SuccessResponse.PageInfo.builder()
+                            .currentPage(request.getPage())
+                            .totalPages(pageData.getTotalPages())
+                            .pageSize(pageData.getSize())
+                            .totalElements(pageData.getTotalElements())
+                            .hasPreviousPage(pageData.hasPrevious())
+                            .hasNextPage(pageData.hasNext())
+                            .build())
+                    .result(jobPostDetails)
+                    .build();
+        } catch (CustomException e) {
+            return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                    .pageInfo(SuccessResponse.PageInfo.builder()
+                            .currentPage(request.getPage())
+                            .totalPages(pageData.getTotalPages())
+                            .pageSize(pageData.getSize())
+                            .totalElements(pageData.getTotalElements())
+                            .hasPreviousPage(pageData.hasPrevious())
+                            .hasNextPage(pageData.hasNext())
+                            .build())
+                    .result(pageData.getContent().stream()
+                            .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
+                            .toList())
+                    .build();
         }
     }
 

@@ -48,6 +48,11 @@ public class JobPostController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @GetMapping("/company/{id}")
+    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getAllJobPostByCompanyId(@PathVariable("id") String companyId, @ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobPostService.getAllJobPostByCompanyId(companyId, request));
+    }
+
     @GetMapping("/recruiter")
     public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getJobPostByRecruiter(@ModelAttribute JobPostSearchFilterRequest request) {
         return ResponseEntity.ok(jobPostService.getJobPostByRecruiter(request));
