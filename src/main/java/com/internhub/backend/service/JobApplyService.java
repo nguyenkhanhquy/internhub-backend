@@ -32,4 +32,7 @@ public interface JobApplyService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     void acceptOfferJobApply(String jobApplyId);
+
+    @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
+    void refuseOfferJobApply(String jobApplyId);
 }

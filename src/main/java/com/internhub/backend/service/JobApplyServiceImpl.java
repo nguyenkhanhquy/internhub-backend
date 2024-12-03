@@ -195,8 +195,7 @@ public class JobApplyServiceImpl implements JobApplyService {
         jobApply.setApplyStatus(ApplyStatus.ACCEPTED);
         jobApplyRepository.save(jobApply);
 
-        Student student = jobApply.getStudent();
-        List<JobApply> otherJobApplies = jobApplyRepository.findAllByStudent(student);
+        List<JobApply> otherJobApplies = jobApplyRepository.findAllByStudent(jobApply.getStudent());
         for (JobApply otherJobApply : otherJobApplies) {
             if (!otherJobApply.getId().equals(jobApplyId) && otherJobApply.getApplyStatus() != ApplyStatus.REJECTED) {
                 otherJobApply.setApplyStatus(ApplyStatus.REFUSED);
@@ -209,6 +208,28 @@ public class JobApplyServiceImpl implements JobApplyService {
         Notification notification = Notification.builder()
                 .title(title)
                 .content("Sinh viên [" + jobApply.getStudent().getName() + "] đã chấp nhận đề nghị thực tập của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "]")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
+
+    @Override
+    public void refuseOfferJobApply(String jobApplyId) {
+        JobApply jobApply = jobApplyRepository.findById(jobApplyId)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_APPLY_NOT_FOUND));
+
+        jobApply.setApplyStatus(ApplyStatus.REFUSED);
+        jobApplyRepository.save(jobApply);
+
+        User user = jobApply.getJobPost().getCompany().getRecruiter().getUser();
+        String title = "Một sinh viên đã từ chối đề nghị thực tập";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Sinh viên [" + jobApply.getStudent().getName() + "] đã từ chối đề nghị thực tập của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "]")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();
