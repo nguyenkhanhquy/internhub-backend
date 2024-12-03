@@ -62,4 +62,15 @@ public class JobApplyController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PutMapping("/offer/{id}")
+    public ResponseEntity<SuccessResponse<Void>> offerJobApply(@PathVariable("id") String jobApplyId) {
+        jobApplyService.offerJobApply(jobApplyId);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Mời nhận việc thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

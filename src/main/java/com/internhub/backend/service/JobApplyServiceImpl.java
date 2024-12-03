@@ -164,4 +164,26 @@ public class JobApplyServiceImpl implements JobApplyService {
 
         webSocketService.sendPrivateMessage(user.getId(), title);
     }
+
+    @Override
+    public void offerJobApply(String jobApplyId) {
+        JobApply jobApply = jobApplyRepository.findById(jobApplyId)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_APPLY_NOT_FOUND));
+
+        jobApply.setApplyStatus(ApplyStatus.OFFER);
+        jobApplyRepository.save(jobApply);
+
+        User user = jobApply.getStudent().getUser();
+        String title = "Một hồ sơ của bạn đã nhận được đề nghị thực tập";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Chúc mừng! Hồ sơ của bạn cho công việc [" + jobApply.getJobPost().getTitle() + "] đã nhận được đề nghị thực tập")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
 }

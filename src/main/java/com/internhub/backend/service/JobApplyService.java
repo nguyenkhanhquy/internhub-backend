@@ -26,4 +26,7 @@ public interface JobApplyService {
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
     void interviewJobApply(InterviewJobApplyRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    void offerJobApply(String jobApplyId);
 }
