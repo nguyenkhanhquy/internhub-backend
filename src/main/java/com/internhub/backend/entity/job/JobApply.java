@@ -31,7 +31,7 @@ public class JobApply {
     @Column(name = "cv", nullable = false)
     private String cv;
 
-    @Column(name = "interview_letter")
+    @Column(name = "interview_letter", length = 3000)
     private String interviewLetter;
 
     @Column(name = "apply_status", nullable = false)
