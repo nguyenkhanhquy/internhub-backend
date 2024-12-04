@@ -55,4 +55,8 @@ public class Student {
 
     @Column(name = "gpa", nullable = false)
     private double gpa;
+
+    @Builder.Default
+    @Column(name = "is_reported", nullable = false)
+    private boolean isReported = false;
 }
