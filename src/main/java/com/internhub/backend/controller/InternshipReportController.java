@@ -1,6 +1,6 @@
 package com.internhub.backend.controller;
 
-import com.internhub.backend.dto.request.internshipReports.CreateInternshipReportRequest;
+import com.internhub.backend.dto.request.internshipreports.CreateInternshipReportRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.student.InternshipReport;

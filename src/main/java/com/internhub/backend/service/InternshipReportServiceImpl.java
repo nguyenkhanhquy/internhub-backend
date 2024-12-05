@@ -1,6 +1,6 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.request.internshipReports.CreateInternshipReportRequest;
+import com.internhub.backend.dto.request.internshipreports.CreateInternshipReportRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.student.InternshipReport;
@@ -43,14 +43,15 @@ public class InternshipReportServiceImpl implements InternshipReportService {
                 .student(student)
                 .companyName(request.getCompanyName())
                 .teacherName(request.getTeacherName())
-                .intructorName(request.getIntructorName())
-                .intructorEmail(request.getIntructorEmail())
+                .instructorName(request.getInstructorName())
+                .instructorEmail(request.getInstructorEmail())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .reportFile(request.getReportFile())
                 .evaluationFile(request.getEvaluationFile())
                 .createdDate(Date.from(new Date().toInstant()))
                 .reportStatus(ReportStatus.PROCESSING)
+                .isSystemCompany(request.isSystemCompany())
                 .build();
 
         internshipReportRepository.save(internshipReport);

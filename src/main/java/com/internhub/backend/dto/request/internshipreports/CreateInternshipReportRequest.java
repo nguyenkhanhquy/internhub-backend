@@ -1,4 +1,4 @@
-package com.internhub.backend.dto.request.internshipReports;
+package com.internhub.backend.dto.request.internshipreports;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
@@ -17,10 +17,10 @@ public class CreateInternshipReportRequest {
     private String teacherName;
 
     @NotBlank(message = "Tên người hướng dẫn không được để trống")
-    private String intructorName;
+    private String instructorName;
 
     @NotBlank(message = "Email người hướng dẫn không được để trống")
-    private String intructorEmail;
+    private String instructorEmail;
 
     @NotNull(message = "Ngày bắt đầu không được để trống")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -35,4 +35,7 @@ public class CreateInternshipReportRequest {
 
     @NotBlank(message = "File đánh giá không được để trống")
     private String evaluationFile;
+
+    @NotNull(message = "Phải cho biết công ty thuộc hệ thống hay không")
+    private boolean isSystemCompany;
 }

@@ -27,11 +27,11 @@ public class InternshipReport {
     @Column(name = "teacher_name", nullable = false)
     private String teacherName;
 
-    @Column(name = "intructor_name", nullable = false)
-    private String intructorName;
+    @Column(name = "instructor_name", nullable = false)
+    private String instructorName;
 
-    @Column(name = "intructor_email", nullable = false)
-    private String intructorEmail;
+    @Column(name = "instructor_email", nullable = false)
+    private String instructorEmail;
 
     @Column(name = "created_date", updatable = false, nullable = false)
     private Date createdDate;
@@ -47,6 +47,9 @@ public class InternshipReport {
 
     @Column(name = "evaluation_file", nullable = false)
     private String evaluationFile;
+
+    @Column(name = "is_system_company", nullable = false)
+    private boolean isSystemCompany;
 
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "user_id", nullable = false)
