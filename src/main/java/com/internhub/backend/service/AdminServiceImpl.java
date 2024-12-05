@@ -2,14 +2,17 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
+import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.account.Notification;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
+import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
+import com.internhub.backend.repository.InternshipReportRepository;
 import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.UserRepository;
@@ -29,17 +32,35 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private final JobPostRepository jobPostRepository;
+    private final InternshipReportRepository internshipReportRepository;
     private final JobPostMapper jobPostMapper;
     private final RecruiterRepository recruiterRepository;
     private final UserRepository userRepository;
     private final WebSocketService webSocketService;
 
     @Override
+    public SuccessResponse<List<InternshipReport>> getAllInternshipReports(PageSearchSortFilterRequest request) {
+        Sort sort = Sort.by(Sort.Order.desc("createdDate"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+        Page<InternshipReport> pageData = internshipReportRepository.findAll(pageable);
+
+        return SuccessResponse.<List<InternshipReport>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent())
+                .build();
+    }
+
+    @Override
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         Sort sort = Sort.by(Sort.Order.desc("updatedDate"));
-
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-
         Page<JobPost> pageData = jobPostRepository.findAll(pageable);
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
