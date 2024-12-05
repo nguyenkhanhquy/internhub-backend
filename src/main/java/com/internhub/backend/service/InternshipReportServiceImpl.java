@@ -57,7 +57,7 @@ public class InternshipReportServiceImpl implements InternshipReportService {
     }
 
     @Override
-    public SuccessResponse<List<InternshipReport>> getAllInternshipReportByStudent(PageSearchSortFilterRequest request) {
+    public SuccessResponse<List<InternshipReport>> getAllInternshipReportsByStudent(PageSearchSortFilterRequest request) {
         Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");

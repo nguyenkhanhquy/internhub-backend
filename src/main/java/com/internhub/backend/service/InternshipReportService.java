@@ -14,5 +14,5 @@ public interface InternshipReportService {
     void createInternshipReport(CreateInternshipReportRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
-    SuccessResponse<List<InternshipReport>> getAllInternshipReportByStudent(PageSearchSortFilterRequest request);
+    SuccessResponse<List<InternshipReport>> getAllInternshipReportsByStudent(PageSearchSortFilterRequest request);
 }
