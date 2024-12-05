@@ -35,6 +35,17 @@ public class AdminController {
         return ResponseEntity.ok(successResponse);
     }
 
+    @PostMapping("/internship-reports/reject/{id}")
+    public ResponseEntity<SuccessResponse<Void>> rejectInternshipReport(@PathVariable("id") String id) {
+        adminService.rejectInternshipReport(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Từ chối báo cáo thực tập thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @GetMapping("/jobs")
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         return adminService.getAllJobPosts(request);

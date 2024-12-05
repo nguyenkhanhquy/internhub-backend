@@ -80,6 +80,27 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public void rejectInternshipReport(String id) {
+        InternshipReport internshipReport = internshipReportRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.INTERNSHIP_REPORT_NOT_FOUND));
+        internshipReport.setReportStatus(ReportStatus.REJECTED);
+        internshipReportRepository.save(internshipReport);
+
+        User user = internshipReport.getStudent().getUser();
+        String title = "Báo cáo thực tập của bạn đã bị từ chối";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Báo cáo thực tập của bạn đã bị từ chối, vui lòng kiểm tra lại thông tin và gửi lại báo cáo")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
+    }
+
+    @Override
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         Sort sort = Sort.by(Sort.Order.desc("updatedDate"));
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
