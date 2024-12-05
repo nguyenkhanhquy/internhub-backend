@@ -11,6 +11,7 @@ import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.job.ApplyStatus;
 import com.internhub.backend.entity.job.JobApply;
 import com.internhub.backend.entity.job.JobPost;
+import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
@@ -202,6 +203,11 @@ public class JobApplyServiceImpl implements JobApplyService {
             }
         }
         jobApplyRepository.saveAll(otherJobApplies);
+
+        Student student = studentRepository.findById(jobApply.getStudent().getUserId())
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+        student.setInternStatus(InternStatus.WORKING);
+        studentRepository.save(student);
 
         User user = jobApply.getJobPost().getCompany().getRecruiter().getUser();
         String title = "Một sinh viên đã chấp nhận đề nghị thực tập";

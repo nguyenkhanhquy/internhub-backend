@@ -1,5 +1,6 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
@@ -8,15 +9,14 @@ import com.internhub.backend.entity.account.Notification;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
+import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.entity.student.ReportStatus;
+import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
-import com.internhub.backend.repository.InternshipReportRepository;
-import com.internhub.backend.repository.JobPostRepository;
-import com.internhub.backend.repository.RecruiterRepository;
-import com.internhub.backend.repository.UserRepository;
+import com.internhub.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,8 +36,38 @@ public class AdminServiceImpl implements AdminService {
     private final InternshipReportRepository internshipReportRepository;
     private final JobPostMapper jobPostMapper;
     private final RecruiterRepository recruiterRepository;
+    private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
     private final UserRepository userRepository;
     private final WebSocketService webSocketService;
+
+    @Override
+    public OverviewDTO getOverview() {
+        long totalStudents = studentRepository.count();
+        long totalStudentsNotReported = studentRepository.countStudentByIsReported(false);
+        long totalTeachers = teacherRepository.count();
+        long totalRecruiters = recruiterRepository.count();
+        long totalRecruitersNotApproved = recruiterRepository.countRecruiterByIsApproved(false);
+        long totalJobPosts = jobPostRepository.count();
+        long totalJobPostsDisplayed = jobPostRepository.countJobPostByIsHidden(false);
+
+        long totalStudentsSearching = studentRepository.countByInternStatus(InternStatus.SEARCHING);
+        long totalStudentsWorking = studentRepository.countByInternStatus(InternStatus.WORKING);
+        long totalStudentsCompleted = studentRepository.countByInternStatus(InternStatus.COMPLETED);
+
+        return OverviewDTO.builder()
+                .totalStudents(totalStudents)
+                .totalStudentsNotReported(totalStudentsNotReported)
+                .totalTeachers(totalTeachers)
+                .totalRecruiters(totalRecruiters)
+                .totalRecruitersNotApproved(totalRecruitersNotApproved)
+                .totalJobPosts(totalJobPosts)
+                .totalJobPostsDisplayed(totalJobPostsDisplayed)
+                .totalStudentsSearching(totalStudentsSearching)
+                .totalStudentsWorking(totalStudentsWorking)
+                .totalStudentsCompleted(totalStudentsCompleted)
+                .build();
+    }
 
     @Override
     public SuccessResponse<List<InternshipReport>> getAllInternshipReports(PageSearchSortFilterRequest request) {
@@ -75,6 +105,12 @@ public class AdminServiceImpl implements AdminService {
                 .build();
         user.getNotifications().add(notification);
         userRepository.save(user);
+
+        Student student = studentRepository.findById(user.getId())
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+        student.setReported(true);
+        student.setInternStatus(InternStatus.COMPLETED);
+        studentRepository.save(student);
 
         webSocketService.sendPrivateMessage(user.getId(), title);
     }

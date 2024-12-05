@@ -1,5 +1,6 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
@@ -18,6 +19,17 @@ import java.util.List;
 public class AdminController {
 
     private final AdminService adminService;
+
+    @GetMapping("/overview")
+    public ResponseEntity<SuccessResponse<OverviewDTO>> getOverview() {
+        OverviewDTO overviewDTO = adminService.getOverview();
+
+        SuccessResponse<OverviewDTO> successResponse = SuccessResponse.<OverviewDTO>builder()
+                .result(overviewDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 
     @GetMapping("/internship-reports")
     public SuccessResponse<List<InternshipReport>> getAllInternshipReports(PageSearchSortFilterRequest request) {
