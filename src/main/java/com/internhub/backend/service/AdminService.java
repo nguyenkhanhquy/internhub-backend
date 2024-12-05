@@ -15,6 +15,9 @@ public interface AdminService {
     SuccessResponse<List<InternshipReport>> getAllInternshipReports(PageSearchSortFilterRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void approveInternshipReport(String id);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
     SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")

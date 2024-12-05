@@ -24,6 +24,17 @@ public class AdminController {
         return adminService.getAllInternshipReports(request);
     }
 
+    @PostMapping("/internship-reports/approve/{id}")
+    public ResponseEntity<SuccessResponse<Void>> approveInternshipReport(@PathVariable("id") String id) {
+        adminService.approveInternshipReport(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Duyệt báo cáo thực tập thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
     @GetMapping("/jobs")
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         return adminService.getAllJobPosts(request);

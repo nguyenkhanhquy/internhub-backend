@@ -9,6 +9,7 @@ import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
 import com.internhub.backend.entity.student.InternshipReport;
+import com.internhub.backend.entity.student.ReportStatus;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
@@ -55,6 +56,27 @@ public class AdminServiceImpl implements AdminService {
                         .build())
                 .result(pageData.getContent())
                 .build();
+    }
+
+    @Override
+    public void approveInternshipReport(String id) {
+        InternshipReport internshipReport = internshipReportRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.INTERNSHIP_REPORT_NOT_FOUND));
+        internshipReport.setReportStatus(ReportStatus.ACCEPTED);
+        internshipReportRepository.save(internshipReport);
+
+        User user = internshipReport.getStudent().getUser();
+        String title = "Báo cáo thực tập của bạn đã được duyệt";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Chúc mừng! Báo cáo thực tập của bạn đã được duyệt")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 
     @Override
