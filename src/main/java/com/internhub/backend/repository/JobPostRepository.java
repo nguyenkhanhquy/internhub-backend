@@ -33,5 +33,5 @@ public interface JobPostRepository extends JpaRepository<JobPost, String> {
             "AND j.isApproved = true AND j.isHidden = false AND j.isDeleted = false")
     Page<JobPost> searchJobPosts(String query, Pageable pageable);
 
-    long countJobPostByIsHidden(boolean isHidden);
+    long countJobPostByIsApprovedAndIsDeleted(boolean isApproved, boolean isDeleted);
 }

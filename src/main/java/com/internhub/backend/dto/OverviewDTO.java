@@ -20,7 +20,7 @@ public class OverviewDTO {
     private long totalRecruitersNotApproved;
 
     private long totalJobPosts;
-    private long totalJobPostsDisplayed;
+    private long totalJobPostsNotApproved;
 
     private long totalStudentsSearching;
     private long totalStudentsWorking;

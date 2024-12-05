@@ -49,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
         long totalRecruiters = recruiterRepository.count();
         long totalRecruitersNotApproved = recruiterRepository.countRecruiterByIsApproved(false);
         long totalJobPosts = jobPostRepository.count();
-        long totalJobPostsDisplayed = jobPostRepository.countJobPostByIsHidden(false);
+        long totalJobPostsDisplayed = jobPostRepository.countJobPostByIsApprovedAndIsDeleted(false, false);
 
         long totalStudentsSearching = studentRepository.countByInternStatus(InternStatus.SEARCHING);
         long totalStudentsWorking = studentRepository.countByInternStatus(InternStatus.WORKING);
@@ -62,7 +62,7 @@ public class AdminServiceImpl implements AdminService {
                 .totalRecruiters(totalRecruiters)
                 .totalRecruitersNotApproved(totalRecruitersNotApproved)
                 .totalJobPosts(totalJobPosts)
-                .totalJobPostsDisplayed(totalJobPostsDisplayed)
+                .totalJobPostsNotApproved(totalJobPostsDisplayed)
                 .totalStudentsSearching(totalStudentsSearching)
                 .totalStudentsWorking(totalStudentsWorking)
                 .totalStudentsCompleted(totalStudentsCompleted)
