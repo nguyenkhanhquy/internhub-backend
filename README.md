@@ -4,13 +4,18 @@ Internhub is a platform that connects students with companies for internships. T
 
 ## Table of Contents
 
-1. [Class Diagram](#class-diagram)
-2. [Prerequisites](#prerequisites)
-3. [Installation](#installation)
-4. [Technology Stack](#technology-stack)
-5. [Documentation](#documentation)
-6. [Author](#author)
-7. [References](#references)
+1. [Use Case Diagram](#use-case-diagram)
+2. [Class Diagram](#class-diagram)
+3. [Prerequisites](#prerequisites)
+4. [Installation](#installation)
+5. [Technology Stack](#technology-stack)
+6. [Documentation](#documentation)
+7. [Author](#author)
+8. [References](#references)
+
+## Use Case Diagram
+
+![Use Case Diagram](/assets/UseCaseDiagram.png)
 
 ## Class Diagram
 
