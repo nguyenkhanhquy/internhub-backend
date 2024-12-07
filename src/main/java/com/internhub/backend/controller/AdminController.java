@@ -2,12 +2,14 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
+import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.service.AdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -76,8 +78,8 @@ public class AdminController {
     }
 
     @PostMapping("/jobs/delete/{id}")
-    public ResponseEntity<SuccessResponse<Void>> deleteJobPost(@PathVariable("id") String id) {
-        adminService.deleteJobPost(id);
+    public ResponseEntity<SuccessResponse<Void>> deleteJobPost(@PathVariable("id") String id, @Valid @RequestBody DeleteJobPostRequest request) {
+        adminService.deleteJobPost(id, request);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Từ chối bài đăng tuyển dụng thành công")

@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
+import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
@@ -32,7 +33,7 @@ public interface AdminService {
     void approveJobPost(String id);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
-    void deleteJobPost(String id);
+    void deleteJobPost(String id, DeleteJobPostRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     SuccessResponse<List<Recruiter>> getAllRecruiters(PageSearchSortFilterRequest request);

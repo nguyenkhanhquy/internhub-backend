@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
+import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
@@ -184,7 +185,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deleteJobPost(String id) {
+    public void deleteJobPost(String id, DeleteJobPostRequest request) {
         JobPost jobPost = jobPostRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
         jobPost.setDeleted(true);
@@ -199,7 +200,7 @@ public class AdminServiceImpl implements AdminService {
         String title = "Bài đăng: " + jobPost.getTitle() + " đã bị từ chối";
         Notification notification = Notification.builder()
                 .title(title)
-                .content("Bài đăng: " + jobPost.getTitle() + " đã bị từ chối và không thể hiển thị")
+                .content("Bài đăng: " + jobPost.getTitle() + " đã bị từ chối với lý do [ " + request.getReason() + " ] và không thể hiển thị")
                 .createdDate(Date.from(Instant.now()))
                 .user(user)
                 .build();

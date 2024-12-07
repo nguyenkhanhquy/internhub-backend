@@ -72,7 +72,7 @@ Internhub is a platform that connects students with companies for internships. T
     mvn spring-boot:run
     ```
 
-5. Open your browser and navigate to `http://localhost:8080/api/v1/swagger-ui/index.htmk` to view the Swagger documentation.
+5. Open your browser and navigate to `http://localhost:8080/api/v1/swagger-ui/index.html` to view the Swagger documentation.
 
 6. You can now test the API endpoints using Swagger.
 
