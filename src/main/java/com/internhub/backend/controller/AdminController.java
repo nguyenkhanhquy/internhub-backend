@@ -5,6 +5,7 @@ import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +84,11 @@ public class AdminController {
                 .build();
 
         return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/recruiters")
+    public SuccessResponse<List<Recruiter>> getAllRecruiters(PageSearchSortFilterRequest request) {
+        return adminService.getAllRecruiters(request);
     }
 
     @PostMapping("/recruiters/approve/{id}")

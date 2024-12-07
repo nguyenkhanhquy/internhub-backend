@@ -210,6 +210,24 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public SuccessResponse<List<Recruiter>> getAllRecruiters(PageSearchSortFilterRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Page<Recruiter> pageData = recruiterRepository.findAllRecruiters(request.getSearch(), pageable);
+
+        return SuccessResponse.<List<Recruiter>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent())
+                .build();
+    }
+
+    @Override
     public void approveRecruiter(String id) {
         Recruiter recruiter = recruiterRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
