@@ -64,7 +64,7 @@ public class JobPostController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .statusCode(HttpStatus.CREATED.value())
-                .message("Đăng tin tuyển dụng thành công")
+                .message("Tạo bài đăng thành công")
                 .build();
 
         return ResponseEntity.status(HttpStatus.CREATED).body(successResponse);
