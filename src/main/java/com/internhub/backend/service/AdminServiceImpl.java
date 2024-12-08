@@ -141,7 +141,7 @@ public class AdminServiceImpl implements AdminService {
     public SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request) {
         Sort sort = Sort.by(Sort.Order.desc("updatedDate"));
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<JobPost> pageData = jobPostRepository.findAll(pageable);
+        Page<JobPost> pageData = jobPostRepository.adminFindAllJobPosts(request.getSearch(), pageable);
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

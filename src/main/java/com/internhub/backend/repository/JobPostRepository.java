@@ -34,5 +34,13 @@ public interface JobPostRepository extends JpaRepository<JobPost, String> {
             "AND j.isApproved = true AND j.isHidden = false AND j.isDeleted = false")
     Page<JobPost> searchJobPosts(String query, Pageable pageable);
 
+    @Query("SELECT j FROM JobPost j WHERE " +
+            "(:query IS NULL OR :query = '' OR " +
+            "    LOWER(j.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "    LOWER(j.company.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "    LOWER(j.jobPosition) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            ")")
+    Page<JobPost> adminFindAllJobPosts(String query, Pageable pageable);
+
     long countJobPostByIsApprovedAndIsDeleted(boolean isApproved, boolean isDeleted);
 }
