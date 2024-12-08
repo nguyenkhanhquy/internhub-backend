@@ -21,4 +21,6 @@ public class JobPostSearchFilterRequest {
     private Boolean isApproved;
     private Boolean isHidden;
     private Boolean isDeleted;
+
+    private String type;
 }

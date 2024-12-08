@@ -174,7 +174,7 @@ public class JobPostServiceImpl implements JobPostService {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<JobPost> pageData = jobPostRepository.findAllByCompany(company, request.getSearch(), pageable, true, false, false);
+        Page<JobPost> pageData = jobPostRepository.findAllByCompany(company, request.getSearch(), pageable, true, false, false, request.getType());
 
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();
@@ -247,7 +247,7 @@ public class JobPostServiceImpl implements JobPostService {
             sort = Sort.by(Sort.Order.desc("createdDate"));
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<JobPost> pageData = jobPostRepository.findAllByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted());
+        Page<JobPost> pageData = jobPostRepository.findAllByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted(), request.getType());
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
