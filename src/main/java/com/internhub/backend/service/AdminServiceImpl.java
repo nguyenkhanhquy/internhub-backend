@@ -14,6 +14,7 @@ import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.entity.student.ReportStatus;
 import com.internhub.backend.entity.student.Student;
+import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
@@ -255,6 +256,24 @@ public class AdminServiceImpl implements AdminService {
         Page<Student> pageData = studentRepository.adminFindAllStudents(request.getSearch(), pageable);
 
         return SuccessResponse.<List<Student>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent())
+                .build();
+    }
+
+    @Override
+    public SuccessResponse<List<Teacher>> getAllTeachers(PageSearchSortFilterRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Page<Teacher> pageData = teacherRepository.adminFindAllTeachers(request.getSearch(), pageable);
+
+        return SuccessResponse.<List<Teacher>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
                         .currentPage(request.getPage())
                         .totalPages(pageData.getTotalPages())
