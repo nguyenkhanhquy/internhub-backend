@@ -8,6 +8,7 @@ import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternshipReport;
+import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.service.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -102,5 +103,10 @@ public class AdminController {
                 .build();
 
         return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/students")
+    public SuccessResponse<List<Student>> getAllStudents(PageSearchSortFilterRequest request) {
+        return adminService.getAllStudents(request);
     }
 }

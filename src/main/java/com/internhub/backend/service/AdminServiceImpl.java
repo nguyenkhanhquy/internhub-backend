@@ -248,4 +248,22 @@ public class AdminServiceImpl implements AdminService {
 
         webSocketService.sendPrivateMessage(user.getId(), title);
     }
+
+    @Override
+    public SuccessResponse<List<Student>> getAllStudents(PageSearchSortFilterRequest request) {
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Page<Student> pageData = studentRepository.adminFindAllStudents(request.getSearch(), pageable);
+
+        return SuccessResponse.<List<Student>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent())
+                .build();
+    }
 }

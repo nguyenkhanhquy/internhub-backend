@@ -8,6 +8,7 @@ import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternshipReport;
+import com.internhub.backend.entity.student.Student;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -40,4 +41,7 @@ public interface AdminService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     void approveRecruiter(String id);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    SuccessResponse<List<Student>> getAllStudents(PageSearchSortFilterRequest request);
 }
