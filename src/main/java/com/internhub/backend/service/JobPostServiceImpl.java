@@ -6,6 +6,8 @@ import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.account.Notification;
+import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
@@ -17,6 +19,7 @@ import com.internhub.backend.mapper.JobPostMapper;
 import com.internhub.backend.repository.*;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +39,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JobPostServiceImpl implements JobPostService {
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    private final WebSocketService webSocketService;
+    private final UserRepository userRepository;
     private final JobPostRepository jobPostRepository;
     private final RecruiterRepository recruiterRepository;
     private final StudentRepository studentRepository;
@@ -318,6 +326,19 @@ public class JobPostServiceImpl implements JobPostService {
         jobPost.setDeleted(false);
 
         jobPostRepository.save(jobPost);
+
+        User user = userRepository.findByEmail(adminEmail);
+        String title = "Có bài đăng tuyển dụng mới chỉnh sửa đang chờ duyệt";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Doanh nghiệp [" + jobPost.getCompany().getName() + "] mới chỉnh sủa bài đăng [" + jobPost.getTitle() + "] đang chờ duyệt.")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 
     @Override
