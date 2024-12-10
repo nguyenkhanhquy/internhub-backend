@@ -64,6 +64,8 @@ Internhub is a platform that connects students with companies for internships. T
    CLOUDINARY_CLOUD_NAME= # Your Cloudinary cloud name (e.g. internhub)
    CLOUDINARY_API_KEY= # Your Cloudinary API key (e.g. 123456789012345)
    CLOUDINARY_API_SECRET= # Your Cloudinary API secret (e.g. 123456789012345)
+   ADMIN_EMAIL= # Your admin email (e.g. admin@email.com)
+   ADMIN_PASSWORD= # Your admin password (e.g. 5fs@878fa@$)
    ```
 
 4. Run the project using the following command:

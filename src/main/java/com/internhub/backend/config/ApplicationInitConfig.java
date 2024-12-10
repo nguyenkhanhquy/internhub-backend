@@ -7,6 +7,7 @@ import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.task.TokenCleanupTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,12 @@ import java.util.List;
 @Slf4j
 @Configuration
 public class ApplicationInitConfig {
+
+    @Value("${admin.email}")
+    private String adminEmail;
+
+    @Value("${admin.password}")
+    private String adminPassword;
 
     private final PasswordEncoder passwordEncoder;
     private final TokenCleanupTask tokenCleanupTask;
@@ -50,10 +57,10 @@ public class ApplicationInitConfig {
     }
 
     private void initializeAdminUser(UserRepository userRepository, RoleRepository roleRepository) {
-        if (userRepository.findByEmail("admin@admin.com") == null) {
+        if (userRepository.findByEmail(adminEmail) == null) {
             User user = User.builder()
-                    .email("admin@admin.com")
-                    .password(passwordEncoder.encode("12345678"))
+                    .email(adminEmail)
+                    .password(passwordEncoder.encode(adminPassword))
                     .isActive(true)
                     .createdDate(Date.from(Instant.now()))
                     .updatedDate(Date.from(Instant.now()))
