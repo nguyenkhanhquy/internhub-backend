@@ -1,6 +1,7 @@
 package com.internhub.backend.dto.request.internshipreports;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -36,6 +37,7 @@ public class CreateInternshipReportRequest {
     @NotBlank(message = "File đánh giá không được để trống")
     private String evaluationFile;
 
+    @JsonProperty("isSystemCompany")
     @NotNull(message = "Phải cho biết công ty thuộc hệ thống hay không")
     private boolean isSystemCompany;
 }
