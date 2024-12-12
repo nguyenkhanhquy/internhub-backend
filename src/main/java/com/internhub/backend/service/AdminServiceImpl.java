@@ -75,7 +75,7 @@ public class AdminServiceImpl implements AdminService {
     public SuccessResponse<List<InternshipReport>> getAllInternshipReports(PageSearchSortFilterRequest request) {
         Sort sort = Sort.by(Sort.Order.desc("createdDate"));
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<InternshipReport> pageData = internshipReportRepository.findAll(pageable);
+        Page<InternshipReport> pageData = internshipReportRepository.adminFindAllInternshipReports(request.getSearch(), pageable);
 
         return SuccessResponse.<List<InternshipReport>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()
