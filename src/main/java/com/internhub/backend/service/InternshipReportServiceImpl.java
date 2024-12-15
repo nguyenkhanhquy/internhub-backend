@@ -3,6 +3,8 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.request.internshipreports.CreateInternshipReportRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.account.Notification;
+import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.student.InternshipReport;
 import com.internhub.backend.entity.student.ReportStatus;
 import com.internhub.backend.entity.student.Student;
@@ -10,8 +12,10 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.repository.InternshipReportRepository;
 import com.internhub.backend.repository.StudentRepository;
+import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +32,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class InternshipReportServiceImpl implements InternshipReportService {
 
+    @Value("${admin.email}")
+    private String adminEmail;
+
     private final InternshipReportRepository internshipReportRepository;
     private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
+    private final WebSocketService webSocketService;
 
     @Override
     public void createInternshipReport(CreateInternshipReportRequest request) {
@@ -55,6 +65,19 @@ public class InternshipReportServiceImpl implements InternshipReportService {
                 .build();
 
         internshipReportRepository.save(internshipReport);
+
+        User user = userRepository.findByEmail(adminEmail);
+        String title = "Có báo cáo thực tập mới đang chờ duyệt";
+        Notification notification = Notification.builder()
+                .title(title)
+                .content("Sinh viên [" + student.getName() + " - " + student.getStudentId() + "] vừa nộp báo cáo thực tập và đang chờ duyệt.")
+                .createdDate(Date.from(Instant.now()))
+                .user(user)
+                .build();
+        user.getNotifications().add(notification);
+        userRepository.save(user);
+
+        webSocketService.sendPrivateMessage(user.getId(), title);
     }
 
     @Override
