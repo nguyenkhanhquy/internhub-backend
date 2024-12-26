@@ -45,6 +45,7 @@ Internhub is a platform that connects students with companies for internships. T
      |-- assets/
      |-- src/
      |-- .env.local 👈
+     |-- ...
    ```
 
     Add the following environment variables to the `.env.local` file:
