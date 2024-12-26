@@ -11,7 +11,6 @@ Internhub is a platform that connects students with companies for internships. T
 5. [Technology Stack](#technology-stack)
 6. [Documentation](#documentation)
 7. [Author](#author)
-8. [References](#references)
 
 ## Use Case Diagram
 
@@ -108,18 +107,3 @@ Internhub is a platform that connects students with companies for internships. T
 
 - Author Name: `Nguyễn Khánh Quy`
 - Email: <nguyenkhanhquy123@gmail.com>
-
-## References
-
-- [Java Documentation](https://docs.oracle.com/en/java/)
-- [Maven Documentation](https://maven.apache.org/guides/index.html)
-- [Spring Framework Documentation](https://spring.io/projects/spring-framework)
-- [Spring Boot Documentation](https://spring.io/projects/spring-boot)
-- [Spring Data JPA Documentation](https://spring.io/projects/spring-data-jpa)
-- [Hibernate Documentation](https://hibernate.org/orm/documentation/5.5/)
-- [MySQL Documentation](https://dev.mysql.com/doc/)
-- [IntelliJ IDEA Documentation](https://www.jetbrains.com/idea/documentation/)
-- [Heroku Documentation](https://devcenter.heroku.com/categories/reference)
-- [Cloudinary Documentation](https://cloudinary.com/documentation)
-- [Swagger Documentation](https://swagger.io/docs/)
-- [Git Documentation](https://git-scm.com/doc)
