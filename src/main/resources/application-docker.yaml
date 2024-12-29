@@ -1,0 +1,61 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api/v1
+
+spring:
+  application:
+    name: internhub-backend
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:internhub_db}?createDatabaseIfNotExist=true
+    username: ${DB_USER:root}
+    password: ${DB_PASS:1234}
+    driver-class-name: ${DB_DRIVER}
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 9
+      idle-timeout: 300000
+      connection-timeout: 10000
+
+  jackson:
+    time-zone: UTC
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
+
+jwt:
+  signerkey: ${SIGNER_KEY}
+  valid-duration: ${VALID_DURATION} # in HOURS
+  refreshable-duration: ${REFRESHABLE_DURATION} # in HOURS
+
+cors:
+  allowed:
+    origins: ${FRONTEND_URL}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
+admin:
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
