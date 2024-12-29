@@ -1,0 +1,43 @@
+services:
+  springboot:
+    container_name: springboot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env.docker
+    networks:
+      - spring_mysql
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.4.3
+    restart: always
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env.docker
+    networks:
+      - spring_mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  spring_mysql:
+    name: spring_mysql
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
