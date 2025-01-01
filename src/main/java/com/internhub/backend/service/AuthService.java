@@ -1,5 +1,6 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.LoginResponseDTO;
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
@@ -23,4 +24,6 @@ public interface AuthService {
     UserDTO getCurrentAuthUser();
 
     Object getCurentAuthProfile();
+
+    LoginResponseDTO outboundAuthenticate(String code);
 }
