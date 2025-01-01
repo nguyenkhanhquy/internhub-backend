@@ -1,5 +1,6 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.LoginResponseDTO;
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
@@ -93,6 +94,18 @@ public class AuthController {
         SuccessResponse<Object> successResponse = SuccessResponse.builder()
                 .message("Lấy thông tin hồ sơ thành công")
                 .result(profile)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/outbound/authentication")
+    public ResponseEntity<SuccessResponse<LoginResponseDTO>> outboundAuthenticate(@RequestParam("code") String code) {
+        LoginResponseDTO loginResponseDTO = authService.outboundAuthenticate(code);
+
+        SuccessResponse<LoginResponseDTO> successResponse = SuccessResponse.<LoginResponseDTO>builder()
+                .message("Đăng nhập thành công")
+                .result(loginResponseDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
