@@ -1,0 +1,48 @@
+name: internhub
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.4.4
+    container_name: internhub-database-mysql
+    #    restart: always
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    env_file:
+      - .env.docker
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internhub-network
+
+  # Spring Boot Backend
+  springboot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: internhub-server
+    container_name: internhub-server-springboot
+#    restart: always
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env.docker
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - internhub-network
+
+networks:
+  internhub-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
