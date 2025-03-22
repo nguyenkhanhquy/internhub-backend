@@ -14,7 +14,7 @@ services:
       - mysql-data:/var/lib/mysql
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "--silent" ]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 5
     networks:
