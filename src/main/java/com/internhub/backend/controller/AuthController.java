@@ -1,6 +1,6 @@
 package com.internhub.backend.controller;
 
-import com.internhub.backend.dto.LoginResponseDTO;
+import com.internhub.backend.dto.auth.LoginResponseDTO;
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;

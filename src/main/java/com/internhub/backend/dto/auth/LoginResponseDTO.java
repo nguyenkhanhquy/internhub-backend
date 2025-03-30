@@ -1,4 +1,4 @@
-package com.internhub.backend.dto;
+package com.internhub.backend.dto.auth;
 
 import lombok.Builder;
 import lombok.Getter;
