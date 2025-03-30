@@ -1,4 +1,4 @@
-package com.internhub.backend.dto;
+package com.internhub.backend.dto.admin;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
