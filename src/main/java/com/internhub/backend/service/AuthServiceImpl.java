@@ -1,5 +1,6 @@
 package com.internhub.backend.service;
 
+import com.internhub.backend.dto.auth.LoginResponseDTO;
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
@@ -20,17 +21,24 @@ import com.internhub.backend.util.AuthUtils;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.shaded.gson.Gson;
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
@@ -41,12 +49,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Value("${jwt.signerkey}")
     private String jwtSignerKey;
-
     @Value("${jwt.valid-duration}")
     private int jwtValidDuration;
-
     @Value("${jwt.refreshable-duration}")
     private int jwtRefreshableDuration;
+    @Value("${google.client-id}")
+    private String clientId;
+    @Value("${google.client-secret}")
+    private String clientSecret;
+    @Value("${google.redirect-uri}")
+    private String redirectUri;
 
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
@@ -162,6 +174,69 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
+    @Override
+    public LoginResponseDTO outboundAuthenticate(String code) {
+        String accessToken = getOauthAccessTokenGoogle(code);
+
+        User googleUser = getProfileDetailsGoogle(accessToken);
+        User user = userRepository.findByEmail(googleUser.getEmail());
+
+        if (user == null) {
+            throw new CustomException(EnumException.INVALID_LOGIN);
+        }
+
+        if (!user.isActive()) {
+            throw new CustomException(EnumException.USER_NOT_ACTIVATED);
+        }
+
+        return LoginResponseDTO.builder()
+                .accessToken(generateToken(user))
+                .refreshToken(UUID.randomUUID().toString())
+                .expirationTime(LocalDateTime.now().plusHours(jwtValidDuration))
+                .build();
+    }
+
+    private String getOauthAccessTokenGoogle(String code) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("code", code);
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("redirect_uri", redirectUri);
+        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile");
+        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email");
+        params.add("scope", "openid");
+        params.add("grant_type", "authorization_code");
+
+        HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, httpHeaders);
+
+        String url = "https://oauth2.googleapis.com/token";
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
+        JsonObject jsonObject = new Gson().fromJson(response, JsonObject.class);
+
+        return jsonObject.get("access_token").toString().replace("\"", "");
+    }
+
+    private User getProfileDetailsGoogle(String accessToken) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(accessToken);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(httpHeaders);
+
+        String url = "https://www.googleapis.com/oauth2/v2/userinfo";
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, requestEntity, String.class);
+        JsonObject jsonObject = new Gson().fromJson(response.getBody(), JsonObject.class);
+
+        User user = new User();
+        user.setEmail(jsonObject.get("email").toString().replace("\"", ""));
+
+        return user;
+    }
+
     private InvalidatedToken createInvalidatedToken(SignedJWT signedJWT) throws ParseException {
         String jit = signedJWT.getJWTClaimsSet().getJWTID();
         Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
@@ -215,7 +290,7 @@ public class AuthServiceImpl implements AuthService {
         // Tạo JWTClaimsSet chứa các thông tin cần thiết
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
-                .issuer("internhub.com")
+                .issuer("internhub.works")
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(expiration))
                 .jwtID(UUID.randomUUID().toString())

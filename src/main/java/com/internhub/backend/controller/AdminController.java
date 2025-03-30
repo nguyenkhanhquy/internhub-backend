@@ -1,6 +1,6 @@
 package com.internhub.backend.controller;
 
-import com.internhub.backend.dto.OverviewDTO;
+import com.internhub.backend.dto.admin.OverviewDTO;
 import com.internhub.backend.dto.job.jobpost.JobPostDetailDTO;
 import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
