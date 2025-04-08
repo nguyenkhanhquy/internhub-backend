@@ -82,8 +82,8 @@ public class UserServiceImpl implements UserService {
                     .email(createUserRequest.getEmail())
                     .password(passwordEncoder.encode(createUserRequest.getPassword()))
                     .isActive(true)
-                    .createdDate(Date.from(Instant.now()))
-                    .updatedDate(Date.from(Instant.now()))
+//                    .createdDate(Date.from(Instant.now()))
+//                    .updatedDate(Date.from(Instant.now()))
                     .build();
 
             User savedUser = userRepository.save(user);
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 
             user.setEmail(updateUserRequest.getEmail());
             user.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
-            user.setUpdatedDate(Date.from(Instant.now()));
+//            user.setUpdatedDate(Date.from(Instant.now()));
 
             User updatedUser = userRepository.save(user);
 
@@ -142,8 +142,8 @@ public class UserServiceImpl implements UserService {
                     .email(registerRecruiterRequest.getEmail())
                     .password(passwordEncoder.encode(registerRecruiterRequest.getPassword()))
                     .isActive(false)
-                    .createdDate(Date.from(Instant.now()))
-                    .updatedDate(Date.from(Instant.now()))
+//                    .createdDate(Date.from(Instant.now()))
+//                    .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("RECRUITER"))
                     .build();
 
@@ -199,8 +199,8 @@ public class UserServiceImpl implements UserService {
                     .email(registerStudentRequest.getEmail())
                     .password(passwordEncoder.encode(registerStudentRequest.getPassword()))
                     .isActive(false)
-                    .createdDate(Date.from(Instant.now()))
-                    .updatedDate(Date.from(Instant.now()))
+//                    .createdDate(Date.from(Instant.now()))
+//                    .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("STUDENT"))
                     .build();
 
@@ -294,7 +294,7 @@ public class UserServiceImpl implements UserService {
         verifyOtp(email, otp);
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setUpdatedDate(Date.from(Instant.now()));
+//        user.setUpdatedDate(Date.from(Instant.now()));
         userRepository.save(user);
     }
 
@@ -313,7 +313,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(updatePasswordRequest.getNewPassword()));
-        user.setUpdatedDate(Date.from(Instant.now()));
+//        user.setUpdatedDate(Date.from(Instant.now()));
         userRepository.save(user);
     }
 
