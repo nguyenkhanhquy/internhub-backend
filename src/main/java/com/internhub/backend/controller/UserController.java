@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -104,6 +105,15 @@ public class UserController {
                 .build();
 
         return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/import/teachers")
+    public ResponseEntity<SuccessResponse<Void>> importTeachers(@RequestParam("file") MultipartFile file) {
+        userService.importTeachersFromFile(file);
+
+        return ResponseEntity.ok(SuccessResponse.<Void>builder()
+                .message("Import danh sách giảng viên thành công")
+                .build());
     }
 
     @PostMapping("/verify/send-otp")

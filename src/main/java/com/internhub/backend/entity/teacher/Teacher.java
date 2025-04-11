@@ -1,5 +1,6 @@
 package com.internhub.backend.entity.teacher;
 
+import com.internhub.backend.entity.account.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,9 +15,12 @@ import lombok.*;
 public class Teacher {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    private String id;
+    private String userId;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "user_id")
+    @MapsId
+    private User user;
 
     @Column(name = "name", nullable = false)
     private String name;
