@@ -25,7 +25,7 @@ import com.nimbusds.jose.shaded.gson.Gson;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -45,6 +45,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     @Value("${jwt.signerkey}")
@@ -62,24 +63,13 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final InvalidatedTokenRepository invalidatedTokenRepository;
+    private final TokenService tokenService;
     private final RecruiterRepository recruiterRepository;
     private final StudentRepository studentRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RecruiterMapper recruiterMapper;
     private final StudentMapper studentMapper;
-
-    @Autowired
-    public AuthServiceImpl(UserRepository userRepository, InvalidatedTokenRepository invalidatedTokenRepository, RecruiterRepository recruiterRepository, StudentRepository studentRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, RecruiterMapper recruiterMapper, StudentMapper studentMapper) {
-        this.userRepository = userRepository;
-        this.invalidatedTokenRepository = invalidatedTokenRepository;
-        this.recruiterRepository = recruiterRepository;
-        this.studentRepository = studentRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.recruiterMapper = recruiterMapper;
-        this.studentMapper = studentMapper;
-    }
 
     @Override
     public Map<String, Object> login(LoginRequest loginRequest) {
@@ -118,7 +108,10 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = logoutRequest.getAccessToken();
 
         SignedJWT signedJWT = verifyToken(accessToken, false);
-        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+//        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        tokenService.saveInvalidatedToken(jit, expiryTime);
     }
 
     @Override
@@ -126,7 +119,10 @@ public class AuthServiceImpl implements AuthService {
         String accessToken = refreshTokenRequest.getAccessToken();
 
         SignedJWT signedJWT = verifyToken(accessToken, true);
-        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+//        invalidatedTokenRepository.save(createInvalidatedToken(signedJWT));
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+        tokenService.saveInvalidatedToken(jit, expiryTime);
 
         String email = signedJWT.getJWTClaimsSet().getSubject();
         User user = userRepository.findByEmail(email);
@@ -266,7 +262,11 @@ public class AuthServiceImpl implements AuthService {
                 throw new CustomException(EnumException.INVALID_TOKEN);
             }
 
-            if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+//            if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID())) {
+//                throw new CustomException(EnumException.INVALID_TOKEN);
+//            }
+
+            if (tokenService.isTokenInvalidated(signedJWT.getJWTClaimsSet().getJWTID())) {
                 throw new CustomException(EnumException.INVALID_TOKEN);
             }
 
