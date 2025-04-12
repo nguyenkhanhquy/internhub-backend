@@ -22,6 +22,7 @@ public enum EnumException {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token không hợp lệ"),
     INVALID_OTP(HttpStatus.UNAUTHORIZED, "Mã OTP không hợp lệ"),
     INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "Thông tin đăng nhập không chính xác"),
+    INVALID_LOGIN_GOOGLE(HttpStatus.UNAUTHORIZED, "Tài khoản Google chưa được đăng ký"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Mật khẩu hiện tại không chính xác"),
     USER_NOT_ACTIVATED(HttpStatus.UNAUTHORIZED, "Tài khoản chưa được kích hoạt"),
 

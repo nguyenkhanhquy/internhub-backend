@@ -1,7 +1,7 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.auth.LoginResponseDTO;
 import com.internhub.backend.dto.account.UserDTO;
+import com.internhub.backend.dto.auth.LoginResponseDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
