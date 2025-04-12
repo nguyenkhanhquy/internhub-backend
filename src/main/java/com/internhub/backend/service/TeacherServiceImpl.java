@@ -21,7 +21,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void addTeacher(TeacherCreateRequest request) {
         Teacher teacher = Teacher.builder()
                 .name(request.getName())
-                .email(request.getEmail())
+                .teacherId(request.getTeacherId())
                 .build();
 
         teacherRepository.save(teacher);
@@ -33,7 +33,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .orElseThrow(() -> new CustomException(EnumException.TEACHER_NOT_FOUND));
 
         teacher.setName(request.getName());
-        teacher.setEmail(request.getEmail());
+        teacher.setTeacherId(request.getTeacherId());
 
         teacherRepository.save(teacher);
     }

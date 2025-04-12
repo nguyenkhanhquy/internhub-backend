@@ -17,10 +17,7 @@ import com.internhub.backend.util.AuthUtils;
 import com.opencsv.CSVReader;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -244,10 +241,10 @@ public class UserServiceImpl implements UserService {
                 CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()));
                 List<String[]> rows = csvReader.readAll();
                 for (String[] row : rows) {
-                    if (row[0].equals("Name") && row[1].equals("Email")) continue; // Bỏ qua tiêu đề
+                    if (row[0].equals("TeacherId") && row[1].equals("Name") && row[2].equals("Email")) continue; // Bỏ qua tiêu đề
                     try {
                         User user = User.builder()
-                                .email(row[1])
+                                .email(row[2])
                                 .password(passwordEncoder.encode("12345678"))
                                 .isActive(false)
                                 .role(roleRepository.findByName("TEACHER"))
@@ -257,12 +254,12 @@ public class UserServiceImpl implements UserService {
 
                         teachers.add(Teacher.builder()
                                 .user(savedUser)
-                                .name(row[0])
-                                .email(row[1])
+                                .name(row[1])
+                                .teacherId(row[0])
                                 .build()
                         );
                     } catch (DataIntegrityViolationException e) {
-                        log.warn("Email {} already exists, skipping this entry.", row[1]);
+                        log.warn("Email {} already exists, skipping this entry.", row[2]);
                     }
                 }
             } else {
@@ -272,8 +269,11 @@ public class UserServiceImpl implements UserService {
 
                 for (Row row : sheet) {
                     if (row.getRowNum() == 0) continue; // Bỏ qua tiêu đề
-                    String name = row.getCell(0).getStringCellValue();
-                    String email = row.getCell(1).getStringCellValue();
+                    String teacherId = row.getCell(0).getCellType() == CellType.NUMERIC
+                            ? String.valueOf((int) row.getCell(0).getNumericCellValue())
+                            : row.getCell(0).getStringCellValue();
+                    String name = row.getCell(1).getStringCellValue();
+                    String email = row.getCell(2).getStringCellValue();
                     try {
                         User user = User.builder()
                                 .email(email)
@@ -287,7 +287,7 @@ public class UserServiceImpl implements UserService {
                         teachers.add(Teacher.builder()
                                 .user(savedUser)
                                 .name(name)
-                                .email(email)
+                                .teacherId(teacherId)
                                 .build()
                         );
                     } catch (DataIntegrityViolationException e) {

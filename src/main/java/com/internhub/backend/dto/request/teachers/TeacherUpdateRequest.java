@@ -9,6 +9,6 @@ public class TeacherUpdateRequest {
     @NotBlank(message = "Tên được bỏ trống")
     private String name;
 
-    @NotBlank(message = "Email được bỏ trống")
-    private String email;
+    @NotBlank(message = "Mã giảng viên được bỏ trống")
+    private String teacherId;
 }
