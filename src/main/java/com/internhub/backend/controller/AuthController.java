@@ -29,10 +29,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SuccessResponse<Map<String, Object>>> login(@Valid @RequestBody LoginRequest loginRequest) {
-        Map<String, Object> resultData = authService.login(loginRequest);
+    public ResponseEntity<SuccessResponse<LoginResponseDTO>> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponseDTO resultData = authService.login(loginRequest);
 
-        SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
+        SuccessResponse<LoginResponseDTO> successResponse = SuccessResponse.<LoginResponseDTO>builder()
                 .message("Đăng nhập thành công")
                 .result(resultData)
                 .build();

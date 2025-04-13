@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Setter
 @Getter
@@ -15,5 +15,5 @@ public class LoginResponseDTO {
 
     private String refreshToken;
 
-    private LocalDateTime expirationTime;
+    private Instant expirationTime;
 }

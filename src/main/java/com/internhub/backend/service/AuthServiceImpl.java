@@ -32,7 +32,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.ParseException;
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -61,7 +62,7 @@ public class AuthServiceImpl implements AuthService {
     private final StudentMapper studentMapper;
 
     @Override
-    public Map<String, Object> login(LoginRequest loginRequest) {
+    public LoginResponseDTO login(LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail());
 
         if (user == null || !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
@@ -72,7 +73,12 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(EnumException.USER_NOT_ACTIVATED);
         }
 
-        return Map.of("accessToken", tokenService.generateToken(user));
+        String accessToken = tokenService.generateToken(user);
+        return LoginResponseDTO.builder()
+                .accessToken(accessToken)
+                .refreshToken(UUID.randomUUID().toString())
+                .expirationTime(Instant.now().plus(jwtValidDuration, ChronoUnit.HOURS))
+                .build();
     }
 
     @Override
@@ -173,11 +179,10 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String accessToken = tokenService.generateToken(user);
-
         return LoginResponseDTO.builder()
                 .accessToken(accessToken)
                 .refreshToken(UUID.randomUUID().toString())
-                .expirationTime(LocalDateTime.now().plusHours(jwtValidDuration))
+                .expirationTime(Instant.now().plus(jwtValidDuration, ChronoUnit.HOURS))
                 .build();
     }
 

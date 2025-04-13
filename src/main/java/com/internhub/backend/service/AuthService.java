@@ -13,7 +13,7 @@ import java.util.Map;
 
 public interface AuthService {
 
-    Map<String, Object> login(LoginRequest loginRequest);
+    LoginResponseDTO login(LoginRequest loginRequest);
 
     Map<String, Object> introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException;
 
