@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -62,8 +60,6 @@ public class ApplicationInitConfig {
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))
                     .isActive(true)
-                    .createdDate(Date.from(Instant.now()))
-                    .updatedDate(Date.from(Instant.now()))
                     .role(roleRepository.findByName("FIT"))
                     .build();
 

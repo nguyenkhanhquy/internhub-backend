@@ -241,7 +241,8 @@ public class UserServiceImpl implements UserService {
                 CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()));
                 List<String[]> rows = csvReader.readAll();
                 for (String[] row : rows) {
-                    if (row[0].equals("TeacherId") && row[1].equals("Name") && row[2].equals("Email")) continue; // Bỏ qua tiêu đề
+                    if (row[0].equals("TeacherId") && row[1].equals("Name") && row[2].equals("Email"))
+                        continue; // Bỏ qua tiêu đề
                     try {
                         User user = User.builder()
                                 .email(row[2])
