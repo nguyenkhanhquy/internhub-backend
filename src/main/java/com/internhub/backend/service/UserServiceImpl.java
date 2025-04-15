@@ -260,7 +260,7 @@ public class UserServiceImpl implements UserService {
                                 .build()
                         );
                     } catch (DataIntegrityViolationException e) {
-                        log.warn("Email {} already exists, skipping this entry.", row[2]);
+                        log.warn("Email {} đã tồn tại, bỏ qua mục này.", row[2]);
                     }
                 }
             } else {
@@ -292,7 +292,7 @@ public class UserServiceImpl implements UserService {
                                 .build()
                         );
                     } catch (DataIntegrityViolationException e) {
-                        log.warn("Email {} already exists, skipping this entry.", email);
+                        log.warn("Email {} đã tồn tại, bỏ qua mục này.", email);
                     }
                 }
                 workbook.close();

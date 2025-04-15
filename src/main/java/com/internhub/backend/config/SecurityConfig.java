@@ -25,7 +25,7 @@ public class SecurityConfig {
 
     private static final String[] PUBLIC_POST_ENDPOINTS = {"/auth/**", "/users/register/**", "/users/verify/**", "/jobs"};
 
-    private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**", "/companies/**", "/auth/outbound/authentication"};
+    private static final String[] PUBLIC_GET_ENDPOINTS = {"/jobs/**", "/companies/**", "/auth/outbound/authentication", "/academic/**"};
 
     private static final String[] PUBLIC_ENDPOINTS = {"/", "/files/**", "/ws-demo/**", "/ws/**", "/swagger-ui/**", "/v3/api-docs/**"};
 

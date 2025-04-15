@@ -1,4 +1,4 @@
-package com.internhub.backend.dto.student;
+package com.internhub.backend.dto.academic;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,9 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MajorDTO {
+public class SemesterDTO {
 
-    private String value;
+    private String id;
 
-    private String description;
+    private String name;
 }

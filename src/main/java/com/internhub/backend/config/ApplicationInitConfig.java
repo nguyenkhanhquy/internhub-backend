@@ -4,6 +4,7 @@ import com.internhub.backend.entity.account.Role;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
+import com.internhub.backend.task.AcademicYearTask;
 import com.internhub.backend.task.TokenCleanupTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,13 @@ public class ApplicationInitConfig {
     private String adminPassword;
 
     private final PasswordEncoder passwordEncoder;
+    private final AcademicYearTask academicYearTask;
     private final TokenCleanupTask tokenCleanupTask;
 
     @Autowired
-    public ApplicationInitConfig(PasswordEncoder passwordEncoder, TokenCleanupTask tokenCleanupTask) {
+    public ApplicationInitConfig(PasswordEncoder passwordEncoder, AcademicYearTask academicYearTask, TokenCleanupTask tokenCleanupTask) {
         this.passwordEncoder = passwordEncoder;
+        this.academicYearTask = academicYearTask;
         this.tokenCleanupTask = tokenCleanupTask;
     }
 
@@ -39,6 +42,7 @@ public class ApplicationInitConfig {
         return args -> {
             initializeRoles(roleRepository);
             initializeAdminUser(userRepository, roleRepository);
+            runCreateAcademicYearTask();
             runTokenCleanupTask();
         };
     }
@@ -67,6 +71,11 @@ public class ApplicationInitConfig {
 
             log.info("Tài khoản FIT mặc định đã được tạo khi khởi động máy chủ");
         }
+    }
+
+    private void runCreateAcademicYearTask() {
+        log.info("Đang chạy tác vụ tạo năm học mới khi khởi động máy chủ");
+        academicYearTask.createAcademicYear();
     }
 
     private void runTokenCleanupTask() {
