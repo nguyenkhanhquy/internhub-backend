@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.teachers.TeacherCreateRequest;
 import com.internhub.backend.dto.request.teachers.TeacherUpdateRequest;
+import com.internhub.backend.dto.teacher.TeacherDTO;
 import com.internhub.backend.entity.teacher.Teacher;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -20,5 +21,5 @@ public interface TeacherService {
 
     Teacher getTeacherById(String id);
 
-    List<Teacher> getAllTeachers();
+    List<TeacherDTO> getAllTeachers();
 }

@@ -2,9 +2,11 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.teachers.TeacherCreateRequest;
 import com.internhub.backend.dto.request.teachers.TeacherUpdateRequest;
+import com.internhub.backend.dto.teacher.TeacherDTO;
 import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
+import com.internhub.backend.mapper.TeacherMapper;
 import com.internhub.backend.repository.TeacherRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,7 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
+    private final TeacherMapper teacherMapper;
 
     @Override
     public void addTeacher(TeacherCreateRequest request) {
@@ -53,7 +56,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<Teacher> getAllTeachers() {
-        return teacherRepository.findAll();
+    public List<TeacherDTO> getAllTeachers() {
+        return teacherMapper.toDTOs(teacherRepository.findAll());
     }
 }

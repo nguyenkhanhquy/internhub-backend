@@ -3,6 +3,7 @@ package com.internhub.backend.controller;
 import com.internhub.backend.dto.request.teachers.TeacherCreateRequest;
 import com.internhub.backend.dto.request.teachers.TeacherUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.dto.teacher.TeacherDTO;
 import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.service.TeacherService;
 import jakarta.validation.Valid;
@@ -29,10 +30,10 @@ public class TeacherController {
     }
 
     @GetMapping
-    public ResponseEntity<SuccessResponse<List<Teacher>>> getAllTeachers() {
-        List<Teacher> teachers = teacherService.getAllTeachers();
+    public ResponseEntity<SuccessResponse<List<TeacherDTO>>> getAllTeachers() {
+        List<TeacherDTO> teachers = teacherService.getAllTeachers();
 
-        return ResponseEntity.ok(SuccessResponse.<List<Teacher>>builder()
+        return ResponseEntity.ok(SuccessResponse.<List<TeacherDTO>>builder()
                 .result(teachers)
                 .build());
     }

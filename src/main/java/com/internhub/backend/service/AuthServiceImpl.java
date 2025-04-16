@@ -11,9 +11,11 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.RecruiterMapper;
 import com.internhub.backend.mapper.StudentMapper;
+import com.internhub.backend.mapper.TeacherMapper;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.RecruiterRepository;
 import com.internhub.backend.repository.StudentRepository;
+import com.internhub.backend.repository.TeacherRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
 import com.nimbusds.jose.JOSEException;
@@ -56,10 +58,12 @@ public class AuthServiceImpl implements AuthService {
     private final TokenService tokenService;
     private final RecruiterRepository recruiterRepository;
     private final StudentRepository studentRepository;
+    private final TeacherRepository teacherRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
     private final RecruiterMapper recruiterMapper;
     private final StudentMapper studentMapper;
+    private final TeacherMapper teacherMapper;
 
     @Override
     public LoginResponseDTO login(LoginRequest loginRequest) {
@@ -152,15 +156,15 @@ public class AuthServiceImpl implements AuthService {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
-        if (user.getRole().getName().equals("STUDENT")) {
-            return studentMapper.mapStudentToStudentDTO(studentRepository.findById(userId)
+        return switch (user.getRole().getName()) {
+            case "STUDENT" -> studentMapper.toDTO(studentRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
-        } else if (user.getRole().getName().equals("RECRUITER")) {
-            return recruiterMapper.toDTO(recruiterRepository.findById(userId)
+            case "RECRUITER" -> recruiterMapper.toDTO(recruiterRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
-        } else {
-            throw new CustomException(EnumException.PROFILE_NOT_FOUND);
-        }
+            case "TEACHER" -> teacherMapper.toDTO(teacherRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND)));
+            default -> throw new CustomException(EnumException.PROFILE_NOT_FOUND);
+        };
     }
 
     @Override
@@ -196,9 +200,7 @@ public class AuthServiceImpl implements AuthService {
         params.add("client_id", clientId);
         params.add("client_secret", clientSecret);
         params.add("redirect_uri", redirectUri);
-        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile");
-        params.add("scope", "https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email");
-        params.add("scope", "openid");
+        params.add("scope", "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid");
         params.add("grant_type", "authorization_code");
 
         HttpEntity<MultiValueMap<String, String>> requestEntity = new HttpEntity<>(params, httpHeaders);
