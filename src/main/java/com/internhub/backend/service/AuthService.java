@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.auth.LoginResponseDTO;
+import com.internhub.backend.dto.auth.RefreshTokenDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
@@ -19,7 +20,7 @@ public interface AuthService {
 
     void logout(LogoutRequest logoutRequest) throws ParseException, JOSEException;
 
-    Map<String, Object> refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException;
+    RefreshTokenDTO refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException;
 
     UserDTO getCurrentAuthUser();
 

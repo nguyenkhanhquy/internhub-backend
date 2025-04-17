@@ -2,6 +2,7 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.auth.LoginResponseDTO;
+import com.internhub.backend.dto.auth.RefreshTokenDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
@@ -113,7 +114,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Map<String, Object> refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
+    public RefreshTokenDTO refreshToken(RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
         String accessToken = refreshTokenRequest.getAccessToken();
 
         SignedJWT signedJWT = tokenService.verifyToken(accessToken, true);
@@ -128,7 +129,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(EnumException.UNAUTHENTICATED);
         }
 
-        return Map.of("accessToken", tokenService.generateToken(user));
+        return RefreshTokenDTO.builder()
+                .accessToken(tokenService.generateToken(user))
+                .expirationTime(Instant.now().plus(jwtValidDuration, ChronoUnit.HOURS))
+                .build();
     }
 
     @Override

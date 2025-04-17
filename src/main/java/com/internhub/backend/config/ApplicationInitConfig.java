@@ -55,6 +55,7 @@ public class ApplicationInitConfig {
                             .name(roleName)
                             .build())
             );
+            log.info("Các vai trò mặc định đã được tạo khi khởi động máy chủ");
         }
     }
 
@@ -66,10 +67,8 @@ public class ApplicationInitConfig {
                     .isActive(true)
                     .role(roleRepository.findByName("FIT"))
                     .build();
-
             userRepository.save(user);
-
-            log.info("Tài khoản FIT mặc định đã được tạo khi khởi động máy chủ");
+            log.info("Tài khoản admin mặc định đã được tạo khi khởi động máy chủ");
         }
     }
 

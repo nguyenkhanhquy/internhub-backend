@@ -2,6 +2,7 @@ package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.account.UserDTO;
 import com.internhub.backend.dto.auth.LoginResponseDTO;
+import com.internhub.backend.dto.auth.RefreshTokenDTO;
 import com.internhub.backend.dto.request.auth.IntrospectRequest;
 import com.internhub.backend.dto.request.auth.LoginRequest;
 import com.internhub.backend.dto.request.auth.LogoutRequest;
@@ -64,10 +65,10 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<SuccessResponse<Map<String, Object>>> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
-        Map<String, Object> resultData = authService.refreshToken(refreshTokenRequest);
+    public ResponseEntity<SuccessResponse<RefreshTokenDTO>> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) throws ParseException, JOSEException {
+        RefreshTokenDTO resultData = authService.refreshToken(refreshTokenRequest);
 
-        SuccessResponse<Map<String, Object>> successResponse = SuccessResponse.<Map<String, Object>>builder()
+        SuccessResponse<RefreshTokenDTO> successResponse = SuccessResponse.<RefreshTokenDTO>builder()
                 .message("Làm mới token thành công")
                 .result(resultData)
                 .build();
