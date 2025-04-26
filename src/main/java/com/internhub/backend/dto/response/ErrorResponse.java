@@ -5,7 +5,6 @@ import lombok.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
