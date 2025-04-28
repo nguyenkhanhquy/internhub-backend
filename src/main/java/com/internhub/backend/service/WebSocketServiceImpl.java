@@ -11,7 +11,6 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     private final SimpMessagingTemplate template;
 
-
     @Override
     public void sendPrivateMessage(String userId, String messageContent) {
         TextMessageDTO textMessageDTO = new TextMessageDTO();
