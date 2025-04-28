@@ -50,7 +50,7 @@ public class Student {
     @Column(name = "intern_status", nullable = false)
     private InternStatus internStatus;
 
-    @Column(name = "student_id", nullable = false)
+    @Column(name = "student_id", nullable = false, unique = true)
     private String studentId;
 
     @Column(name = "gpa", nullable = false)

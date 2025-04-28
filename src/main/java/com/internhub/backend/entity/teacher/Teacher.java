@@ -25,6 +25,6 @@ public class Teacher {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "teacher_id", nullable = false)
+    @Column(name = "teacher_id", nullable = false, unique = true)
     private String teacherId;
 }
