@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
@@ -24,11 +23,15 @@ public class AcademicYearTask {
         this.academicYearRepository = academicYearRepository;
     }
 
-    @Scheduled(cron = "0 1 0 1 1 ?", zone = "Asia/Ho_Chi_Minh")
+    @Scheduled(cron = "0 0 0 1 8 ?", zone = "Asia/Ho_Chi_Minh")
     public void createAcademicYear() {
-        log.info("Bắt đầu nhiệm vụ tạo năm học mới tại {}", Instant.now());
         try {
-            int currentYear = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).getYear();
+            LocalDate now = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+            int currentYear = now.getYear();
+            int currentMonth = now.getMonthValue();
+            if (currentMonth < 8) {
+                currentYear--;
+            }
             String academicYearName = currentYear + "-" + (currentYear + 1);
 
             if (academicYearRepository.existsByName(academicYearName)) {
@@ -40,7 +43,7 @@ public class AcademicYearTask {
                 log.info("Đã hoàn tất nhiệm vụ tạo năm học mới: {}", academicYearName);
             }
         } catch (Exception e) {
-            log.info("Lỗi trong quá trình tạo năm học mới: {}", e.getMessage(), e);
+            log.error("Lỗi trong quá trình tạo năm học mới: {}", e.getMessage(), e);
         }
     }
 }

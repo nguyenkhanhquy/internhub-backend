@@ -15,4 +15,8 @@ public class YearAndSemesterDTO {
     private List<AcademicYear> academicYears;
 
     private List<SemesterDTO> semesters;
+
+    private AcademicYear currentAcademicYear;
+
+    private SemesterDTO currentSemester;
 }
