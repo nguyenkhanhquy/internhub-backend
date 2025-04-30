@@ -16,6 +16,7 @@ public enum EnumException {
     EMAIL_AND_STUDENT_ID_MISMATCH(HttpStatus.BAD_REQUEST, "Mã số sinh viên không khớp với email"),
     ACCOUNT_ALREADY_ACTIVATED(HttpStatus.BAD_REQUEST, "Tài khoản đã được kích hoạt trước đó"),
     FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "Loại tệp không hợp lệ"),
+    COURSE_CODE_EXISTS(HttpStatus.BAD_REQUEST, "Mã lớp học đã tồn tại"),
 
     // 401 : Unauthorized — user chưa được xác thực
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),
@@ -38,6 +39,8 @@ public enum EnumException {
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy công ty"),
     JOB_APPLY_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy hồ sơ ứng tuyển"),
     INTERNSHIP_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy báo cáo thực tập"),
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy lớp học"),
+    ACADEMIC_YEAR_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy năm học"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống
     UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),

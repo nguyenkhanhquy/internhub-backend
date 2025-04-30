@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface StudentRepository extends JpaRepository<Student, String> {
 
     long countStudentByIsReported(boolean isReported);
@@ -19,4 +21,6 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             "    LOWER(s.studentId) LIKE LOWER(CONCAT('%', :query, '%')) " +
             ")")
     Page<Student> adminFindAllStudents(String query, Pageable pageable);
+
+    List<Student> findByStudentId(String studentId);
 }

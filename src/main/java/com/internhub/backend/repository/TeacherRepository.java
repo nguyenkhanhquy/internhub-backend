@@ -15,4 +15,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, String> {
             "    LOWER(t.teacherId) LIKE LOWER(CONCAT('%', :query, '%')) " +
             ")")
     Page<Teacher> adminFindAllTeachers(String query, Pageable pageable);
+
+    Teacher findByTeacherId(String teacherId);
 }
