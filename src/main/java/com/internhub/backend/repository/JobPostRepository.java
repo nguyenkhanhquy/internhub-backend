@@ -2,10 +2,12 @@ package com.internhub.backend.repository;
 
 import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.job.JobPost;
+import com.internhub.backend.entity.student.Major;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface JobPostRepository extends JpaRepository<JobPost, String> {
 
@@ -43,4 +45,14 @@ public interface JobPostRepository extends JpaRepository<JobPost, String> {
     Page<JobPost> adminFindAllJobPosts(String query, Pageable pageable);
 
     long countJobPostByIsApprovedAndIsDeleted(boolean isApproved, boolean isDeleted);
+
+    @Query("SELECT j FROM JobPost j " +
+            "WHERE :studentMajor MEMBER OF j.majors " +
+            "AND j.isApproved = true " +
+            "AND j.isHidden = false " +
+            "AND j.isDeleted = false")
+    Page<JobPost> findAllSuitableForStudent(
+            Pageable pageable,
+            @Param("studentMajor") Major studentMajor
+    );
 }

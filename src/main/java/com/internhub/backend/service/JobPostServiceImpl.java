@@ -146,6 +146,19 @@ public class JobPostServiceImpl implements JobPostService {
     }
 
     @Override
+    public Page<JobPostBasicDTO> getJobPostsSuitableForStudent(Pageable pageable) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        return jobPostRepository.findAllSuitableForStudent(pageable, student.getMajor())
+                .map(jobPostMapper::mapJobPostToJobPostBasicDTO);
+    }
+
+    @Override
     public JobPostDetailDTO getJobPostById(String id) {
         JobPost jobPost = jobPostRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));

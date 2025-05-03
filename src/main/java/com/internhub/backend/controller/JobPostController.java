@@ -9,6 +9,10 @@ import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobPostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +39,25 @@ public class JobPostController {
     @GetMapping("/popular")
     public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getPopularJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
         return ResponseEntity.ok(jobPostService.getPopularJobPosts(request));
+    }
+
+    @GetMapping("/suitable")
+    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getJobPostsSuitableForStudent(@PageableDefault(page = 0, size = 10, sort = "updatedDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<JobPostBasicDTO> pageData = jobPostService.getJobPostsSuitableForStudent(pageable);
+
+        SuccessResponse<List<JobPostBasicDTO>> successResponse = SuccessResponse.<List<JobPostBasicDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(pageData.getNumber())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent())
+                .build();
+
+        return ResponseEntity.ok(successResponse);
     }
 
     @GetMapping("/{id}")

@@ -6,6 +6,8 @@ import com.internhub.backend.dto.request.jobs.CreateJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.jobs.JobPostUpdateRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -17,6 +19,9 @@ public interface JobPostService {
     SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request);
 
     SuccessResponse<List<JobPostBasicDTO>> getPopularJobPosts(JobPostSearchFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
+    Page<JobPostBasicDTO> getJobPostsSuitableForStudent(Pageable pageable);
 
     JobPostDetailDTO getJobPostById(String id);
 
