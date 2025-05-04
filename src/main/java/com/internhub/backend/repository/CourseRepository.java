@@ -13,7 +13,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
     boolean existsByCourseCode(String courseCode);
 
     @Query("SELECT c FROM Course c " +
-            "WHERE LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
+            "WHERE (:search IS NULL OR LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :search, '%'))) " +
             "AND (:year IS NULL OR c.academicYear.id = :year) " +
             "AND (:semester IS NULL OR c.semester = :semester) " +
             "ORDER BY c.startDate DESC")
