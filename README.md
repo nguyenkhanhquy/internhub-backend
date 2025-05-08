@@ -113,7 +113,6 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
   - Spring Framework (Application framework)
   - Spring Boot (Auto-configuration)
   - Spring Data JPA (Data access)
-  - Hibernate (ORM)
 - **Database**: MySQL
 - **Build Tool**: Maven
 - **Testing**: JUnit, Mockito
