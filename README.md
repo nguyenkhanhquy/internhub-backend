@@ -1,110 +1,167 @@
 # Internhub Backend
 
-Internhub is a platform that connects students with companies for internships. This project is the backend part of the Internhub platform. It is built using Java, Spring Boot, and MySQL. The project provides RESTful API endpoints for the frontend to interact with the database.
+[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.0-green.svg)](https://spring.io/projects/spring-boot)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0.40-blue.svg)](https://dev.mysql.com/downloads/mysql/)
+[![Maven](https://img.shields.io/badge/Maven-3.9.9-red.svg)](https://maven.apache.org/download.cgi)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-## Table of Contents
+## 📋 Overview
 
-1. [Use Case Diagram](#use-case-diagram)
-2. [Class Diagram](#class-diagram)
-3. [Prerequisites](#prerequisites)
-4. [Installation](#installation)
-5. [Technology Stack](#technology-stack)
-6. [Documentation](#documentation)
-7. [Author](#author)
+Internhub is a platform connecting students with companies for internships. This project is the backend part of the Internhub platform, built using Java, Spring Boot, and MySQL. The project provides RESTful API endpoints for the frontend to interact with the database.
 
-## Use Case Diagram
+## 🔧 System Requirements
+
+- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) 21 or higher
+- [Apache Maven](https://maven.apache.org/download.cgi) 3.9.9 or higher
+- [Spring Boot](https://spring.io/projects/spring-boot) 3.4.0 or higher
+- [MySQL](https://dev.mysql.com/downloads/mysql/) 8.0.40 or higher
+
+## 🚀 Installation Guide
+
+### 1. Clone the project from repository
+
+```sh
+git clone https://github.com/nguyenkhanhquy/internhub-backend.git
+cd internhub-backend
+```
+
+### 2. Open the project in your preferred IDE (IntelliJ IDEA recommended)
+
+### 3. Create a `.env.local` file
+
+Ensure the `.env.local` file is placed in the root directory of the project:
+
+```plaintext
+internhub-backend/
+  |-- ...
+  |-- assets/
+  |-- src/
+  |-- .env.local 👈
+  |-- ...
+```
+
+Add the following environment variables to the `.env.local` file:
+
+```plaintext
+# Database Configuration
+DATASOURCE_URL=jdbc:mysql://localhost:3306/internhub
+DATASOURCE_USERNAME=your_mysql_username
+DATASOURCE_PASSWORD=your_mysql_password
+DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
+
+# Email Configuration
+MAIL_USERNAME=your_email_address
+MAIL_PASSWORD=your_email_password
+
+# JWT Configuration
+SIGNER_KEY=your_jwt_signer_key
+VALID_DURATION=your_valid_duration
+REFRESHABLE_DURATION=your_refreshable_duration
+
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
+
+# Cloudinary Configuration
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# Admin Credentials
+ADMIN_EMAIL=your_admin_email
+ADMIN_PASSWORD=your_admin_password
+```
+
+### 4. Run the project
+
+```sh
+mvn spring-boot:run
+```
+
+### 5. Open your browser and access the Swagger documentation
+
+```plaintext
+http://localhost:8080/api/v1/swagger-ui/index.html
+```
+
+### 6. Start testing the API endpoints using Swagger
+
+### 7. Stop the project
+
+Press `Ctrl + C` in the terminal.
+
+## 📦 Available Commands
+
+```sh
+# Run the application
+mvn spring-boot:run
+
+# Clean and package the application
+mvn clean package
+
+# Run tests
+mvn test
+
+# Run with specific profile
+mvn spring-boot:run -Dspring-boot.run.profiles=docker
+```
+
+## ⚙️ Technology Stack
+
+- **Programming Language**: Java
+- **Framework/Libraries**:
+  - Spring Framework (Application framework)
+  - Spring Boot (Auto-configuration)
+  - Spring Data JPA (Data access)
+  - Hibernate (ORM)
+- **Database**: MySQL
+- **Build Tool**: Maven
+- **Testing**: JUnit, Mockito
+- **API Testing**: Swagger, Postman, JMeter
+- **Cloud Storage**: Cloudinary
+- **Deployment**: Heroku
+- **IDE**: IntelliJ IDEA
+- **Version Control**: Git
+
+## 📁 Directory Structure
+
+```plaintext
+src/
+  |-- main/
+      |-- java/com/internhub/backend/
+          |-- config/        # Configuration classes
+          |-- controller/    # REST controllers
+          |-- dto/           # Data transfer objects
+          |-- entity/        # JPA entities
+          |-- exception/     # Custom exceptions
+          |-- mapper/        # Object mappers
+          |-- repository/    # Data access interfaces
+          |-- service/       # Business logic
+          |-- task/          # Scheduled tasks
+          |-- util/          # Utility classes
+      |-- resources/
+          |-- application.yml  # Application properties
+          |-- static/          # Static resources
+          |-- templates/       # Template files
+  |-- test/                  # Test classes
+```
+
+## 📊 System Architecture
+
+### Use Case Diagram
 
 ![Use Case Diagram](/assets/UseCaseDiagram.png)
 
-## Class Diagram
+### Class Diagram
 
 ![Class Diagram](/assets/ClassDiagram.png)
 
-## Prerequisites
+## 👨‍💻 Author
 
-- [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) 21 or later
-- [Apache Maven](https://maven.apache.org/download.cgi) 3.9.9 or later
-- [Spring Boot](https://spring.io/projects/spring-boot) 3.4.0 or later
-- [MySQL](https://dev.mysql.com/downloads/mysql/) 8.0.40 or later
+| Author Name | Email | GitHub |
+|-----------|------------|--------|
+| Nguyen Khanh Quy | <nguyenkhanhquy123@gmail.com> | [@nguyenkhanhquy](https://github.com/nguyenkhanhquy) |
 
-## Installation
+## 📄 License
 
-1. Clone the project from the repository:
-
-    ```sh
-    git clone https://github.com/nguyenkhanhquy/internhub-backend.git
-    ```
-
-2. Open the project in your favorite IDE (IntelliJ IDEA is recommended).
-
-3. Create `.env.local` file
-
-   ```plaintext
-   internhub-backend/
-     |-- ...
-     |-- assets/
-     |-- src/
-     |-- .env.local 👈
-     |-- ...
-   ```
-
-    Add the following environment variables to the `.env.local` file:
-    
-    ```plaintext
-   DATASOURCE_URL= # Your MySQL database URL (e.g. jdbc:mysql://localhost:3306/internhub)
-   DATASOURCE_USERNAME= # Your MySQL database username (e.g. root)
-   DATASOURCE_PASSWORD= # Your MySQL database password (e.g. 5@fuex7)
-   DATASOURCE_DRIVER= # Your MySQL database driver (e.g. com.mysql.cj.jdbc.Driver)
-   MAIL_USERNAME= # Your email address (e.g. mail@email.com)
-   MAIL_PASSWORD= # Your email password (e.g. 4245ssAf@)
-   SIGNER_KEY= # Your JWT signer key (e.g. FD5oCuoXQvckL9HTzN1eXLio02OKQLMvH6XNr33bffi8N7SkZg5aSQ3H8PNVEhq7)
-   VALID_DURATION= # Your JWT valid duration (e.g. 3) *in hours
-   REFRESHABLE_DURATION= # Your JWT refreshable duration (e.g. 72) *in hours
-   FRONTEND_URL= # Your frontend URL (e.g. http://localhost:3000)
-   CLOUDINARY_CLOUD_NAME= # Your Cloudinary cloud name (e.g. internhub)
-   CLOUDINARY_API_KEY= # Your Cloudinary API key (e.g. 123456789012345)
-   CLOUDINARY_API_SECRET= # Your Cloudinary API secret (e.g. 123456789012345)
-   ADMIN_EMAIL= # Your admin email (e.g. admin@email.com)
-   ADMIN_PASSWORD= # Your admin password (e.g. 5fs@878fa@$)
-   ```
-
-4. Run the project using the following command:
-
-    ```sh
-    mvn spring-boot:run
-    ```
-
-5. Open your browser and navigate to `http://localhost:8080/api/v1/swagger-ui/index.html` to view the Swagger documentation.
-
-6. You can now test the API endpoints using Swagger.
-
-7. Stop the project by pressing `Ctrl + C` in the terminal.
-
-**Optional:**
-
-- You can use [Postman](https://www.postman.com/downloads) to test the API endpoints
-- You can use [MySQL Workbench](https://dev.mysql.com/downloads/workbench) to view the database
-- You can deploy the project to Heroku by following the instructions [here](https://devcenter.heroku.com/articles/getting-started-with-java).
-
-## Technology Stack
-
-- Programming Language: Java
-- Frameworks/Libraries: Spring Framework, Spring Boot, Spring Data JPA, Hibernate
-- Database: MySQL
-- IDE: IntelliJ IDEA
-- Build Tool: Maven
-- Testing: JUnit
-- API Testing: Postman, Swagger, Jmeter
-- Deployment: Heroku
-- Cloud Storage: Cloudinary
-- Documentation: Swagger
-- Version Control: Git
-
-## Documentation
-
-- `http://localhost:8080/api/v1/swagger-ui/index.html` - Swagger documentation
-
-## Author
-
-- Author Name: `Nguyễn Khánh Quy`
-- Email: <nguyenkhanhquy123@gmail.com>
+This project is licensed under the [MIT License](./LICENSE).
