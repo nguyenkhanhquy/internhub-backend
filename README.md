@@ -75,7 +75,7 @@ ADMIN_PASSWORD=your_admin_password
 ### 4. Run the project
 
 ```sh
-mvn spring-boot:run
+.\run.ps1
 ```
 
 ### 5. Open your browser and access the Swagger documentation
@@ -104,6 +104,12 @@ mvn test
 
 # Run with specific profile
 mvn spring-boot:run -Dspring-boot.run.profiles=docker
+
+# Run with Docker
+docker-compose up -d
+
+# Run with PowPowerShell script (Windows only)
+.\run.ps1
 ```
 
 ## ⚙️ Technology Stack
