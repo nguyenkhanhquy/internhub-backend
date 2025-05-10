@@ -14,7 +14,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     @Query("SELECT c FROM Course c " +
             "WHERE (:search IS NULL OR LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :search, '%'))) " +
-            "AND (:year IS NULL OR c.academicYear.id = :year) " +
+            "AND (:year IS NULL OR c.academicYear.name = :year) " +
             "AND (:semester IS NULL OR c.semester = :semester) " +
             "ORDER BY c.startDate DESC")
     Page<Course> filterCourses(

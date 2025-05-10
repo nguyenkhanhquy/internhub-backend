@@ -59,9 +59,10 @@ public class Course {
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     @Builder.Default
-    private CourseStatus courseStatus = CourseStatus.GRADING;
+    private CourseStatus courseStatus = CourseStatus.DRAFT;
 
     public enum CourseStatus {
+        DRAFT("Đang điều chỉnh"),
         GRADING("Đang nhập điểm"),
         FINALIZED("Đã kết thúc");
 

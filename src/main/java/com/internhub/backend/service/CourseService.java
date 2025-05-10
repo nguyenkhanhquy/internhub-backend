@@ -3,9 +3,13 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.academic.CourseDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
+import com.internhub.backend.dto.student.StudentDTO;
+import com.internhub.backend.entity.academic.Enrollment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 public interface CourseService {
 
@@ -23,4 +27,10 @@ public interface CourseService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     void deleteCourse(String courseId);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    List<StudentDTO> getAllStudentsByCourseId(String courseId);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void assignStudentsToCourse(String courseId, List<String> studentIds);
 }

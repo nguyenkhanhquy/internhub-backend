@@ -4,17 +4,18 @@ import com.internhub.backend.dto.academic.CourseDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.dto.student.StudentDTO;
 import com.internhub.backend.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/courses")
@@ -86,5 +87,29 @@ public class CourseController {
         courseService.deleteCourse(courseId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{courseId}/students")
+    public ResponseEntity<SuccessResponse<List<StudentDTO>>> getAllStudentsByCourseId(@PathVariable String courseId) {
+        List<StudentDTO> studentDTOS = courseService.getAllStudentsByCourseId(courseId);
+
+        SuccessResponse<List<StudentDTO>> response = SuccessResponse.<List<StudentDTO>>builder()
+                .result(studentDTOS)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{courseId}/students/assign")
+    public ResponseEntity<SuccessResponse<Void>> assignStudentsToCourse(@PathVariable String courseId,
+                                                                        @RequestBody Map<String, List<String>> request) {
+        List<String> studentIds = request.get("studentIds");
+        courseService.assignStudentsToCourse(courseId, studentIds);
+
+        SuccessResponse<Void> response = SuccessResponse.<Void>builder()
+                .message("Gán sinh viên thành công!")
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 }

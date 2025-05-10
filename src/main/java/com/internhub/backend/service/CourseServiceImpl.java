@@ -3,6 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.academic.CourseDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
+import com.internhub.backend.dto.student.StudentDTO;
 import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Enrollment;
@@ -11,6 +12,7 @@ import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.CourseMapper;
+import com.internhub.backend.mapper.StudentMapper;
 import com.internhub.backend.repository.AcademicYearRepository;
 import com.internhub.backend.repository.CourseRepository;
 import com.internhub.backend.repository.StudentRepository;
@@ -21,7 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class CourseServiceImpl implements CourseService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final CourseMapper courseMapper;
+    private final StudentMapper studentMapper;
 
     @Override
     public CourseDTO createCourse(CreateCourseRequest request) {
@@ -72,14 +78,16 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Page<CourseDTO> getAllCourses(Pageable pageable, String search ,String year, String semesterValue) {
-        Semester semester = null;
-        if (semesterValue != null && !semesterValue.isBlank()) {
-            try {
-                semester = Semester.valueOf(semesterValue);
-            } catch (IllegalArgumentException ignored) {
-
-            }
-        }
+        Semester semester = Optional.ofNullable(semesterValue)
+                .filter(s -> !s.isBlank())
+                .map(s -> {
+                    try {
+                        return Semester.valueOf(s);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .orElse(null);
 
         return courseRepository.filterCourses(pageable, search, year, semester)
                 .map(courseMapper::toDTO);
@@ -124,6 +132,56 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new CustomException(EnumException.COURSE_NOT_FOUND));
 
         courseRepository.delete(course);
+    }
+
+    @Override
+    public List<StudentDTO> getAllStudentsByCourseId(String courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(EnumException.COURSE_NOT_FOUND));
+
+        List<Enrollment> enrollments = course.getEnrollments();
+
+        return enrollments.stream()
+                .map(Enrollment::getStudent)
+                .map(studentMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public void assignStudentsToCourse(String courseId, List<String> studentIds) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(EnumException.COURSE_NOT_FOUND));
+
+        // 1. Map nhanh để tìm studentId trong danh sách truyền vào
+        Set<String> incomingStudentIdSet = new HashSet<>(studentIds);
+
+        // 2. Lọc ra những enrollment hiện tại KHÔNG có trong danh sách mới => XÓA
+        course.getEnrollments().removeIf(enrollment ->
+                !incomingStudentIdSet.contains(enrollment.getStudent().getStudentId())
+        );
+
+        // 3. Thêm sinh viên mới chưa có
+        for (String studentId : studentIds) {
+            // Nếu đã có thì skip
+            boolean alreadyEnrolled = course.getEnrollments().stream()
+                    .anyMatch(e -> e.getStudent().getStudentId().equals(studentId));
+            if (alreadyEnrolled) continue;
+
+            Optional<Student> optionalStudent = studentRepository.findByStudentId(studentId)
+                    .stream()
+                    .findFirst();
+
+            if (optionalStudent.isPresent()) {
+                Student student = optionalStudent.get();
+                Enrollment enrollment = Enrollment.builder()
+                        .course(course)
+                        .student(student)
+                        .build();
+                course.getEnrollments().add(enrollment);
+            }
+        }
+
+        courseRepository.save(course);
     }
 
     private LocalDate generateStartDate(String academicYear, Semester semester) {
