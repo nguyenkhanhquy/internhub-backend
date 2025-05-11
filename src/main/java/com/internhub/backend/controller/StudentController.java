@@ -1,5 +1,6 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.academic.CourseDTO;
 import com.internhub.backend.dto.request.students.UpdateStudentProfileRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.student.Student;
@@ -39,6 +40,17 @@ public class StudentController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Cập nhật hồ sơ thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/current-course")
+    public ResponseEntity<SuccessResponse<CourseDTO>> getCurrentCourseByStudent() {
+        CourseDTO courseDTO = studentService.getCurrentCourseByStudent();
+
+        SuccessResponse<CourseDTO> successResponse = SuccessResponse.<CourseDTO>builder()
+                .result(courseDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);

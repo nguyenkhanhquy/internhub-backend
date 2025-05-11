@@ -1,10 +1,10 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.YearAndSemesterDTO;
-import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Semester;
 import com.internhub.backend.mapper.SemesterMapper;
 import com.internhub.backend.repository.AcademicYearRepository;
+import com.internhub.backend.util.AcademicUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,31 +28,8 @@ public class AcademicServiceImpl implements AcademicService {
                 .semesters(Arrays.stream(Semester.values())
                         .map(semesterMapper::toDTO)
                         .toList())
-                .currentAcademicYear(getCurrentAcademicYear(now))
-                .currentSemester(semesterMapper.toDTO(getCurrentSemester(now)))
+                .currentAcademicYear(AcademicUtil.getCurrentAcademicYear(now, academicYearRepository))
+                .currentSemester(semesterMapper.toDTO(AcademicUtil.getCurrentSemester(now)))
                 .build();
-    }
-
-    private AcademicYear getCurrentAcademicYear(LocalDate now) {
-        int year = now.getYear();
-        int month = now.getMonthValue();
-        String name;
-        if (month >= 8) {
-            name = year + "-" + (year + 1);
-        } else {
-            name = (year - 1) + "-" + year;
-        }
-        return academicYearRepository.findByName(name);
-    }
-
-    private Semester getCurrentSemester(LocalDate now) {
-        int month = now.getMonthValue();
-        if (month >= 8) {
-            return Semester.HK01;
-        } else if (month <= 5) {
-            return Semester.HK02;
-        } else {
-            return Semester.HK03;
-        }
     }
 }

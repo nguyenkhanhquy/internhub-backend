@@ -107,7 +107,7 @@ public class CourseController {
         courseService.assignStudentsToCourse(courseId, studentIds);
 
         SuccessResponse<Void> response = SuccessResponse.<Void>builder()
-                .message("Gán sinh viên thành công!")
+                .message("Gán sinh viên thành công")
                 .build();
 
         return ResponseEntity.ok(response);

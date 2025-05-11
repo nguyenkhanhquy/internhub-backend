@@ -4,7 +4,6 @@ import com.internhub.backend.dto.academic.CourseDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
 import com.internhub.backend.dto.student.StudentDTO;
-import com.internhub.backend.entity.academic.Enrollment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
