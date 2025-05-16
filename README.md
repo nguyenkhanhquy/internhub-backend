@@ -155,11 +155,11 @@ src/
 
 ### Use Case Diagram
 
-![Use Case Diagram](/assets/UseCaseDiagram.png)
+![Use Case Diagram](/docs/diagrams/UseCaseDiagram.png)
 
 ### Class Diagram
 
-![Class Diagram](/assets/ClassDiagram.png)
+![Class Diagram](/docs/diagrams/ClassDiagram.png)
 
 ## 👨‍💻 Author
 
