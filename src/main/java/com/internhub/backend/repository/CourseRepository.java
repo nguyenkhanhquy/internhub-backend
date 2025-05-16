@@ -2,6 +2,7 @@ package com.internhub.backend.repository;
 
 import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Semester;
+import com.internhub.backend.entity.teacher.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,6 +20,21 @@ public interface CourseRepository extends JpaRepository<Course, String> {
             "ORDER BY c.startDate DESC")
     Page<Course> filterCourses(
             Pageable pageable,
+            @Param("search") String search,
+            @Param("year") String year,
+            @Param("semester") Semester semester
+    );
+
+    @Query("SELECT c FROM Course c " +
+            "WHERE c.teacher = :teacher " +
+            "AND c.courseStatus = 'GRADING'" +
+            "AND (:search IS NULL OR LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :search, '%'))) " +
+            "AND (:year IS NULL OR c.academicYear.name = :year) " +
+            "AND (:semester IS NULL OR c.semester = :semester) " +
+            "ORDER BY c.startDate DESC")
+    Page<Course> filterCoursesByTeacher(
+            Pageable pageable,
+            @Param("teacher") Teacher teacher,
             @Param("search") String search,
             @Param("year") String year,
             @Param("semester") Semester semester

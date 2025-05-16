@@ -16,7 +16,7 @@ public interface CourseService {
     CourseDTO createCourse(CreateCourseRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
-    Page<CourseDTO> getAllCourses(Pageable pageable, String search, String year, String semester);
+    Page<CourseDTO> getAllCourses(Pageable pageable, String search, String year, String semesterValue);
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     CourseDTO getCourseById(String courseId);
