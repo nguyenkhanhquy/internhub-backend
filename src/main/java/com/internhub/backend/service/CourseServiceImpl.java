@@ -1,6 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDetailDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
 import com.internhub.backend.dto.student.StudentDTO;
@@ -12,11 +13,9 @@ import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.CourseMapper;
+import com.internhub.backend.mapper.EnrollmentMapper;
 import com.internhub.backend.mapper.StudentMapper;
-import com.internhub.backend.repository.AcademicYearRepository;
-import com.internhub.backend.repository.CourseRepository;
-import com.internhub.backend.repository.StudentRepository;
-import com.internhub.backend.repository.TeacherRepository;
+import com.internhub.backend.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +35,10 @@ public class CourseServiceImpl implements CourseService {
     private final AcademicYearRepository academicYearRepository;
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final CourseMapper courseMapper;
     private final StudentMapper studentMapper;
+    private final EnrollmentMapper enrollmentMapper;
 
     @Override
     public CourseDTO createCourse(CreateCourseRequest request) {
@@ -182,6 +183,17 @@ public class CourseServiceImpl implements CourseService {
         }
 
         courseRepository.save(course);
+    }
+
+    @Override
+    public List<EnrollmentDetailDTO> getAllEnrollmentsByCourseId(String courseId) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(EnumException.COURSE_NOT_FOUND));
+
+        return enrollmentRepository.findAllByCourse(course)
+                .stream()
+                .map(enrollmentMapper::toDetailDTO)
+                .toList();
     }
 
     private LocalDate generateStartDate(String academicYear, Semester semester) {

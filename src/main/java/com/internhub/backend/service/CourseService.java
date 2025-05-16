@@ -1,6 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDetailDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
 import com.internhub.backend.dto.student.StudentDTO;
@@ -32,4 +33,7 @@ public interface CourseService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     void assignStudentsToCourse(String courseId, List<String> studentIds);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT') or hasAuthority('SCOPE_TEACHER')")
+    List<EnrollmentDetailDTO> getAllEnrollmentsByCourseId(String courseId);
 }

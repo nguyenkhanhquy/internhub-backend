@@ -1,6 +1,7 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDetailDTO;
 import com.internhub.backend.dto.request.courses.CreateCourseRequest;
 import com.internhub.backend.dto.request.courses.UpdateCourseRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
@@ -108,6 +109,17 @@ public class CourseController {
 
         SuccessResponse<Void> response = SuccessResponse.<Void>builder()
                 .message("Gán sinh viên thành công")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{courseId}/enrollments")
+    public ResponseEntity<SuccessResponse<List<EnrollmentDetailDTO>>> getAllEnrollmentsByCourseId(@PathVariable String courseId) {
+        List<EnrollmentDetailDTO> enrollments = courseService.getAllEnrollmentsByCourseId(courseId);
+
+        SuccessResponse<List<EnrollmentDetailDTO>> response = SuccessResponse.<List<EnrollmentDetailDTO>>builder()
+                .result(enrollments)
                 .build();
 
         return ResponseEntity.ok(response);
