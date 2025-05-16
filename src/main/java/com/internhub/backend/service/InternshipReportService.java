@@ -1,6 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.internshipreports.CreateInternshipReportRequest;
+import com.internhub.backend.dto.request.internshipreports.SubmitInternshipReportRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.student.InternshipReport;
@@ -15,4 +16,7 @@ public interface InternshipReportService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     SuccessResponse<List<InternshipReport>> getAllInternshipReportsByStudent(PageSearchSortFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
+    void submitInternshipReport(SubmitInternshipReportRequest request);
 }

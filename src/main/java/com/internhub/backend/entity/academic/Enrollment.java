@@ -40,7 +40,7 @@ public class Enrollment {
     @JoinColumn(name = "student_id", referencedColumnName = "student_id", nullable = false)
     private Student student;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "report_id", referencedColumnName = "id")
     private InternshipReport internshipReport;
 

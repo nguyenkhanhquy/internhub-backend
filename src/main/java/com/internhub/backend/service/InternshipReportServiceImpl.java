@@ -1,8 +1,10 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.request.internshipreports.CreateInternshipReportRequest;
+import com.internhub.backend.dto.request.internshipreports.SubmitInternshipReportRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.academic.Enrollment;
 import com.internhub.backend.entity.account.Notification;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.student.InternshipReport;
@@ -10,6 +12,7 @@ import com.internhub.backend.entity.student.ReportStatus;
 import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
+import com.internhub.backend.repository.EnrollmentRepository;
 import com.internhub.backend.repository.InternshipReportRepository;
 import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
@@ -38,6 +41,7 @@ public class InternshipReportServiceImpl implements InternshipReportService {
     private final InternshipReportRepository internshipReportRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final WebSocketService webSocketService;
 
     @Override
@@ -109,5 +113,36 @@ public class InternshipReportServiceImpl implements InternshipReportService {
                         .build())
                 .result(pageData.getContent())
                 .build();
+    }
+
+    @Override
+    public void submitInternshipReport(SubmitInternshipReportRequest request) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        Student student = studentRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        InternshipReport internshipReport = InternshipReport.builder()
+                .student(student)
+                .companyName(request.getCompanyName())
+                .teacherName(request.getTeacherName())
+                .instructorName(request.getInstructorName())
+                .instructorEmail(request.getInstructorEmail())
+                .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
+                .reportFile(request.getReportFile())
+                .evaluationFile(request.getEvaluationFile())
+                .createdDate(Date.from(new Date().toInstant()))
+                .reportStatus(ReportStatus.PROCESSING)
+                .isSystemCompany(request.isSystemCompany())
+                .build();
+
+        Enrollment enrollment = enrollmentRepository.findByStudentAndCourse_CourseCode(student, request.getCourseCode()).orElseThrow();
+        enrollment.setInternshipReport(internshipReport);
+        enrollment.setEnrollmentStatus(Enrollment.EnrollmentStatus.SUBMITTED);
+
+        enrollmentRepository.save(enrollment);
     }
 }

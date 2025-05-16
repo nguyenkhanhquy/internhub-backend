@@ -77,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Page<CourseDTO> getAllCourses(Pageable pageable, String search ,String year, String semesterValue) {
+    public Page<CourseDTO> getAllCourses(Pageable pageable, String search, String year, String semesterValue) {
         Semester semester = Optional.ofNullable(semesterValue)
                 .filter(s -> !s.isBlank())
                 .map(s -> {

@@ -8,7 +8,9 @@ import java.time.LocalDate;
 
 public class AcademicUtil {
 
-    private AcademicUtil() {throw new IllegalStateException("Utility class");}
+    private AcademicUtil() {
+        throw new IllegalStateException("Utility class");
+    }
 
     public static AcademicYear getCurrentAcademicYear(LocalDate now, AcademicYearRepository academicYearRepository) {
         int year = now.getYear();

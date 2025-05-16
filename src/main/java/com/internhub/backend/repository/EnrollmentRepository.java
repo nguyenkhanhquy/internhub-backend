@@ -35,4 +35,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, String> 
             @Param("academicYear") AcademicYear academicYear,
             @Param("semester") Semester semester
     );
+
+    Optional<Enrollment> findByStudentAndCourse_CourseCode(Student student, String courseCode);
 }
