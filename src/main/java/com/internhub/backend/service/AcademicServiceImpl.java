@@ -4,7 +4,7 @@ import com.internhub.backend.dto.academic.YearAndSemesterDTO;
 import com.internhub.backend.entity.academic.Semester;
 import com.internhub.backend.mapper.SemesterMapper;
 import com.internhub.backend.repository.AcademicYearRepository;
-import com.internhub.backend.util.AcademicUtil;
+import com.internhub.backend.util.AcademicUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +28,8 @@ public class AcademicServiceImpl implements AcademicService {
                 .semesters(Arrays.stream(Semester.values())
                         .map(semesterMapper::toDTO)
                         .toList())
-                .currentAcademicYear(AcademicUtil.getCurrentAcademicYear(now, academicYearRepository))
-                .currentSemester(semesterMapper.toDTO(AcademicUtil.getCurrentSemester(now)))
+                .currentAcademicYear(AcademicUtils.getCurrentAcademicYear(now, academicYearRepository))
+                .currentSemester(semesterMapper.toDTO(AcademicUtils.getCurrentSemester(now)))
                 .build();
     }
 }

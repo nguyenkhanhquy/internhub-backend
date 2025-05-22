@@ -14,10 +14,13 @@ import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.*;
 import com.internhub.backend.util.AuthUtils;
-import com.opencsv.CSVReader;
+import com.internhub.backend.util.ExcelUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -26,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -228,74 +230,44 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void importTeachersFromFile(MultipartFile file) {
-        String contentType = file.getContentType();
-        if (contentType == null || (!contentType.equals("text/csv") && !contentType.equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))) {
+        if (!ExcelUtils.isExcelFile(file)) {
             throw new CustomException(EnumException.FILE_TYPE_INVALID);
         }
 
-        List<Teacher> teachers = new ArrayList<>();
+        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0);
+            List<Teacher> teachers = new ArrayList<>();
 
-        try {
-            if (contentType.equals("text/csv")) {
-                // Xử lý file CSV
-                CSVReader csvReader = new CSVReader(new InputStreamReader(file.getInputStream()));
-                List<String[]> rows = csvReader.readAll();
-                for (String[] row : rows) {
-                    if (row[0].equals("TeacherId") && row[1].equals("Name") && row[2].equals("Email"))
-                        continue; // Bỏ qua tiêu đề
-                    try {
-                        User user = User.builder()
-                                .email(row[2])
-                                .password(passwordEncoder.encode("12345678"))
-                                .isActive(false)
-                                .role(roleRepository.findByName("TEACHER"))
-                                .build();
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue; // Bỏ qua tiêu đề
 
-                        User savedUser = userRepository.save(user);
+                String teacherId = ExcelUtils.getCellValueAsString(row.getCell(0));
+                String name = ExcelUtils.getCellValueAsString(row.getCell(1));
+                String email = ExcelUtils.getCellValueAsString(row.getCell(2));
 
-                        teachers.add(Teacher.builder()
-                                .user(savedUser)
-                                .name(row[1])
-                                .teacherId(row[0])
-                                .build()
-                        );
-                    } catch (DataIntegrityViolationException e) {
-                        log.warn("Email {} đã tồn tại, bỏ qua mục này.", row[2]);
-                    }
+                if (email == null || email.isEmpty()) continue;
+
+                if (userRepository.existsByEmail(email)) {
+                    log.warn("Email {} đã tồn tại, bỏ qua.", email);
+                    continue;
                 }
-            } else {
-                // Xử lý file Excel
-                Workbook workbook = WorkbookFactory.create(file.getInputStream());
-                Sheet sheet = workbook.getSheetAt(0);
 
-                for (Row row : sheet) {
-                    if (row.getRowNum() == 0) continue; // Bỏ qua tiêu đề
-                    String teacherId = row.getCell(0).getCellType() == CellType.NUMERIC
-                            ? String.valueOf((int) row.getCell(0).getNumericCellValue())
-                            : row.getCell(0).getStringCellValue();
-                    String name = row.getCell(1).getStringCellValue();
-                    String email = row.getCell(2).getStringCellValue();
-                    try {
-                        User user = User.builder()
-                                .email(email)
-                                .password(passwordEncoder.encode("12345678"))
-                                .isActive(false)
-                                .role(roleRepository.findByName("TEACHER"))
-                                .build();
+                User user = User.builder()
+                        .email(email)
+                        .password(passwordEncoder.encode("12345678"))
+                        .isActive(false)
+                        .role(roleRepository.findByName("TEACHER"))
+                        .build();
 
-                        User savedUser = userRepository.save(user);
+                User savedUser = userRepository.save(user);
 
-                        teachers.add(Teacher.builder()
-                                .user(savedUser)
-                                .name(name)
-                                .teacherId(teacherId)
-                                .build()
-                        );
-                    } catch (DataIntegrityViolationException e) {
-                        log.warn("Email {} đã tồn tại, bỏ qua mục này.", email);
-                    }
-                }
-                workbook.close();
+                Teacher teacher = Teacher.builder()
+                        .user(savedUser)
+                        .name(name)
+                        .teacherId(teacherId)
+                        .build();
+
+                teachers.add(teacher);
             }
 
             teacherRepository.saveAll(teachers);

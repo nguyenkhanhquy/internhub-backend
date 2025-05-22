@@ -6,9 +6,9 @@ import com.internhub.backend.repository.AcademicYearRepository;
 
 import java.time.LocalDate;
 
-public class AcademicUtil {
+public class AcademicUtils {
 
-    private AcademicUtil() {
+    private AcademicUtils() {
         throw new IllegalStateException("Utility class");
     }
 

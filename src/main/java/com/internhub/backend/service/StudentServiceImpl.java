@@ -12,7 +12,7 @@ import com.internhub.backend.mapper.CourseMapper;
 import com.internhub.backend.repository.AcademicYearRepository;
 import com.internhub.backend.repository.EnrollmentRepository;
 import com.internhub.backend.repository.StudentRepository;
-import com.internhub.backend.util.AcademicUtil;
+import com.internhub.backend.util.AcademicUtils;
 import com.internhub.backend.util.AuthUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -76,8 +76,8 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
 
         LocalDate now = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
-        AcademicYear currentAcademicYear = AcademicUtil.getCurrentAcademicYear(now, academicYearRepository);
-        Semester currentSemester = AcademicUtil.getCurrentSemester(now);
+        AcademicYear currentAcademicYear = AcademicUtils.getCurrentAcademicYear(now, academicYearRepository);
+        Semester currentSemester = AcademicUtils.getCurrentSemester(now);
 
         Course currentCourse = enrollmentRepository
                 .findCurrentCourseByStudent(student, currentAcademicYear, currentSemester)
