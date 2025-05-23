@@ -9,4 +9,7 @@ public interface EnrollmentService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     Page<EnrollmentDTO> getAllEnrollmentsByStudent(Pageable pageable, String search);
+
+    @PreAuthorize("hasAuthority('SCOPE_TEACHER')")
+    void updateFinalScore(String enrollmentId, Double finalScore, String feedback);
 }

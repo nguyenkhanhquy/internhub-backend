@@ -41,6 +41,7 @@ public enum EnumException {
     INTERNSHIP_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy báo cáo thực tập"),
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy lớp học"),
     ACADEMIC_YEAR_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy năm học"),
+    ENROLLMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy thông tin ghi danh"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống
     UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),

@@ -1,17 +1,16 @@
 package com.internhub.backend.controller;
 
 import com.internhub.backend.dto.academic.EnrollmentDTO;
+import com.internhub.backend.dto.request.enrollments.UpdateFinalScoreRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.EnrollmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +36,18 @@ public class EnrollmentController {
                         .hasNextPage(pageData.hasNext())
                         .build())
                 .result(pageData.getContent())
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PatchMapping("/{enrollmentId}/final-score")
+    public ResponseEntity<SuccessResponse<Void>> updateFinalScore(@PathVariable String enrollmentId,
+                                                                  @Valid @RequestBody UpdateFinalScoreRequest request) {
+        enrollmentService.updateFinalScore(enrollmentId, request.getFinalScore(), request.getFeedback());
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Cập nhật điểm thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
