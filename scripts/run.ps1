@@ -16,7 +16,7 @@ function Check-FileExists($filePath, $errorMessage) {
 # Kiểm tra sự tồn tại của các file cần thiết
 Check-FileExists ".env.local" "File .env.local không tồn tại. Vui lòng kiểm tra lại."
 Check-FileExists "pom.xml" "File pom.xml không tồn tại. Vui lòng kiểm tra lại."
-Check-FileExists "src/main/resources/application.yml" "File application.yml không tồn tại. Vui lòng kiểm tra lại."
+Check-FileExists "src/main/resources/application.yaml" "File application.yaml không tồn tại. Vui lòng kiểm tra lại."
 
 # Đọc file .env.local và thiết lập biến môi trường
 Write-Host "=====================================" -ForegroundColor Cyan

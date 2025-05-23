@@ -145,7 +145,7 @@ src/
           |-- task/          # Scheduled tasks
           |-- util/          # Utility classes
       |-- resources/
-          |-- application.yml  # Application properties
+          |-- application.yaml  # Application properties
           |-- static/          # Static resources
           |-- templates/       # Template files
   |-- test/                  # Test classes
