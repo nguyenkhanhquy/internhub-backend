@@ -1,10 +1,13 @@
 package com.internhub.backend.entity.student;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.internhub.backend.entity.account.User;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -59,4 +62,10 @@ public class Student {
     @Builder.Default
     @Column(name = "is_reported", nullable = false)
     private boolean isReported = false;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @ToString.Exclude
+    @JsonBackReference
+    private List<CurriculumVitae> curriculumVitaes = new ArrayList<>();
 }
