@@ -17,14 +17,10 @@ import java.util.Optional;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, String> {
 
-    @Query("SELECT e FROM Enrollment e " +
-            "WHERE e.student = :student " +
-            "AND LOWER(e.course.courseCode) LIKE LOWER(CONCAT('%', :search, '%')) " +
-            "ORDER BY e.updatedDate DESC")
-    Page<Enrollment> filterEnrollmentsByStudent(
-            @Param("student") Student student,
-            Pageable pageable,
-            @Param("search") String search
+    Page<Enrollment> findByStudent_UserId(String userId, Pageable pageable);
+
+    Page<Enrollment> findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCase(
+            String userId, String courseCode, Pageable pageable
     );
 
     @Query("SELECT e.course FROM Enrollment e " +

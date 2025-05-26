@@ -25,5 +25,7 @@ public class EnrollmentDTO {
 
     private Double finalScore;
 
+    private String feedback;
+
     private String enrollmentStatus;
 }

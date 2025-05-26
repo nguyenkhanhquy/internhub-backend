@@ -2,13 +2,11 @@ package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.EnrollmentDTO;
 import com.internhub.backend.entity.academic.Enrollment;
-import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.EnrollmentMapper;
 import com.internhub.backend.repository.EnrollmentRepository;
-import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.TeacherRepository;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ public class EnrollmentServiceImpl implements EnrollmentService {
 
     private final NotificationService notificationService;
     private final EnrollmentRepository enrollmentRepository;
-    private final StudentRepository studentRepository;
     private final TeacherRepository teacherRepository;
     private final EnrollmentMapper enrollmentMapper;
 
@@ -34,10 +31,12 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
-        Student student = studentRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+        if (search == null || search.isBlank()) {
+            return enrollmentRepository.findByStudent_UserId(userId, pageable)
+                    .map(enrollmentMapper::toDTO);
+        }
 
-        return enrollmentRepository.filterEnrollmentsByStudent(student, pageable, search)
+        return enrollmentRepository.findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCase(userId, search, pageable)
                 .map(enrollmentMapper::toDTO);
     }
 

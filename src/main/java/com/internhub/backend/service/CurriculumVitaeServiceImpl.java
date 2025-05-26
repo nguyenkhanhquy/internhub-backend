@@ -53,7 +53,7 @@ public class CurriculumVitaeServiceImpl implements CurriculumVitaeService {
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
 
-        if (search == null || search.trim().isEmpty()) {
+        if (search == null || search.isBlank()) {
             return curriculumVitaeRepository.findByStudent_UserId(pageable, userId)
                     .map(curriculumVitaeMapper::toDTO);
         }

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
     @GetMapping("/student")
-    public ResponseEntity<SuccessResponse<List<EnrollmentDTO>>> getAllEnrollmentsByStudent(@PageableDefault(page = 0, size = 10) Pageable pageable,
+    public ResponseEntity<SuccessResponse<List<EnrollmentDTO>>> getAllEnrollmentsByStudent(@PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
                                                                                            @RequestParam(required = false) String search) {
         Page<EnrollmentDTO> pageData = enrollmentService.getAllEnrollmentsByStudent(pageable, search);
 
