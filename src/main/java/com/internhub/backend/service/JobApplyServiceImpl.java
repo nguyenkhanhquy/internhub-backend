@@ -44,6 +44,7 @@ public class JobApplyServiceImpl implements JobApplyService {
     private final UserRepository userRepository;
     private final JobApplyMapper jobApplyMapper;
     private final WebSocketService webSocketService;
+    private final NotificationService notificationService;
 
     @Override
     public void createJobApply(CreateJobApplyRequest request) {
@@ -67,6 +68,15 @@ public class JobApplyServiceImpl implements JobApplyService {
                 .build();
 
         jobApplyRepository.save(jobApply);
+
+        // Gửi thông báo cho nhà tuyển dụng
+        String title = "Nhận được một hồ sơ ứng tuyển mới";
+        String content = "Sinh viên [" + student.getName() + " - " + student.getStudentId() + "] đã nộp hồ sơ ứng tuyển vào bài đăng [" + jobPost.getTitle() + "]";
+        notificationService.sendNotification(
+                jobPost.getCompany().getRecruiter().getUser(),
+                title,
+                content
+        );
     }
 
     @Override
