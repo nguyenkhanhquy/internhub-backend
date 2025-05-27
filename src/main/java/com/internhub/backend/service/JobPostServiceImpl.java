@@ -162,6 +162,12 @@ public class JobPostServiceImpl implements JobPostService {
     public JobPostDetailDTO getJobPostById(String id) {
         JobPost jobPost = jobPostRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.JOB_POST_NOT_FOUND));
+
+        // Kiểm tra xem bài đăng có bị ẩn, chưa được phê duyệt hoặc đã bị xóa không
+        if (jobPost.isHidden() || !jobPost.isApproved() || jobPost.isDeleted()) {
+            throw new CustomException(EnumException.JOB_POST_NOT_FOUND);
+        }
+
         JobPostDetailDTO jobPostDetailDTO = jobPostMapper.mapJobPostToJobPostDetailDTO(jobPost);
 
         try {

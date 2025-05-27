@@ -35,7 +35,7 @@ public class CurriculumVitaeController {
 
     @GetMapping("/student")
     public ResponseEntity<SuccessResponse<List<CurriculumVitaeDTO>>> getAllCVsByStudent(@PageableDefault(sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable,
-                                                                                        @RequestParam (required = false) String search) {
+                                                                                        @RequestParam(required = false) String search) {
         Page<CurriculumVitaeDTO> pageData = curriculumVitaeService.getAllCVsByStudent(pageable, search);
 
         SuccessResponse<List<CurriculumVitaeDTO>> successResponse = SuccessResponse.<List<CurriculumVitaeDTO>>builder()
