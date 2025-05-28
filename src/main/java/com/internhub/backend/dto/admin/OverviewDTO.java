@@ -11,6 +11,11 @@ import lombok.*;
 @Builder
 public class OverviewDTO {
 
+    private long totalNotifications;
+    private long totalNotificationsNotRead;
+
+    private long totalCourses;
+
     private long totalStudents;
     private long totalStudentsNotReported;
 

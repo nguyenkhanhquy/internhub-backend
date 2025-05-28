@@ -66,4 +66,8 @@ public class User {
     public int getNotificationIsReadCount() {
         return notifications != null ? (int) notifications.stream().filter(Notification::isRead).count() : 0;
     }
+
+    public int getNotificationNotReadCount() {
+        return notifications != null ? (int) notifications.stream().filter(notification -> !notification.isRead()).count() : 0;
+    }
 }

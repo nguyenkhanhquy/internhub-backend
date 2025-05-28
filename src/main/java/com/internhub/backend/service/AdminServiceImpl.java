@@ -19,11 +19,14 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
 import com.internhub.backend.repository.*;
+import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -34,6 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
+    private final CourseRepository courseRepository;
     private final JobPostRepository jobPostRepository;
     private final InternshipReportRepository internshipReportRepository;
     private final JobPostMapper jobPostMapper;
@@ -45,6 +49,15 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public OverviewDTO getOverview() {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
+
+        long totalNotifications = user.getNotificationCount();
+        long totalNotificationsNotRead = user.getNotificationNotReadCount();
+        long totalCourses = courseRepository.count();
         long totalStudents = studentRepository.count();
         long totalStudentsNotReported = studentRepository.countStudentByIsReported(false);
         long totalTeachers = teacherRepository.count();
@@ -58,6 +71,9 @@ public class AdminServiceImpl implements AdminService {
         long totalStudentsCompleted = studentRepository.countByInternStatus(InternStatus.COMPLETED);
 
         return OverviewDTO.builder()
+                .totalNotifications(totalNotifications)
+                .totalNotificationsNotRead(totalNotificationsNotRead)
+                .totalCourses(totalCourses)
                 .totalStudents(totalStudents)
                 .totalStudentsNotReported(totalStudentsNotReported)
                 .totalTeachers(totalTeachers)
