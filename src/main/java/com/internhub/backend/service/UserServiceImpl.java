@@ -8,28 +8,20 @@ import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Major;
 import com.internhub.backend.entity.student.Student;
-import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.UserMapper;
 import com.internhub.backend.repository.*;
 import com.internhub.backend.util.AuthUtils;
-import com.internhub.backend.util.ExcelUtils;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,20 +34,18 @@ public class UserServiceImpl implements UserService {
     private final RecruiterRepository recruiterRepository;
     private final CompanyRepository companyRepository;
     private final StudentRepository studentRepository;
-    private final TeacherRepository teacherRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final OtpService otpService;
     private final EmailService emailService;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, StudentRepository studentRepository, TeacherRepository teacherRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, RecruiterRepository recruiterRepository, CompanyRepository companyRepository, StudentRepository studentRepository, UserMapper userMapper, PasswordEncoder passwordEncoder, OtpService otpService, EmailService emailService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.recruiterRepository = recruiterRepository;
         this.companyRepository = companyRepository;
         this.studentRepository = studentRepository;
-        this.teacherRepository = teacherRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.otpService = otpService;
@@ -225,54 +215,6 @@ public class UserServiceImpl implements UserService {
             return userMapper.mapUserToUserDTO(savedUser);
         } catch (DataIntegrityViolationException e) {
             throw new CustomException(EnumException.EMAIL_EXISTED);
-        }
-    }
-
-    @Override
-    public void importTeachersFromFile(MultipartFile file) {
-        if (!ExcelUtils.isExcelFile(file)) {
-            throw new CustomException(EnumException.FILE_TYPE_INVALID);
-        }
-
-        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
-            List<Teacher> teachers = new ArrayList<>();
-
-            for (Row row : sheet) {
-                if (row.getRowNum() == 0) continue; // Bỏ qua tiêu đề
-
-                String teacherId = ExcelUtils.getCellValueAsString(row.getCell(0));
-                String name = ExcelUtils.getCellValueAsString(row.getCell(1));
-                String email = ExcelUtils.getCellValueAsString(row.getCell(2));
-
-                if (email == null || email.isEmpty()) continue;
-
-                if (userRepository.existsByEmail(email)) {
-                    log.warn("Email {} đã tồn tại, bỏ qua.", email);
-                    continue;
-                }
-
-                User user = User.builder()
-                        .email(email)
-                        .password(passwordEncoder.encode("12345678"))
-                        .isActive(false)
-                        .role(roleRepository.findByName("TEACHER"))
-                        .build();
-
-                User savedUser = userRepository.save(user);
-
-                Teacher teacher = Teacher.builder()
-                        .user(savedUser)
-                        .name(name)
-                        .teacherId(teacherId)
-                        .build();
-
-                teachers.add(teacher);
-            }
-
-            teacherRepository.saveAll(teachers);
-        } catch (Exception e) {
-            throw new CustomException(EnumException.IMPORT_FILE_ERROR);
         }
     }
 

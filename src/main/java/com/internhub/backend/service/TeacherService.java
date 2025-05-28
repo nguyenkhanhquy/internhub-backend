@@ -8,6 +8,7 @@ import com.internhub.backend.entity.teacher.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,4 +29,7 @@ public interface TeacherService {
 
     @PreAuthorize("hasAuthority('SCOPE_TEACHER')")
     Page<CourseDTO> getAllCoursesByTeacher(Pageable pageable, String search, String year, String semesterValue);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void importTeachers(MultipartFile file);
 }

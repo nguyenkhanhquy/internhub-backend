@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -89,5 +90,14 @@ public class TeacherController {
                 .build();
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<SuccessResponse<Void>> importTeachers(@RequestParam("file") MultipartFile file) {
+        teacherService.importTeachers(file);
+
+        return ResponseEntity.ok(SuccessResponse.<Void>builder()
+                .message("Import danh sách giảng viên thành công")
+                .build());
     }
 }

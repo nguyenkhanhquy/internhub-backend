@@ -5,7 +5,6 @@ import com.internhub.backend.dto.request.users.*;
 import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -30,9 +29,6 @@ public interface UserService {
     UserDTO registerRecruiter(RegisterRecruiterRequest registerRecruiterRequest);
 
     UserDTO registerStudent(RegisterStudentRequest registerStudentRequest);
-
-    @PreAuthorize("hasAuthority('SCOPE_FIT')")
-    void importTeachersFromFile(MultipartFile file);
 
     void sendOTP(Map<String, String> request) throws MessagingException;
 
