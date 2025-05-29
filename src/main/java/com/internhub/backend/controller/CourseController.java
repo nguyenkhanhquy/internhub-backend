@@ -124,4 +124,20 @@ public class CourseController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/{courseId}/status")
+    public ResponseEntity<SuccessResponse<Void>> updateCourseStatus(
+            @PathVariable String courseId,
+            @RequestBody Map<String, String> request) {
+
+        String status = request.get("status");
+
+        courseService.updateCourseStatus(courseId, status);
+
+        SuccessResponse<Void> response = SuccessResponse.<Void>builder()
+                .message("Cập nhật trạng thái lớp học thành công")
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
 }

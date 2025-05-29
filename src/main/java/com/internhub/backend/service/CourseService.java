@@ -36,4 +36,7 @@ public interface CourseService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT') or hasAuthority('SCOPE_TEACHER')")
     List<EnrollmentDetailDTO> getAllEnrollmentsByCourseId(String courseId);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    void updateCourseStatus(String courseId, String status);
 }

@@ -196,6 +196,21 @@ public class CourseServiceImpl implements CourseService {
                 .toList();
     }
 
+    @Override
+    public void updateCourseStatus(String courseId, String status) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CustomException(EnumException.COURSE_NOT_FOUND));
+
+        try {
+            if (!status.equals(course.getCourseStatus().name())) {
+                course.setCourseStatus(Course.CourseStatus.valueOf(status));
+                courseRepository.save(course);
+            }
+        } catch (Exception e) {
+            throw new CustomException(EnumException.INVALID_COURSE_STATUS);
+        }
+    }
+
     private LocalDate generateStartDate(String academicYear, Semester semester) {
         String[] years = academicYear.split("-");
         int startYear = Integer.parseInt(years[0]);

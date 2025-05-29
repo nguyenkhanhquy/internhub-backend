@@ -17,6 +17,7 @@ public enum EnumException {
     ACCOUNT_ALREADY_ACTIVATED(HttpStatus.BAD_REQUEST, "Tài khoản đã được kích hoạt trước đó"),
     FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "Loại tệp không hợp lệ"),
     COURSE_CODE_EXISTS(HttpStatus.BAD_REQUEST, "Mã lớp học đã tồn tại"),
+    INVALID_COURSE_STATUS(HttpStatus.BAD_REQUEST, "Trạng thái lớp học không hợp lệ"),
 
     // 401 : Unauthorized — user chưa được xác thực
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),
