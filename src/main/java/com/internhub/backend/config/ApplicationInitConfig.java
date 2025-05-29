@@ -60,7 +60,7 @@ public class ApplicationInitConfig {
     }
 
     private void initializeAdminUser(UserRepository userRepository, RoleRepository roleRepository) {
-        if (userRepository.findByEmail(adminEmail) == null) {
+        if (!userRepository.existsByEmail(adminEmail)) {
             User user = User.builder()
                     .email(adminEmail)
                     .password(passwordEncoder.encode(adminPassword))
