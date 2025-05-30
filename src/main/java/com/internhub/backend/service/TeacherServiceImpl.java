@@ -135,8 +135,15 @@ public class TeacherServiceImpl implements TeacherService {
 
                 if (email == null || email.isEmpty()) continue;
 
+                if (teacherId == null || teacherId.isEmpty()) continue;
+
                 if (userRepository.existsByEmail(email)) {
-                    log.warn("Email {} đã tồn tại, bỏ qua.", email);
+                    log.warn("Email {} đã tồn tại, bỏ qua dòng {}.", email, row.getRowNum() + 1);
+                    continue;
+                }
+
+                if (teacherRepository.existsByTeacherId(teacherId)) {
+                    log.warn("Mã giảng viên {} đã tồn tại, bỏ qua dòng {}.", teacherId, row.getRowNum() + 1);
                     continue;
                 }
 

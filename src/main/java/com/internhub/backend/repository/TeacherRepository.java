@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface TeacherRepository extends JpaRepository<Teacher, String> {
 
+    boolean existsByTeacherId(String teacherId);
+
     @Query("SELECT t FROM Teacher t WHERE " +
             "(:query IS NULL OR :query = '' OR " +
             "    LOWER(t.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
