@@ -306,6 +306,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public boolean lockUser(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(EnumException.USER_NOT_FOUND));
+
+        if (user.getRole() == null || user.getRole().getName().equals("FIT")) {
+            throw new CustomException(EnumException.UNAUTHORIZED);
+        }
+
+        user.setLocked(!user.isLocked());
+        return userRepository.save(user).isLocked();
+    }
+
     private void verifyOtp(String email, String otpString) {
         try {
             int otp = Integer.parseInt(otpString);

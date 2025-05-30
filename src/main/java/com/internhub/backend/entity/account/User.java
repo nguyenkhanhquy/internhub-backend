@@ -37,6 +37,10 @@ public class User {
     @Column(name = "is_active", nullable = false)
     private boolean isActive;
 
+    @Column(name = "is_locked", nullable = false)
+    @Builder.Default
+    private boolean isLocked = false;
+
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", updatable = false, nullable = false)

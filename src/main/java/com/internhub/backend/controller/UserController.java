@@ -160,4 +160,15 @@ public class UserController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PatchMapping("/{id}/lock")
+    public ResponseEntity<SuccessResponse<Void>> lockUser(@PathVariable("id") String id) {
+        boolean isLocked = userService.lockUser(id);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message(isLocked ? "Đã khóa thành công" : "Đã mở khóa thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }

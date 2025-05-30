@@ -39,4 +39,7 @@ public interface UserService {
     void resetPassword(Map<String, String> request);
 
     void updatePassword(UpdatePasswordRequest updatePasswordRequest);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    boolean lockUser(String id);
 }

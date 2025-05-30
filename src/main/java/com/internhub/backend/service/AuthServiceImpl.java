@@ -78,6 +78,10 @@ public class AuthServiceImpl implements AuthService {
             throw new CustomException(EnumException.USER_NOT_ACTIVATED);
         }
 
+        if (user.isLocked()) {
+            throw new CustomException(EnumException.USER_LOCKED);
+        }
+
         String accessToken = tokenService.generateToken(user);
         return LoginResponseDTO.builder()
                 .accessToken(accessToken)
@@ -184,6 +188,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (!user.isActive()) {
             throw new CustomException(EnumException.USER_NOT_ACTIVATED);
+        }
+
+        if (user.isLocked()) {
+            throw new CustomException(EnumException.USER_LOCKED);
         }
 
         String accessToken = tokenService.generateToken(user);

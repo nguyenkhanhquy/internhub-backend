@@ -27,6 +27,7 @@ public enum EnumException {
     INVALID_LOGIN_GOOGLE(HttpStatus.UNAUTHORIZED, "Tài khoản Google chưa được đăng ký"),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Mật khẩu hiện tại không chính xác"),
     USER_NOT_ACTIVATED(HttpStatus.UNAUTHORIZED, "Tài khoản chưa được kích hoạt"),
+    USER_LOCKED(HttpStatus.UNAUTHORIZED, "Tài khoản bị khóa"),
 
     // 403: Forbidden — user không có quyền
     UNAUTHORIZED(HttpStatus.FORBIDDEN, "Không có quyền truy cập"),
