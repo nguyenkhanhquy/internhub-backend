@@ -17,11 +17,9 @@ import java.util.Optional;
 
 public interface EnrollmentRepository extends JpaRepository<Enrollment, String> {
 
-    Page<Enrollment> findByStudent_UserId(String userId, Pageable pageable);
+    Page<Enrollment> findByStudent_UserIdAndCourse_CourseStatusNot(String userId, Course.CourseStatus courseCourseStatus, Pageable pageable);
 
-    Page<Enrollment> findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCase(
-            String userId, String courseCode, Pageable pageable
-    );
+    Page<Enrollment> findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCaseAndCourse_CourseStatusNot(String studentUserId, String courseCourseCode, Course.CourseStatus courseCourseStatus, Pageable pageable);
 
     @Query("SELECT e.course FROM Enrollment e " +
             "WHERE e.student = :student " +

@@ -1,6 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.EnrollmentDTO;
+import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Enrollment;
 import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
@@ -32,11 +33,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String userId = (String) jwt.getClaims().get("userId");
 
         if (search == null || search.isBlank()) {
-            return enrollmentRepository.findByStudent_UserId(userId, pageable)
+            return enrollmentRepository.findByStudent_UserIdAndCourse_CourseStatusNot(userId, Course.CourseStatus.DRAFT ,pageable)
                     .map(enrollmentMapper::toDTO);
         }
 
-        return enrollmentRepository.findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCase(userId, search, pageable)
+        return enrollmentRepository.findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCaseAndCourse_CourseStatusNot(userId, search, Course.CourseStatus.DRAFT ,pageable)
                 .map(enrollmentMapper::toDTO);
     }
 
