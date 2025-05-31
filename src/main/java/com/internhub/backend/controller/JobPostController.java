@@ -81,6 +81,11 @@ public class JobPostController {
         return ResponseEntity.ok(jobPostService.getJobPostByRecruiter(request));
     }
 
+    @GetMapping("/recruiter/expired")
+    public ResponseEntity<SuccessResponse<List<JobPostDetailDTO>>> getExpiredJobPostsByRecruiter(@ModelAttribute JobPostSearchFilterRequest request) {
+        return ResponseEntity.ok(jobPostService.getExpiredJobPostsByRecruiter(request));
+    }
+
     @PostMapping
     public ResponseEntity<SuccessResponse<Void>> createJobPost(@Valid @RequestBody CreateJobPostRequest createJobPostRequest) {
         jobPostService.createJobPost(createJobPostRequest);

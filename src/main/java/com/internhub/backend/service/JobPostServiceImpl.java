@@ -29,6 +29,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -275,6 +276,40 @@ public class JobPostServiceImpl implements JobPostService {
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
         Page<JobPost> pageData = jobPostRepository.findAllByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getIsApproved(), request.getIsHidden(), request.getIsDeleted(), request.getType());
+
+        return SuccessResponse.<List<JobPostDetailDTO>>builder()
+                .pageInfo(SuccessResponse.PageInfo.builder()
+                        .currentPage(request.getPage())
+                        .totalPages(pageData.getTotalPages())
+                        .pageSize(pageData.getSize())
+                        .totalElements(pageData.getTotalElements())
+                        .hasPreviousPage(pageData.hasPrevious())
+                        .hasNextPage(pageData.hasNext())
+                        .build())
+                .result(pageData.getContent().stream()
+                        .map(jobPostMapper::mapJobPostToJobPostDetailDTO)
+                        .toList())
+                .build();
+    }
+
+    @Override
+    public SuccessResponse<List<JobPostDetailDTO>> getExpiredJobPostsByRecruiter(JobPostSearchFilterRequest request) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+        Recruiter recruiter = recruiterRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(EnumException.PROFILE_NOT_FOUND));
+
+        Sort sort;
+        if ("oldest".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.asc("createdDate"));
+        } else if ("recentUpdate".equalsIgnoreCase(request.getOrder())) {
+            sort = Sort.by(Sort.Order.desc("updatedDate"));
+        } else {
+            sort = Sort.by(Sort.Order.desc("createdDate"));
+        }
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
+        Page<JobPost> pageData = jobPostRepository.findExpiredJobPostsByCompany(recruiter.getCompany(), request.getSearch(), pageable, request.getType(), LocalDate.now());
 
         return SuccessResponse.<List<JobPostDetailDTO>>builder()
                 .pageInfo(SuccessResponse.PageInfo.builder()

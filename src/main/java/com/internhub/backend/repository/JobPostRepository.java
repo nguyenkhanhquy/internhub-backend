@@ -9,7 +9,20 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+
 public interface JobPostRepository extends JpaRepository<JobPost, String> {
+
+    @Query("SELECT j FROM JobPost j " +
+            "WHERE j.company = :company AND " +
+            "(:query IS NULL OR :query = '' OR " +
+            "    LOWER(j.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "    LOWER(j.jobPosition) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            ") " +
+            "AND (:type IS NULL OR LOWER(j.type) LIKE LOWER(CONCAT('%', :type, '%'))) " +
+            "AND j.isDeleted = false " +
+            "AND j.expiryDate < :now")
+    Page<JobPost> findExpiredJobPostsByCompany(Company company, String query, Pageable pageable, String type, LocalDate now);
 
     @Query("SELECT j FROM JobPost j " +
             "WHERE j.company = :company AND " +

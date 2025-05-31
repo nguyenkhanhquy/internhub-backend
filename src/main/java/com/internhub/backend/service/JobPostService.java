@@ -31,6 +31,9 @@ public interface JobPostService {
     SuccessResponse<List<JobPostDetailDTO>> getJobPostByRecruiter(JobPostSearchFilterRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    SuccessResponse<List<JobPostDetailDTO>> getExpiredJobPostsByRecruiter(JobPostSearchFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
     void createJobPost(CreateJobPostRequest createJobPostRequest);
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
