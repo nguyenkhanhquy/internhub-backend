@@ -67,10 +67,25 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new CustomException(EnumException.TEACHER_NOT_FOUND));
 
-        teacher.setName(request.getName());
-        teacher.setTeacherId(request.getTeacherId());
+        if (request.getName() == null || request.getTeacherId() == null) {
+            throw new CustomException(EnumException.INVALID_REQUEST);
+        }
 
-        teacherRepository.save(teacher);
+        if (request.getName().isBlank() || request.getTeacherId().isBlank()) {
+            throw new CustomException(EnumException.INVALID_REQUEST);
+        }
+
+        if (!teacher.getTeacherId().equals(request.getTeacherId()) || !teacher.getName().equals(request.getName())) {
+            if (teacherRepository.existsByTeacherId(request.getTeacherId()) &&
+                    !teacher.getTeacherId().equals(request.getTeacherId())) {
+                throw new CustomException(EnumException.INVALID_REQUEST);
+            }
+
+            teacher.setName(request.getName());
+            teacher.setTeacherId(request.getTeacherId());
+
+            teacherRepository.save(teacher);
+        }
     }
 
     @Override
