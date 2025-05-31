@@ -229,7 +229,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public SuccessResponse<List<Recruiter>> getAllRecruiters(PageSearchSortFilterRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Sort sort = Sort.by(Sort.Order.desc("user.updatedDate"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
         Page<Recruiter> pageData = recruiterRepository.findAllRecruiters(request.getSearch(), pageable);
 
         return SuccessResponse.<List<Recruiter>>builder()

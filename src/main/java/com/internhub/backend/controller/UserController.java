@@ -166,7 +166,7 @@ public class UserController {
         boolean isLocked = userService.lockUser(id);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
-                .message(isLocked ? "Đã khóa thành công" : "Đã mở khóa thành công")
+                .message(isLocked ? "Đã khóa tài khoản thành công" : "Đã mở khóa tài khoản thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
