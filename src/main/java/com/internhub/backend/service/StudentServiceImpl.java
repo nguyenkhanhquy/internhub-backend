@@ -1,14 +1,15 @@
 package com.internhub.backend.service;
 
-import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDTO;
 import com.internhub.backend.dto.request.students.UpdateStudentProfileRequest;
 import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Course;
+import com.internhub.backend.entity.academic.Enrollment;
 import com.internhub.backend.entity.academic.Semester;
 import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
-import com.internhub.backend.mapper.CourseMapper;
+import com.internhub.backend.mapper.EnrollmentMapper;
 import com.internhub.backend.repository.AcademicYearRepository;
 import com.internhub.backend.repository.EnrollmentRepository;
 import com.internhub.backend.repository.StudentRepository;
@@ -29,14 +30,14 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final AcademicYearRepository academicYearRepository;
     private final EnrollmentRepository enrollmentRepository;
-    private final CourseMapper courseMapper;
+    private final EnrollmentMapper enrollmentMapper;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, AcademicYearRepository academicYearRepository, EnrollmentRepository enrollmentRepository, CourseMapper courseMapper) {
+    public StudentServiceImpl(StudentRepository studentRepository, AcademicYearRepository academicYearRepository, EnrollmentRepository enrollmentRepository, EnrollmentMapper enrollmentMapper) {
         this.studentRepository = studentRepository;
         this.academicYearRepository = academicYearRepository;
         this.enrollmentRepository = enrollmentRepository;
-        this.courseMapper = courseMapper;
+        this.enrollmentMapper = enrollmentMapper;
     }
 
     @Override
@@ -67,7 +68,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public CourseDTO getCurrentCourseByStudent() {
+    public EnrollmentDTO getCurrentEnrollmentByStudent() {
         Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
@@ -79,10 +80,14 @@ public class StudentServiceImpl implements StudentService {
         AcademicYear currentAcademicYear = AcademicUtils.getCurrentAcademicYear(now, academicYearRepository);
         Semester currentSemester = AcademicUtils.getCurrentSemester(now);
 
-        Course currentCourse = enrollmentRepository
-                .findCurrentCourseByStudent(student, currentAcademicYear, currentSemester)
+        Enrollment currentEnrollment = enrollmentRepository
+                .findByStudentAndCourse_AcademicYear_Name_AndCourse_SemesterAndCourse_CourseStatus(
+                        student,
+                        currentAcademicYear.getName(),
+                        currentSemester,
+                        Course.CourseStatus.GRADING
+                )
                 .orElse(null);
-
-        return courseMapper.toDTO(currentCourse);
+        return enrollmentMapper.toDTO(currentEnrollment);
     }
 }

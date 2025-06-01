@@ -21,15 +21,11 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, String> 
 
     Page<Enrollment> findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCaseAndCourse_CourseStatusNot(String studentUserId, String courseCourseCode, Course.CourseStatus courseCourseStatus, Pageable pageable);
 
-    @Query("SELECT e.course FROM Enrollment e " +
-            "WHERE e.student = :student " +
-            "AND e.course.academicYear = :academicYear " +
-            "AND e.course.semester = :semester " +
-            "AND e.course.courseStatus = 'GRADING'")
-    Optional<Course> findCurrentCourseByStudent(
-            @Param("student") Student student,
-            @Param("academicYear") AcademicYear academicYear,
-            @Param("semester") Semester semester
+    Optional<Enrollment> findByStudentAndCourse_AcademicYear_Name_AndCourse_SemesterAndCourse_CourseStatus(
+            Student student,
+            @Param("academicYearName") String academicYearName,
+            Semester semester,
+            Course.CourseStatus courseStatus
     );
 
     Optional<Enrollment> findByStudentAndCourse_CourseCode(Student student, String courseCode);

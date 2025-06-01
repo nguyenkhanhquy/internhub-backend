@@ -1,6 +1,7 @@
 package com.internhub.backend.service;
 
 import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDTO;
 import com.internhub.backend.dto.request.students.UpdateStudentProfileRequest;
 import com.internhub.backend.entity.student.Student;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,5 +16,5 @@ public interface StudentService {
     void updateStudentProfile(UpdateStudentProfileRequest request);
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
-    CourseDTO getCurrentCourseByStudent();
+    EnrollmentDTO getCurrentEnrollmentByStudent();
 }

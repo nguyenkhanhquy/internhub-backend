@@ -3,6 +3,7 @@ package com.internhub.backend.service;
 import com.internhub.backend.dto.academic.EnrollmentDTO;
 import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Enrollment;
+import com.internhub.backend.entity.student.ReportStatus;
 import com.internhub.backend.entity.teacher.Teacher;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
@@ -64,14 +65,17 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         if (finalScore < 5) {
             enrollment.setEnrollmentStatus(Enrollment.EnrollmentStatus.FAILED);
         } else {
+            enrollment.getStudent().setReported(true);
             enrollment.setEnrollmentStatus(Enrollment.EnrollmentStatus.COMPLETED);
         }
+        enrollment.getInternshipReport().setReportStatus(ReportStatus.ACCEPTED);
+
         enrollmentRepository.save(enrollment);
 
         // Gửi thông báo cho sinh viên
-        String title = "Điểm và phản hồi từ giảng viên";
-        String content = "Giảng viên " + teacher.getName() + " đã nhập điểm và phản hồi cho bạn trong khóa học " +
-                enrollment.getCourse().getCourseCode();
+        String title = "[" + enrollment.getCourse().getCourseCode() + "] Đã có điểm và phản hồi từ giảng viên";
+        String content = "Giảng viên " + teacher.getName() + " đã nhập điểm và phản hồi cho bạn trong khóa học [" +
+                enrollment.getCourse().getCourseCode() + "]";
         notificationService.sendNotification(enrollment.getStudent().getUser(), title, content);
     }
 }

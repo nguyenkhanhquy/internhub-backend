@@ -1,6 +1,6 @@
 package com.internhub.backend.controller;
 
-import com.internhub.backend.dto.academic.CourseDTO;
+import com.internhub.backend.dto.academic.EnrollmentDTO;
 import com.internhub.backend.dto.request.students.UpdateStudentProfileRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.entity.student.Student;
@@ -45,12 +45,12 @@ public class StudentController {
         return ResponseEntity.ok(successResponse);
     }
 
-    @GetMapping("/current-course")
-    public ResponseEntity<SuccessResponse<CourseDTO>> getCurrentCourseByStudent() {
-        CourseDTO courseDTO = studentService.getCurrentCourseByStudent();
+    @GetMapping("/current-enrollment")
+    public ResponseEntity<SuccessResponse<EnrollmentDTO>> getCurrentEnrollmentByStudent() {
+        EnrollmentDTO enrollmentDTO = studentService.getCurrentEnrollmentByStudent();
 
-        SuccessResponse<CourseDTO> successResponse = SuccessResponse.<CourseDTO>builder()
-                .result(courseDTO)
+        SuccessResponse<EnrollmentDTO> successResponse = SuccessResponse.<EnrollmentDTO>builder()
+                .result(enrollmentDTO)
                 .build();
 
         return ResponseEntity.ok(successResponse);
