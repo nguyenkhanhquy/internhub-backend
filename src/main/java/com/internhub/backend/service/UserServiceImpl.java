@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -219,7 +220,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void sendOTP(Map<String, String> request) throws MessagingException {
+    public void sendOTP(Map<String, String> request) throws MessagingException, UnsupportedEncodingException {
         String email = request.get("email");
 
         if (!userRepository.existsByEmail(email)) {

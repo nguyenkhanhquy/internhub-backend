@@ -6,6 +6,7 @@ import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public interface UserService {
 
     UserDTO registerStudent(RegisterStudentRequest registerStudentRequest);
 
-    void sendOTP(Map<String, String> request) throws MessagingException;
+    void sendOTP(Map<String, String> request) throws MessagingException, UnsupportedEncodingException;
 
     void activateAccount(Map<String, String> request);
 

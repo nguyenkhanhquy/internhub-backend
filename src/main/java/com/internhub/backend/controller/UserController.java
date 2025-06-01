@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -107,7 +108,7 @@ public class UserController {
     }
 
     @PostMapping("/verify/send-otp")
-    public ResponseEntity<SuccessResponse<Void>> sendOTP(@RequestBody Map<String, String> request) throws MessagingException {
+    public ResponseEntity<SuccessResponse<Void>> sendOTP(@RequestBody Map<String, String> request) throws MessagingException, UnsupportedEncodingException {
         userService.sendOTP(request);
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
