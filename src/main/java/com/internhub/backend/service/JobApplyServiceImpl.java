@@ -22,6 +22,7 @@ import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class JobApplyServiceImpl implements JobApplyService {
+
+    @Value("${admin.email}")
+    private String adminEmail;
 
     private final JobApplyRepository jobApplyRepository;
     private final StudentRepository studentRepository;
@@ -253,5 +257,33 @@ public class JobApplyServiceImpl implements JobApplyService {
         userRepository.save(user);
 
         webSocketService.sendPrivateMessage(user.getId(), title);
+    }
+
+    @Override
+    public void reportQuitJobApply(String jobApplyId, String reason) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        String userId = (String) jwt.getClaims().get("userId");
+
+        JobApply jobApply = jobApplyRepository.findById(jobApplyId)
+                .orElseThrow(() -> new CustomException(EnumException.JOB_APPLY_NOT_FOUND));
+
+        if (!jobApply.getJobPost().getCompany().getRecruiter().getUserId().equals(userId)) {
+            throw new CustomException(EnumException.UNAUTHORIZED);
+        }
+
+        jobApply.setApplyStatus(ApplyStatus.REJECTED);
+        jobApply.getStudent().getUser().setLocked(true);
+
+        jobApplyRepository.save(jobApply);
+
+        // Gửi thông báo cho khoa CNTT
+        String title = "Báo cáo sinh viên bỏ việc";
+        String content = "Sinh viên [" + jobApply.getStudent().getName() + " - " + jobApply.getStudent().getStudentId() + "] đã bỏ việc thực tập tại công ty [" + jobApply.getJobPost().getCompany().getName() + "] với lý do: " + reason;
+        notificationService.sendNotification(
+                userRepository.findByEmail(adminEmail),
+                title,
+                content
+        );
     }
 }

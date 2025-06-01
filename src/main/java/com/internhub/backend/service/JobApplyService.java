@@ -35,4 +35,7 @@ public interface JobApplyService {
 
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     void refuseOfferJobApply(String jobApplyId);
+
+    @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
+    void reportQuitJobApply(String jobApplyId, String reason);
 }

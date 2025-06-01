@@ -30,7 +30,6 @@ public class AcademicController {
 
     @GetMapping("/overview")
     public ResponseEntity<SuccessResponse<OverviewDTO>> getOverview() {
-
         SuccessResponse<OverviewDTO> successResponse = SuccessResponse.<OverviewDTO>builder()
                 .result(academicService.getOverview())
                 .build();

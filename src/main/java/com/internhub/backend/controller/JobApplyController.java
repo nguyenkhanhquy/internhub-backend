@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/jobs/apply")
@@ -91,6 +92,19 @@ public class JobApplyController {
 
         SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
                 .message("Từ chối đề nghị thực tập thành công")
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/report-quit/{id}")
+    public ResponseEntity<SuccessResponse<Void>> reportQuitJobApply(@PathVariable("id") String jobApplyId, @RequestBody Map<String, String> request) {
+        String reason = request.get("reason");
+
+        jobApplyService.reportQuitJobApply(jobApplyId, reason);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Báo cáo bỏ việc thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
