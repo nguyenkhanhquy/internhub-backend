@@ -4,15 +4,15 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.springframework.web.multipart.MultipartFile;
 
-public class ExcelUtils {
+public final class ExcelUtils {
 
     private ExcelUtils() {
-        throw new IllegalStateException("Utility class");
+        throw new UnsupportedOperationException("Utility class");
     }
 
-    public static boolean isExcelFile(MultipartFile file) {
-        return file != null &&
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equals(file.getContentType());
+    public static boolean isNotExcelFile(MultipartFile file) {
+        return file == null ||
+                !"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet".equalsIgnoreCase(file.getContentType());
     }
 
     public static String getCellValueAsString(Cell cell) {
@@ -25,4 +25,10 @@ public class ExcelUtils {
         };
     }
 
+    public static Double getCellValueAsDouble(Cell cell) {
+        if (cell == null || cell.getCellType() != CellType.NUMERIC) {
+            return 0.0;
+        }
+        return cell.getNumericCellValue();
+    }
 }

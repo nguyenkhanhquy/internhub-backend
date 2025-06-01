@@ -269,7 +269,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public SuccessResponse<List<Student>> getAllStudents(PageSearchSortFilterRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Sort sort = Sort.by(Sort.Order.desc("user.updatedDate"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
         Page<Student> pageData = studentRepository.adminFindAllStudents(request.getSearch(), pageable);
 
         return SuccessResponse.<List<Student>>builder()
@@ -287,7 +288,8 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public SuccessResponse<List<Teacher>> getAllTeachers(PageSearchSortFilterRequest request) {
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize());
+        Sort sort = Sort.by(Sort.Order.desc("user.updatedDate"));
+        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
         Page<Teacher> pageData = teacherRepository.adminFindAllTeachers(request.getSearch(), pageable);
 
         return SuccessResponse.<List<Teacher>>builder()

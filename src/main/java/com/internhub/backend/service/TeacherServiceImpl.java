@@ -133,7 +133,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public void importTeachers(MultipartFile file) {
-        if (!ExcelUtils.isExcelFile(file)) {
+        if (ExcelUtils.isNotExcelFile(file)) {
             throw new CustomException(EnumException.FILE_TYPE_INVALID);
         }
 

@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -51,6 +52,17 @@ public class StudentController {
 
         SuccessResponse<EnrollmentDTO> successResponse = SuccessResponse.<EnrollmentDTO>builder()
                 .result(enrollmentDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @PostMapping("/import")
+    public ResponseEntity<SuccessResponse<Void>> importStudents(@RequestParam("file") MultipartFile file) {
+        studentService.importStudents(file);
+
+        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
+                .message("Import danh sách sinh viên thành công")
                 .build();
 
         return ResponseEntity.ok(successResponse);
