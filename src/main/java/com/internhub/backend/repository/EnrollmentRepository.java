@@ -1,6 +1,5 @@
 package com.internhub.backend.repository;
 
-import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Enrollment;
 import com.internhub.backend.entity.academic.Semester;
@@ -9,7 +8,6 @@ import com.internhub.backend.entity.teacher.Teacher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;

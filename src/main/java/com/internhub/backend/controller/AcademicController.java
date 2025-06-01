@@ -1,5 +1,6 @@
 package com.internhub.backend.controller;
 
+import com.internhub.backend.dto.academic.OverviewDTO;
 import com.internhub.backend.dto.academic.YearAndSemesterDTO;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.AcademicService;
@@ -22,6 +23,16 @@ public class AcademicController {
 
         SuccessResponse<YearAndSemesterDTO> successResponse = SuccessResponse.<YearAndSemesterDTO>builder()
                 .result(yearAndSemesterDTO)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
+
+    @GetMapping("/overview")
+    public ResponseEntity<SuccessResponse<OverviewDTO>> getOverview() {
+
+        SuccessResponse<OverviewDTO> successResponse = SuccessResponse.<OverviewDTO>builder()
+                .result(academicService.getOverview())
                 .build();
 
         return ResponseEntity.ok(successResponse);

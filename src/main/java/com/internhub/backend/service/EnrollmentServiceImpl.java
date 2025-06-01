@@ -34,11 +34,11 @@ public class EnrollmentServiceImpl implements EnrollmentService {
         String userId = (String) jwt.getClaims().get("userId");
 
         if (search == null || search.isBlank()) {
-            return enrollmentRepository.findByStudent_UserIdAndCourse_CourseStatusNot(userId, Course.CourseStatus.DRAFT ,pageable)
+            return enrollmentRepository.findByStudent_UserIdAndCourse_CourseStatusNot(userId, Course.CourseStatus.DRAFT, pageable)
                     .map(enrollmentMapper::toDTO);
         }
 
-        return enrollmentRepository.findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCaseAndCourse_CourseStatusNot(userId, search, Course.CourseStatus.DRAFT ,pageable)
+        return enrollmentRepository.findByStudent_UserIdAndCourse_CourseCodeContainingIgnoreCaseAndCourse_CourseStatusNot(userId, search, Course.CourseStatus.DRAFT, pageable)
                 .map(enrollmentMapper::toDTO);
     }
 
