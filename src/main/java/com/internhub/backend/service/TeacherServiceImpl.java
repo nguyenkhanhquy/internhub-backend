@@ -23,7 +23,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -40,9 +39,6 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class TeacherServiceImpl implements TeacherService {
-
-    @Value("${admin.password}")
-    private String adminPassword;
 
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
@@ -147,6 +143,7 @@ public class TeacherServiceImpl implements TeacherService {
                 String teacherId = ExcelUtils.getCellValueAsString(row.getCell(0));
                 String name = ExcelUtils.getCellValueAsString(row.getCell(1));
                 String email = ExcelUtils.getCellValueAsString(row.getCell(2));
+                String password = ExcelUtils.getCellValueAsString(row.getCell(3));
 
                 if (email == null || email.isEmpty()) continue;
 
@@ -164,7 +161,7 @@ public class TeacherServiceImpl implements TeacherService {
 
                 User user = User.builder()
                         .email(email)
-                        .password(passwordEncoder.encode(adminPassword))
+                        .password(passwordEncoder.encode(password))
                         .isActive(false)
                         .role(roleRepository.findByName("TEACHER"))
                         .build();
