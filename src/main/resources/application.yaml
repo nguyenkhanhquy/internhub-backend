@@ -10,6 +10,11 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        jdbc.batch_size: 30
+        order_inserts: true
+        order_updates: true
 
   data:
     redis:

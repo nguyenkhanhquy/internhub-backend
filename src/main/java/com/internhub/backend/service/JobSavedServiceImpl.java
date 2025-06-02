@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -99,6 +100,7 @@ public class JobSavedServiceImpl implements JobSavedService {
     }
 
     @Override
+    @Transactional
     public void deleteAllSavedJobPosts() {
         Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();

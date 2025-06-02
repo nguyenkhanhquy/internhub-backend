@@ -6,6 +6,7 @@ import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Course;
 import com.internhub.backend.entity.academic.Enrollment;
 import com.internhub.backend.entity.academic.Semester;
+import com.internhub.backend.entity.account.Role;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.student.InternStatus;
 import com.internhub.backend.entity.student.Major;
@@ -26,6 +27,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -40,17 +42,15 @@ public class StudentServiceImpl implements StudentService {
     private final AcademicYearRepository academicYearRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
     private final EnrollmentMapper enrollmentMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public StudentServiceImpl(StudentRepository studentRepository, AcademicYearRepository academicYearRepository, EnrollmentRepository enrollmentRepository, RoleRepository roleRepository, UserRepository userRepository, EnrollmentMapper enrollmentMapper, PasswordEncoder passwordEncoder) {
+    public StudentServiceImpl(StudentRepository studentRepository, AcademicYearRepository academicYearRepository, EnrollmentRepository enrollmentRepository, RoleRepository roleRepository, EnrollmentMapper enrollmentMapper, PasswordEncoder passwordEncoder) {
         this.studentRepository = studentRepository;
         this.academicYearRepository = academicYearRepository;
         this.enrollmentRepository = enrollmentRepository;
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
         this.enrollmentMapper = enrollmentMapper;
         this.passwordEncoder = passwordEncoder;
     }
@@ -107,6 +107,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Transactional
     public void importStudents(MultipartFile file) {
         if (ExcelUtils.isNotExcelFile(file)) {
             throw new CustomException(EnumException.FILE_TYPE_INVALID);
@@ -116,6 +117,7 @@ public class StudentServiceImpl implements StudentService {
             Sheet sheet = workbook.getSheetAt(0);
 
             List<Student> students = new ArrayList<>();
+            Role studentRole = roleRepository.findByName("STUDENT");
 
             for (Row row : sheet) {
                 if (row.getRowNum() == 0) continue; // Bỏ qua tiêu đề
@@ -137,13 +139,11 @@ public class StudentServiceImpl implements StudentService {
                         .email(email)
                         .password(passwordEncoder.encode(password))
                         .isActive(false)
-                        .role(roleRepository.findByName("STUDENT"))
+                        .role(studentRole)
                         .build();
 
-                User savedUser = userRepository.save(user);
-
                 Student student = Student.builder()
-                        .user(savedUser)
+                        .user(user)
                         .name(name)
                         .gender(gender)
                         .phone(phone)
@@ -159,6 +159,7 @@ public class StudentServiceImpl implements StudentService {
                 students.add(student);
             }
 
+            // Lưu tất cả students, Hibernate sẽ tự động lưu cả users do cascade = ALL
             studentRepository.saveAll(students);
         } catch (Exception e) {
             throw new CustomException(EnumException.IMPORT_FILE_ERROR);
