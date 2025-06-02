@@ -115,4 +115,12 @@ public class AdminController {
     public SuccessResponse<List<Teacher>> getAllTeachers(PageSearchSortFilterRequest request) {
         return adminService.getAllTeachers(request);
     }
+
+    @GetMapping("/students/not-enrolled")
+    public SuccessResponse<List<Student>> getAllStudentsNotEnrolledInSemester() {
+        List<Student> students = adminService.getAllStudentsNotEnrolledInSemester();
+        return SuccessResponse.<List<Student>>builder()
+                .result(students)
+                .build();
+    }
 }

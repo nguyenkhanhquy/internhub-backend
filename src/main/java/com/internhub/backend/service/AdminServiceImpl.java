@@ -6,6 +6,8 @@ import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import com.internhub.backend.entity.academic.AcademicYear;
+import com.internhub.backend.entity.academic.Semester;
 import com.internhub.backend.entity.account.Notification;
 import com.internhub.backend.entity.account.User;
 import com.internhub.backend.entity.business.Recruiter;
@@ -19,6 +21,7 @@ import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
 import com.internhub.backend.mapper.JobPostMapper;
 import com.internhub.backend.repository.*;
+import com.internhub.backend.util.AcademicUtils;
 import com.internhub.backend.util.AuthUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -303,5 +306,10 @@ public class AdminServiceImpl implements AdminService {
                         .build())
                 .result(pageData.getContent())
                 .build();
+    }
+
+    @Override
+    public List<Student> getAllStudentsNotEnrolledInSemester() {
+        return studentRepository.findStudentsNotEnrolledInSemester("2024-2025", Semester.HK03);
     }
 }

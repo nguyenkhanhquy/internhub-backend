@@ -48,4 +48,7 @@ public interface AdminService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     SuccessResponse<List<Teacher>> getAllTeachers(PageSearchSortFilterRequest request);
+
+    @PreAuthorize("hasAuthority('SCOPE_FIT')")
+    List<Student> getAllStudentsNotEnrolledInSemester();
 }
