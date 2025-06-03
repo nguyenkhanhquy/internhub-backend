@@ -18,20 +18,20 @@ public enum EnumException {
     FILE_TYPE_INVALID(HttpStatus.BAD_REQUEST, "Loại tệp không hợp lệ"),
     COURSE_CODE_EXISTS(HttpStatus.BAD_REQUEST, "Mã lớp học đã tồn tại"),
     INVALID_COURSE_STATUS(HttpStatus.BAD_REQUEST, "Trạng thái lớp học không hợp lệ"),
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Mật khẩu hiện tại không chính xác"),
+    INVALID_OTP(HttpStatus.BAD_REQUEST, "Mã OTP không hợp lệ"),
+    INVALID_LOGIN(HttpStatus.BAD_REQUEST, "Thông tin đăng nhập không chính xác"),
 
     // 401 : Unauthorized — user chưa được xác thực
     UNAUTHENTICATED(HttpStatus.UNAUTHORIZED, "Chưa được xác thực"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Token không hợp lệ"),
-    INVALID_OTP(HttpStatus.UNAUTHORIZED, "Mã OTP không hợp lệ"),
-    INVALID_LOGIN(HttpStatus.UNAUTHORIZED, "Thông tin đăng nhập không chính xác"),
     INVALID_LOGIN_GOOGLE(HttpStatus.UNAUTHORIZED, "Tài khoản Google chưa được đăng ký"),
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "Mật khẩu hiện tại không chính xác"),
-    USER_NOT_ACTIVATED(HttpStatus.UNAUTHORIZED, "Tài khoản chưa được kích hoạt"),
-    USER_LOCKED(HttpStatus.UNAUTHORIZED, "Tài khoản bị khóa"),
 
     // 403: Forbidden — user không có quyền
     UNAUTHORIZED(HttpStatus.FORBIDDEN, "Không có quyền truy cập"),
     ADMIN_CANNOT_BE_DELETED(HttpStatus.FORBIDDEN, "Không có quyền xóa tài khoản quản trị"),
+    USER_NOT_ACTIVATED(HttpStatus.FORBIDDEN, "Tài khoản chưa được kích hoạt"),
+    USER_LOCKED(HttpStatus.FORBIDDEN, "Tài khoản bị khóa"),
 
     // 404: Not found — không tồn tại resource
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy người dùng"),
