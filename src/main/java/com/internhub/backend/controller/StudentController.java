@@ -61,10 +61,8 @@ public class StudentController {
     public ResponseEntity<SuccessResponse<Void>> importStudents(@RequestParam("file") MultipartFile file) {
         studentService.importStudents(file);
 
-        SuccessResponse<Void> successResponse = SuccessResponse.<Void>builder()
-                .message("Import danh sách sinh viên thành công")
-                .build();
-
-        return ResponseEntity.ok(successResponse);
+        return ResponseEntity.ok(SuccessResponse.<Void>builder()
+                .message("Import thành công")
+                .build());
     }
 }

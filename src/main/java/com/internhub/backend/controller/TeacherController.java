@@ -97,7 +97,7 @@ public class TeacherController {
         teacherService.importTeachers(file);
 
         return ResponseEntity.ok(SuccessResponse.<Void>builder()
-                .message("Import danh sách giảng viên thành công")
+                .message("Import thành công")
                 .build());
     }
 }
