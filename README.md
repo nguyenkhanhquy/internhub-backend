@@ -177,11 +177,11 @@ src/
 
 ## 👨‍💻 Development Team
 
-| Full Name | Student ID | GitHub |
-|-----------|------------|--------|
-| Nguyen Khanh Quy | 21110282 | [@nguyenkhanhquy](https://github.com/nguyenkhanhquy) |
-| Dinh Trung Nguyen | 21110259 | [@NguyenDink](https://github.com/NguyenDink) |
+| Full Name         | Student ID | GitHub                                               |
+|-------------------|------------|------------------------------------------------------|
+| Nguyen Khanh Quy  | 21110282   | [@nguyenkhanhquy](https://github.com/nguyenkhanhquy) |
+| Dinh Trung Nguyen | 21110259   | [@NguyenDink](https://github.com/NguyenDink)         |
 
 ## 📄 License
 
-This project is licensed under the [MIT License](/LICENSE).
+This project is licensed under the [MIT License](/LICENSE)
