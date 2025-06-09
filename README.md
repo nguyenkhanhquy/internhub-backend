@@ -4,7 +4,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.0-green.svg)](https://spring.io/projects/spring-boot)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0.40-blue.svg)](https://dev.mysql.com/downloads/mysql/)
 [![Maven](https://img.shields.io/badge/Maven-3.9.9-red.svg)](https://maven.apache.org/download.cgi)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](/LICENSE)
 
 ## 📋 Overview
 
@@ -45,7 +45,7 @@ Add the following environment variables to the `.env.local` file:
 
 ```plaintext
 # Database Configuration
-DATASOURCE_URL=jdbc:mysql://localhost:3306/internhub
+DATASOURCE_URL=jdbc:mysql://localhost:3306/internhub_db?createDatabaseIfNotExist=true
 DATASOURCE_USERNAME=your_mysql_username
 DATASOURCE_PASSWORD=your_mysql_password
 DATASOURCE_DRIVER=com.mysql.cj.jdbc.Driver
@@ -70,12 +70,18 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 # Admin Credentials
 ADMIN_EMAIL=your_admin_email
 ADMIN_PASSWORD=your_admin_password
+
+# Redis Configuration
+REDIS_HOST=your_redis_host
+REDIS_PORT=your_redis_port
+REDIS_USERNAME==your_redis_username
+REDIS_PASSWORD=your_redis_password
 ```
 
 ### 4. Run the project
 
 ```sh
-.\run.ps1
+.\scripts\run.ps1
 ```
 
 ### 5. Open your browser and access the Swagger documentation
@@ -109,7 +115,7 @@ mvn spring-boot:run -Dspring-boot.run.profiles=docker
 docker-compose up -d
 
 # Run with PowPowerShell script (Windows only)
-.\run.ps1
+.\scripts\run.ps1
 ```
 
 ## ⚙️ Technology Stack
@@ -155,18 +161,27 @@ src/
 
 ### Use Case Diagram
 
-![Use Case Diagram](/docs/diagrams/UseCaseDiagram.png)
+![Khach](/docs/diagrams/Khach.png)
+
+![SinhVien](/docs/diagrams/SinhVien.png)
+
+![GiangVien](/docs/diagrams/GiangVien.png)
+
+![DoanhNghiep](/docs/diagrams/DoanhNghiep.png)
+
+![KhoaCNTT](/docs/diagrams/KhoaCNTT.png)
 
 ### Class Diagram
 
 ![Class Diagram](/docs/diagrams/ClassDiagram.png)
 
-## 👨‍💻 Author
+## 👨‍💻 Development Team
 
-| Author Name | Email | GitHub |
+| Full Name | Student ID | GitHub |
 |-----------|------------|--------|
-| Nguyen Khanh Quy | <nguyenkhanhquy123@gmail.com> | [@nguyenkhanhquy](https://github.com/nguyenkhanhquy) |
+| Nguyen Khanh Quy | 21110282 | [@nguyenkhanhquy](https://github.com/nguyenkhanhquy) |
+| Dinh Trung Nguyen | 21110259 | [@NguyenDink](https://github.com/NguyenDink) |
 
 ## 📄 License
 
-This project is licensed under the [MIT License](./LICENSE).
+This project is licensed under the [MIT License](/LICENSE).
