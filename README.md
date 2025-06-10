@@ -128,7 +128,7 @@ docker-compose up -d
 - **Database**: MySQL
 - **Build Tool**: Maven
 - **Testing**: JUnit, Mockito
-- **API Testing**: Swagger, Postman, JMeter
+- **API Testing**: Swagger, Postman
 - **Cloud Storage**: Cloudinary
 - **Deployment**: Heroku
 - **IDE**: IntelliJ IDEA
