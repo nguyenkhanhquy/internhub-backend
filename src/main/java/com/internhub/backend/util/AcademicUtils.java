@@ -6,10 +6,10 @@ import com.internhub.backend.repository.AcademicYearRepository;
 
 import java.time.LocalDate;
 
-public class AcademicUtils {
+public final class AcademicUtils {
 
     private AcademicUtils() {
-        throw new IllegalStateException("Utility class");
+        throw new UnsupportedOperationException("Utility class");
     }
 
     public static AcademicYear getCurrentAcademicYear(LocalDate now, AcademicYearRepository academicYearRepository) {
