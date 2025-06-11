@@ -6,7 +6,6 @@ import com.internhub.backend.dto.request.jobs.DeleteJobPostRequest;
 import com.internhub.backend.dto.request.jobs.JobPostSearchFilterRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
-import com.internhub.backend.entity.academic.AcademicYear;
 import com.internhub.backend.entity.academic.Semester;
 import com.internhub.backend.entity.account.Notification;
 import com.internhub.backend.entity.account.User;
@@ -33,6 +32,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class AdminServiceImpl implements AdminService {
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final UserRepository userRepository;
+    private final AcademicYearRepository academicYearRepository;
     private final WebSocketService webSocketService;
 
     @Override
@@ -310,6 +312,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Student> getAllStudentsNotEnrolledInSemester() {
-        return studentRepository.findStudentsNotEnrolledInSemester("2024-2025", Semester.HK03);
+        LocalDate now = LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        String currentAcademicYear = AcademicUtils.getCurrentAcademicYear(now, academicYearRepository).getName();
+        Semester currentSemester = AcademicUtils.getCurrentSemester(now);
+        return studentRepository.findStudentsNotEnrolledInSemester(currentAcademicYear, currentSemester);
     }
 }

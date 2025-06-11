@@ -27,14 +27,14 @@ public interface StudentRepository extends JpaRepository<Student, String> {
     List<Student> findByStudentId(String studentId);
 
     @Query("""
-        SELECT s FROM Student s
-        WHERE s.userId NOT IN (
-            SELECT e.student.userId
-            FROM Enrollment e
-            WHERE e.course.academicYear.name = :academicYearName
-              AND e.course.semester = :semester
-        )
-    """)
+                SELECT s FROM Student s
+                WHERE s.userId NOT IN (
+                    SELECT e.student.userId
+                    FROM Enrollment e
+                    WHERE e.course.academicYear.name = :academicYearName
+                      AND e.course.semester = :semester
+                )
+            """)
     List<Student> findStudentsNotEnrolledInSemester(
             @Param("academicYearName") String academicYearName,
             @Param("semester") Semester semester
