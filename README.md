@@ -14,7 +14,7 @@ Internhub is a platform connecting students with companies for internships. This
 
 - [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) 21 or higher
 - [Apache Maven](https://maven.apache.org/download.cgi) 3.9.9 or higher
-- [Spring Boot](https://spring.io/projects/spring-boot) 3.4.0 or higher
+- [Spring Boot](https://spring.io/projects/spring-boot) 3.5.0 or higher
 - [MySQL](https://dev.mysql.com/downloads/mysql/) 8.0.40 or higher
 
 ## 🚀 Installation Guide
@@ -125,7 +125,7 @@ docker-compose up -d
   - Spring Framework (Application framework)
   - Spring Boot (Auto-configuration)
   - Spring Data JPA (Data access)
-- **Database**: MySQL
+- **Database**: MySQL, Redis
 - **Build Tool**: Maven
 - **Testing**: JUnit, Mockito
 - **API Testing**: Swagger, Postman
