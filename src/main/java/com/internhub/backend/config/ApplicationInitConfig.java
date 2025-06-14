@@ -43,7 +43,7 @@ public class ApplicationInitConfig {
             initializeRoles(roleRepository);
             initializeAdminUser(userRepository, roleRepository);
             runCreateAcademicYearTask();
-            runTokenCleanupTask();
+//            runTokenCleanupTask();
         };
     }
 

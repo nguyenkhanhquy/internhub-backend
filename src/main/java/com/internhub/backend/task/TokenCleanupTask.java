@@ -22,7 +22,7 @@ public class TokenCleanupTask {
         this.invalidatedTokenRepository = invalidatedTokenRepository;
     }
 
-    @Scheduled(cron = "0 59 23 * * ?")
+//    @Scheduled(cron = "0 59 23 * * ?")
     public void deleteExpiredTokens() {
         log.info("Bắt đầu nhiệm vụ dọn dẹp token đã hết hạn tại {}", Instant.now());
         try {
