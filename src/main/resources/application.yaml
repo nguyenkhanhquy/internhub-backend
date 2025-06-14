@@ -29,9 +29,9 @@ spring:
     password: ${DATASOURCE_PASSWORD}
     driver-class-name: ${DATASOURCE_DRIVER}
     hikari:
-      minimum-idle: 5
-      maximum-pool-size: 9
-      idle-timeout: 300000
+      minimum-idle: 3
+      maximum-pool-size: 6
+      idle-timeout: 180000
       connection-timeout: 10000
 
   jackson:
