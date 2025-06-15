@@ -30,8 +30,8 @@ spring:
     driver-class-name: ${DATASOURCE_DRIVER}
     hikari:
       minimum-idle: 3
-      maximum-pool-size: 6
-      idle-timeout: 180000
+      maximum-pool-size: 7
+      idle-timeout: 300000
       connection-timeout: 10000
 
   jackson:

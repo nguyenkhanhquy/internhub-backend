@@ -35,7 +35,7 @@ public class AcademicYearTask {
             String academicYearName = currentYear + "-" + (currentYear + 1);
 
             if (academicYearRepository.existsByName(academicYearName)) {
-                log.info("Năm học {} đã tồn tại, không tạo mới.", academicYearName);
+                log.info("Năm học {} đã tồn tại, không tạo mới", academicYearName);
             } else {
                 academicYearRepository.save(AcademicYear.builder()
                         .name(academicYearName)
