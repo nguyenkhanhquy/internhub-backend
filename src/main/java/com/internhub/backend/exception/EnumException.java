@@ -47,7 +47,7 @@ public enum EnumException {
     CV_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy CV"),
 
     // 500: Internal Server Error — có lỗi trong hệ thống
-    UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa phân loại: "),
+    UNCATEGORIZED_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "Ngoại lệ chưa được phân loại"),
     JWT_SIGNING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Không thể ký JWT Token"),
     UPLOAD_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Tải lên tệp không thành công"),
     IMPORT_FILE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Lỗi khi nhập dữ liệu từ tệp");

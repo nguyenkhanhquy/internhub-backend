@@ -1,6 +1,7 @@
 package com.internhub.backend.exception;
 
 import com.internhub.backend.dto.response.ErrorResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -20,8 +22,10 @@ public class GlobalExceptionHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .statusCode(enumException.getStatusCode().value())
-                .message(enumException.getMessage() + e.getClass().getSimpleName() + " - " + e.getMessage())
+                .message(enumException.getMessage())
                 .build();
+
+        log.error("{}: {} - {}", enumException.getMessage(), e.getClass().getSimpleName(), e.getMessage());
 
         return new ResponseEntity<>(errorResponse, enumException.getStatusCode());
     }
