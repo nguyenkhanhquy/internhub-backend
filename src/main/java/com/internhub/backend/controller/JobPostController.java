@@ -36,11 +36,6 @@ public class JobPostController {
         return ResponseEntity.ok(jobPostService.getAllJobPosts(request));
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getPopularJobPosts(@ModelAttribute JobPostSearchFilterRequest request) {
-        return ResponseEntity.ok(jobPostService.getPopularJobPosts(request));
-    }
-
     @GetMapping("/suitable")
     public ResponseEntity<SuccessResponse<List<JobPostBasicDTO>>> getJobPostsSuitableForStudent(@PageableDefault(page = 0, size = 10, sort = "updatedDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<JobPostBasicDTO> pageData = jobPostService.getJobPostsSuitableForStudent(pageable);

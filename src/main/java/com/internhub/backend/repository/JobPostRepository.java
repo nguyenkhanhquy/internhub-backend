@@ -46,8 +46,12 @@ public interface JobPostRepository extends JpaRepository<JobPost, String> {
             "    LOWER(j.company.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "    LOWER(j.jobPosition) LIKE LOWER(CONCAT('%', :query, '%')) " +
             ") " +
+            "AND (:major IS NULL OR :major MEMBER OF j.majors) " +
+            "AND (:address IS NULL OR LOWER(j.address) LIKE LOWER(CONCAT('%', :address, '%'))) " +
+            "AND (:type IS NULL OR LOWER(j.type) LIKE LOWER(CONCAT('%', :type, '%'))) " +
+            "AND (:remote IS NULL OR LOWER(j.remote) LIKE LOWER(CONCAT('%', :remote, '%'))) " +
             "AND j.isApproved = true AND j.isHidden = false AND j.isDeleted = false")
-    Page<JobPost> searchJobPosts(String query, Pageable pageable);
+    Page<JobPost> searchJobPosts(String query, Major major, String address, String type, String remote, Pageable pageable);
 
     @Query("SELECT j FROM JobPost j WHERE " +
             "(:query IS NULL OR :query = '' OR " +

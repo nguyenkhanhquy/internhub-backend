@@ -12,6 +12,7 @@ import com.internhub.backend.entity.business.Company;
 import com.internhub.backend.entity.business.Recruiter;
 import com.internhub.backend.entity.job.JobPost;
 import com.internhub.backend.entity.job.JobSaved;
+import com.internhub.backend.entity.student.Major;
 import com.internhub.backend.entity.student.Student;
 import com.internhub.backend.exception.CustomException;
 import com.internhub.backend.exception.EnumException;
@@ -30,10 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,7 +62,18 @@ public class JobPostServiceImpl implements JobPostService {
         }
         Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
 
-        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), pageable);
+        Major major = Optional.ofNullable(request.getMajor())
+                .filter(m -> !m.isBlank())
+                .map(m -> {
+                    try {
+                        return Major.valueOf(m);
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .orElse(null);
+
+        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), major, request.getAddress(), request.getType(), request.getRemote(), pageable);
 
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();
@@ -118,32 +127,6 @@ public class JobPostServiceImpl implements JobPostService {
                             .toList())
                     .build();
         }
-    }
-
-    @Override
-    public SuccessResponse<List<JobPostBasicDTO>> getPopularJobPosts(JobPostSearchFilterRequest request) {
-        Sort sort;
-        if ("oldest".equalsIgnoreCase(request.getOrder())) {
-            sort = Sort.by(Sort.Order.asc("createdDate"));
-        } else {
-            sort = Sort.by(Sort.Order.desc("createdDate"));
-        }
-        Pageable pageable = PageRequest.of(request.getPage() - 1, request.getSize(), sort);
-        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), pageable);
-
-        return SuccessResponse.<List<JobPostBasicDTO>>builder()
-                .pageInfo(SuccessResponse.PageInfo.builder()
-                        .currentPage(request.getPage())
-                        .totalPages(pageData.getTotalPages())
-                        .pageSize(pageData.getSize())
-                        .totalElements(pageData.getTotalElements())
-                        .hasPreviousPage(pageData.hasPrevious())
-                        .hasNextPage(pageData.hasNext())
-                        .build())
-                .result(pageData.getContent().stream()
-                        .map(jobPostMapper::mapJobPostToJobPostBasicDTO)
-                        .toList())
-                .build();
     }
 
     @Override

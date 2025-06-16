@@ -18,8 +18,6 @@ public interface JobPostService {
 
     SuccessResponse<List<JobPostDetailDTO>> getAllJobPosts(JobPostSearchFilterRequest request);
 
-    SuccessResponse<List<JobPostBasicDTO>> getPopularJobPosts(JobPostSearchFilterRequest request);
-
     @PreAuthorize("hasAuthority('SCOPE_STUDENT')")
     Page<JobPostBasicDTO> getJobPostsSuitableForStudent(Pageable pageable);
 
