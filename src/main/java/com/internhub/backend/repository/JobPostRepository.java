@@ -39,9 +39,6 @@ public interface JobPostRepository extends JpaRepository<JobPost, String> {
     @Query("SELECT j FROM JobPost j WHERE " +
             "(:query IS NULL OR :query = '' OR " +
             "    LOWER(j.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "    LOWER(j.type) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "    LOWER(j.remote) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-//            "    LOWER(j.description) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "    LOWER(j.salary) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "    LOWER(j.company.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "    LOWER(j.jobPosition) LIKE LOWER(CONCAT('%', :query, '%')) " +
