@@ -73,7 +73,7 @@ public class JobPostServiceImpl implements JobPostService {
                 })
                 .orElse(null);
 
-        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), major, request.getAddress(), request.getType(), request.getRemote(), pageable);
+        Page<JobPost> pageData = jobPostRepository.searchJobPosts(request.getSearch(), request.getSalary(), major, request.getAddress(), request.getType(), request.getRemote(), pageable);
 
         try {
             Authentication authentication = AuthUtils.getAuthenticatedUser();

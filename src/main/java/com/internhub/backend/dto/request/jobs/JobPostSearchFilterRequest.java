@@ -22,6 +22,7 @@ public class JobPostSearchFilterRequest {
     private Boolean isHidden;
     private Boolean isDeleted;
 
+    private String salary;
     private String major;
     private String address;
     private String type;
