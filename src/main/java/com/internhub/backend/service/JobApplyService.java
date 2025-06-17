@@ -6,8 +6,10 @@ import com.internhub.backend.dto.request.jobs.apply.CreateJobApplyRequest;
 import com.internhub.backend.dto.request.jobs.apply.InterviewJobApplyRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
+import jakarta.mail.MessagingException;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public interface JobApplyService {
@@ -37,5 +39,5 @@ public interface JobApplyService {
     void refuseOfferJobApply(String jobApplyId);
 
     @PreAuthorize("hasAuthority('SCOPE_RECRUITER')")
-    void reportQuitJobApply(String jobApplyId, String reason);
+    void reportQuitJobApply(String jobApplyId, String reason) throws MessagingException, UnsupportedEncodingException;
 }

@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
                         "    <div>" +
                         "        <h1>Xác thực địa chỉ email của bạn</h1>" +
                         "        <p style='font-size: 1.1em'>Để kích hoạt tài khoản InternHub, vui lòng xác thực rằng đây là địa chỉ email của bạn.</p>" +
-                        "        <p style='display: inline-block; padding: 10px 20px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px;'>" + otp + "</p>" +
+                        "        <p style='display: inline-block; padding: 10px 20px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 1.5em;'>" + otp + "</p>" +
                         "        <p style='font-size: 1em; color: #888888;'>Mã OTP sẽ hết hạn sau 5 phút. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</p>" +
                         "    </div>" +
                         "</div>";

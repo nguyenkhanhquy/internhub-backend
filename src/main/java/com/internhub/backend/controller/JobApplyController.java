@@ -7,10 +7,12 @@ import com.internhub.backend.dto.request.jobs.apply.InterviewJobApplyRequest;
 import com.internhub.backend.dto.request.page.PageSearchSortFilterRequest;
 import com.internhub.backend.dto.response.SuccessResponse;
 import com.internhub.backend.service.JobApplyService;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -98,7 +100,7 @@ public class JobApplyController {
     }
 
     @PostMapping("/report-quit/{id}")
-    public ResponseEntity<SuccessResponse<Void>> reportQuitJobApply(@PathVariable("id") String jobApplyId, @RequestBody Map<String, String> request) {
+    public ResponseEntity<SuccessResponse<Void>> reportQuitJobApply(@PathVariable("id") String jobApplyId, @RequestBody Map<String, String> request) throws MessagingException, UnsupportedEncodingException {
         String reason = request.get("reason");
 
         jobApplyService.reportQuitJobApply(jobApplyId, reason);

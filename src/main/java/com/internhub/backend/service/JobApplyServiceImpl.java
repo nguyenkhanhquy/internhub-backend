@@ -21,6 +21,7 @@ import com.internhub.backend.repository.JobPostRepository;
 import com.internhub.backend.repository.StudentRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.util.AuthUtils;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
@@ -49,6 +51,7 @@ public class JobApplyServiceImpl implements JobApplyService {
     private final JobApplyMapper jobApplyMapper;
     private final WebSocketService webSocketService;
     private final NotificationService notificationService;
+    private final EmailService emailService;
 
     @Override
     public void createJobApply(CreateJobApplyRequest request) {
@@ -260,7 +263,7 @@ public class JobApplyServiceImpl implements JobApplyService {
     }
 
     @Override
-    public void reportQuitJobApply(String jobApplyId, String reason) {
+    public void reportQuitJobApply(String jobApplyId, String reason) throws MessagingException, UnsupportedEncodingException {
         Authentication authentication = AuthUtils.getAuthenticatedUser();
         Jwt jwt = (Jwt) authentication.getPrincipal();
         String userId = (String) jwt.getClaims().get("userId");
@@ -285,5 +288,22 @@ public class JobApplyServiceImpl implements JobApplyService {
                 title,
                 content
         );
+
+        // Gửi thông báo qua email cho sinh viên
+        String studentEmail = jobApply.getStudent().getUser().getEmail();
+        String studentTitle = "InternHub - Thông báo về việc bỏ việc thực tập";
+        String studentContent =
+                "<div style=\"font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #333;\">" +
+                        "    <p>Chào <strong>" + jobApply.getStudent().getName() + "</strong>,</p>" +
+                        "    <p>Chúng tôi xin thông báo rằng bạn đã bị <strong>khóa tài khoản</strong> do <strong>bỏ việc thực tập</strong> tại công ty " +
+                        "    <strong>[" + jobApply.getJobPost().getCompany().getName() + "]</strong> với lý do:</p>" +
+                        "    <p style=\"margin: 10px 0; padding: 10px; background-color: #f8d7da; color: #721c24; border-radius: 5px; border: 1px solid #f5c6cb;\">" +
+                        reason + "</p>" +
+                        "    <p>Để được <strong>mở khóa tài khoản</strong>, bạn vui lòng liên hệ <strong>Văn Phòng khoa CNTT</strong> để xử lý.</p>" +
+                        "    <p>Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi.</p>" +
+                        "    <p>Trân trọng,<br/>InternHub Team</p>" +
+                        "</div>";
+
+        emailService.sendHtmlEmail(studentEmail, studentTitle, studentContent);
     }
 }
