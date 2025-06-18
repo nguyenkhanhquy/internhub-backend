@@ -27,7 +27,7 @@ public interface CourseRepository extends JpaRepository<Course, String> {
 
     @Query("SELECT c FROM Course c " +
             "WHERE c.teacher = :teacher " +
-            "AND c.courseStatus = 'GRADING'" +
+            "AND c.courseStatus <> 'DRAFT' " +
             "AND (:search IS NULL OR LOWER(c.courseCode) LIKE LOWER(CONCAT('%', :search, '%'))) " +
             "AND (:year IS NULL OR c.academicYear.name = :year) " +
             "AND (:semester IS NULL OR c.semester = :semester) " +
