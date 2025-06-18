@@ -42,6 +42,7 @@ public class JobPostServiceImpl implements JobPostService {
     private String adminEmail;
 
     private final WebSocketService webSocketService;
+    private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final JobPostRepository jobPostRepository;
     private final RecruiterRepository recruiterRepository;
@@ -337,6 +338,12 @@ public class JobPostServiceImpl implements JobPostService {
                 .build();
 
         jobPostRepository.save(jobPost);
+
+        // Gửi thông báo đến khoa CNTT
+        User user = userRepository.findByEmail(adminEmail);
+        String title = "Có bài đăng tuyển dụng mới đang chờ duyệt";
+        String content = "Doanh nghiệp [" + jobPost.getCompany().getName() + "] mới đăng bài tuyển dụng [" + jobPost.getTitle() + "] đang chờ duyệt.";
+        notificationService.sendNotification(user, title, content);
     }
 
     @Override
