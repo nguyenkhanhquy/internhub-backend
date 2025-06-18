@@ -43,6 +43,7 @@ public class InternshipReportServiceImpl implements InternshipReportService {
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final WebSocketService webSocketService;
+    private final NotificationService notificationService;
 
     @Override
     public void createInternshipReport(CreateInternshipReportRequest request) {
@@ -144,5 +145,11 @@ public class InternshipReportServiceImpl implements InternshipReportService {
         enrollment.setEnrollmentStatus(Enrollment.EnrollmentStatus.SUBMITTED);
 
         enrollmentRepository.save(enrollment);
+
+        // Gửi thông báo cho giảng viên
+        String title = "[" + request.getCourseCode() + "] Một sinh viên đã nộp báo cáo thực tập";
+        String content = "Sinh viên " + student.getName() + " đã nộp báo cáo thực tập cho lớp học phần [" +
+                request.getCourseCode() + "]. Vui lòng kiểm tra và đánh giá báo cáo.";
+        notificationService.sendNotification(enrollment.getCourse().getTeacher().getUser(), title, content);
     }
 }
