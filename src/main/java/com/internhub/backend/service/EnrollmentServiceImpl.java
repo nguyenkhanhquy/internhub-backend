@@ -18,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class EnrollmentServiceImpl implements EnrollmentService {
@@ -68,7 +70,8 @@ public class EnrollmentServiceImpl implements EnrollmentService {
             enrollment.getStudent().setReported(true);
             enrollment.setEnrollmentStatus(Enrollment.EnrollmentStatus.COMPLETED);
         }
-        enrollment.getInternshipReport().setReportStatus(ReportStatus.ACCEPTED);
+        Optional.ofNullable(enrollment.getInternshipReport())
+                .ifPresent(report -> report.setReportStatus(ReportStatus.ACCEPTED));
 
         enrollmentRepository.save(enrollment);
 
