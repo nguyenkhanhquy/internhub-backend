@@ -320,6 +320,17 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user).isLocked();
     }
 
+    @Override
+    public List<UserDTO> searchUsers(SearchUserRequest searchUserRequest) {
+        Authentication authentication = AuthUtils.getAuthenticatedUser();
+        String email = authentication.getName();
+        List<User> users = userRepository.findAllByEmailContainingIgnoreCase(searchUserRequest.getQuery());
+        return users.stream()
+                .filter(user -> !user.getEmail().equals(email))
+                .map(userMapper::mapUserToUserDTO)
+                .toList();
+    }
+
     private void verifyOtp(String email, String otpString) {
         try {
             int otp = Integer.parseInt(otpString);

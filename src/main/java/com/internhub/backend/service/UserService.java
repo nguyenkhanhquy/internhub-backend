@@ -43,4 +43,6 @@ public interface UserService {
 
     @PreAuthorize("hasAuthority('SCOPE_FIT')")
     boolean lockUser(String id);
+
+    List<UserDTO> searchUsers(SearchUserRequest searchUserRequest);
 }

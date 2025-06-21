@@ -172,4 +172,15 @@ public class UserController {
 
         return ResponseEntity.ok(successResponse);
     }
+
+    @PostMapping("/search")
+    public ResponseEntity<SuccessResponse<List<UserDTO>>> searchUsers(@Valid @RequestBody SearchUserRequest searchUserRequest) {
+        List<UserDTO> userDTOs = userService.searchUsers(searchUserRequest);
+
+        SuccessResponse<List<UserDTO>> successResponse = SuccessResponse.<List<UserDTO>>builder()
+                .result(userDTOs)
+                .build();
+
+        return ResponseEntity.ok(successResponse);
+    }
 }
