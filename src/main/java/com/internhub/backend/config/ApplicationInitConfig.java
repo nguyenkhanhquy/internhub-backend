@@ -5,6 +5,7 @@ import com.internhub.backend.entity.account.User;
 import com.internhub.backend.repository.RoleRepository;
 import com.internhub.backend.repository.UserRepository;
 import com.internhub.backend.task.AcademicYearTask;
+import com.internhub.backend.task.CourseTask;
 import com.internhub.backend.task.TokenCleanupTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,14 @@ public class ApplicationInitConfig {
     private final PasswordEncoder passwordEncoder;
     private final AcademicYearTask academicYearTask;
     private final TokenCleanupTask tokenCleanupTask;
+    private final CourseTask courseTask;
 
     @Autowired
-    public ApplicationInitConfig(PasswordEncoder passwordEncoder, AcademicYearTask academicYearTask, TokenCleanupTask tokenCleanupTask) {
+    public ApplicationInitConfig(PasswordEncoder passwordEncoder, AcademicYearTask academicYearTask, TokenCleanupTask tokenCleanupTask, CourseTask courseTask) {
         this.passwordEncoder = passwordEncoder;
         this.academicYearTask = academicYearTask;
         this.tokenCleanupTask = tokenCleanupTask;
+        this.courseTask = courseTask;
     }
 
     @Bean
@@ -44,6 +47,7 @@ public class ApplicationInitConfig {
             initializeAdminUser(userRepository, roleRepository);
             runCreateAcademicYearTask();
 //            runTokenCleanupTask();
+            runCourseTask();
         };
     }
 
@@ -80,5 +84,10 @@ public class ApplicationInitConfig {
     private void runTokenCleanupTask() {
         log.info("Đang chạy tác vụ dọn dẹp token khi khởi động máy chủ");
         tokenCleanupTask.deleteExpiredTokens();
+    }
+
+    private void runCourseTask() {
+        log.info("Đang chạy tác vụ xử lý khóa học khi khởi động máy chủ");
+        courseTask.finishCourse();
     }
 }
