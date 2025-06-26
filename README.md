@@ -1,9 +1,9 @@
 # Internhub Backend
 
 [![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/technologies/downloads/)
-[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.0-green.svg)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0.40-blue.svg)](https://dev.mysql.com/downloads/mysql/)
-[![Maven](https://img.shields.io/badge/Maven-3.9.9-red.svg)](https://maven.apache.org/download.cgi)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.3-green.svg)](https://spring.io/projects/spring-boot)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0.42-blue.svg)](https://dev.mysql.com/downloads/mysql/)
+[![Maven](https://img.shields.io/badge/Maven-3.9.10-red.svg)](https://maven.apache.org/download.cgi)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](/LICENSE)
 
 ## 📋 Overview
@@ -13,9 +13,9 @@ Internhub is a platform connecting students with companies for internships. This
 ## 🔧 System Requirements
 
 - [Java Development Kit (JDK)](https://www.oracle.com/java/technologies/downloads/) 21 or higher
-- [Apache Maven](https://maven.apache.org/download.cgi) 3.9.9 or higher
-- [Spring Boot](https://spring.io/projects/spring-boot) 3.5.0 or higher
-- [MySQL](https://dev.mysql.com/downloads/mysql/) 8.0.40 or higher
+- [Apache Maven](https://maven.apache.org/download.cgi) 3.9.10 or higher
+- [Spring Boot](https://spring.io/projects/spring-boot) 3.5.3 or higher
+- [MySQL](https://dev.mysql.com/downloads/mysql/) 8.0.42 or higher
 
 ## 🚀 Installation Guide
 
@@ -76,6 +76,10 @@ REDIS_HOST=your_redis_host
 REDIS_PORT=your_redis_port
 REDIS_USERNAME==your_redis_username
 REDIS_PASSWORD=your_redis_password
+
+# MongoDB Configuration
+MONGODB_URI=your_mongodb_uri
+MONGODB_DATABASE=your_mongodb_database
 ```
 
 ### 4. Run the project
